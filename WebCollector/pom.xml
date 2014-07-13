@@ -10,20 +10,8 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
-    <dependencies>
-        <dependency><!-- jsoup HTML parser library @ http://jsoup.org/ -->
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.juniversalchardet</groupId>
-            <artifactId>juniversalchardet</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-    </dependencies>
     
-    <build>
+     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -52,7 +40,7 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>true</excludeTransitive>
@@ -62,4 +50,30 @@
             </plugin>
         </plugins>
     </build>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dependencies>
+        <dependency><!-- jsoup HTML parser library @ http://jsoup.org/ -->
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.7.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.juniversalchardet</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+    </dependencies>
+    
+   
 </project>
