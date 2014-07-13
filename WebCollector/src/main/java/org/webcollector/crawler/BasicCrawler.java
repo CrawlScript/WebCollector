@@ -29,6 +29,10 @@ public class BasicCrawler {
     public String cookie=null;
     public String useragent="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0";
 
+    
+    public boolean couldStart(){
+        return seeds.size()!=0;
+    }
     public String getRoot() {
         return root;
     }
@@ -138,6 +142,10 @@ public class BasicCrawler {
         generator.setConconfig(conconfig);
         generator.setThreads(threads);
         generator.generate();
+    }
+    
+    public void stop(){
+        generator.stop();
     }
 
     public static void main(String[] args) {

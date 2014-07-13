@@ -27,6 +27,13 @@ public class WorkQueue
             threads[i].start();
         }
     }
+    
+    public void killALl(){
+        for(int i=0;i<threads.length;i++){
+            threads[i].stop();
+        }
+    }
+    
     public void execute(Runnable r) {
         synchronized(queue) {
             queue.addLast(r);

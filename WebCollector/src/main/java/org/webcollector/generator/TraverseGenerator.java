@@ -50,9 +50,14 @@ public class TraverseGenerator extends Generator {
     public void setThreads(int threads) {
         this.threads = threads;
     }
-
+    
+    
     public TraverseGenerator(Handler handler) {
         super(handler);
+    }
+
+    public void stop() {
+        workqueue.killALl();
     }
 
     public void addSeed(String url) {
