@@ -26,6 +26,8 @@ public class BasicCrawler {
     ArrayList<String> regexs = new ArrayList<String>();
     ArrayList<String> seeds = new ArrayList<String>();
     public String root = "download";
+    public String cookie=null;
+    public String useragent="Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0";
 
     public String getRoot() {
         return root;
@@ -63,7 +65,10 @@ public class BasicCrawler {
     ConnectionConfig conconfig = null;
 
     public void configCon(HttpURLConnection con) {
-        con.setRequestProperty("user-agent", "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0");
+        con.setRequestProperty("User-Agent", useragent);
+        if(cookie!=null){
+            con.setRequestProperty("Cookie", cookie);
+        }
 
     }
 
@@ -80,6 +85,15 @@ public class BasicCrawler {
     public void start(){
         start(10);
     }
+    
+    public void setCookie(String cookie){
+        this.cookie=cookie;
+    }
+    
+    public void setUseragent(String useragent){
+        this.useragent=useragent;
+    }
+    
     public void start(int threads) {
 
         if (regexs.size() == 0) {
