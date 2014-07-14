@@ -6,6 +6,7 @@
 
 package org.webcollector.filter;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -14,15 +15,54 @@ import java.util.regex.Pattern;
  */
 public class RegexFilter extends Filter{
 
-    public String regex;
-    public RegexFilter(String regex){
-        this.regex=regex;
+    
+    public RegexFilter(){
+    }
+    
+    public ArrayList<String> positive=new ArrayList<String>();
+    public ArrayList<String> negative=new ArrayList<String>();
+    
+    public void addRule(String rule){
+        if(rule.length()==0){
+            return;
+        }
+        char pn=rule.charAt(0);
+        String realrule=rule.substring(1);
+        if(pn=='+'){
+            addPositive(realrule);
+        }else if(pn=='-'){
+            addNegative(realrule);
+        }else{
+            addPositive(rule);
+        }
+    }
+    
+    public void addPositive(String positiveregex){
+        positive.add(positiveregex);        
+    }
+    public void addNegative(String negativeregex){
+        negative.add(negativeregex);
     }
     
     @Override
     public boolean shouldFilter(Object object) {
         String url=(String) object;
-        return !(Pattern.matches(regex, url));
+        for(String nregex:negative){
+            if(Pattern.matches(nregex, url)){
+                return true;
+            }
+        }
+        
+        int count=0;
+        for(String pregex:negative){
+            if(Pattern.matches(pregex, url)){
+                count++;
+            }
+        }
+        if(count==0)
+            return true;
+        else
+            return false;
     }
     
     

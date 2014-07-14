@@ -49,8 +49,8 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btn_addseed = new javax.swing.JButton();
-        txt_regex = new javax.swing.JTextField();
-        btn_addregex = new javax.swing.JButton();
+        txt_pregex = new javax.swing.JTextField();
+        btn_addpregex = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         txt_output = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
@@ -59,13 +59,16 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
         btn_stop = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txt_threads = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txt_nregex = new javax.swing.JTextField();
+        btn_addnregex = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("基础爬虫");
 
         jLabel1.setText("种子:");
 
-        jLabel2.setText("正则(可选):");
+        jLabel2.setText("允许的正则(可选):");
 
         btn_addseed.setText("添加");
         btn_addseed.addActionListener(new java.awt.event.ActionListener() {
@@ -74,10 +77,10 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
             }
         });
 
-        btn_addregex.setText("添加");
-        btn_addregex.addActionListener(new java.awt.event.ActionListener() {
+        btn_addpregex.setText("添加");
+        btn_addpregex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_addregexActionPerformed(evt);
+                btn_addpregexActionPerformed(evt);
             }
         });
 
@@ -106,6 +109,16 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
 
         jLabel4.setText("线程数:");
 
+        jLabel5.setText("禁止的正则(可选)：");
+        jLabel5.setToolTipText("");
+
+        btn_addnregex.setText("添加");
+        btn_addnregex.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_addnregexActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,39 +136,48 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4))
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
                         .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txt_threads, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_regex, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                            .addComponent(txt_seed, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_path, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
-                        .addGap(35, 35, 35)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txt_nregex, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txt_threads, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txt_pregex, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                .addComponent(txt_seed, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txt_path, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_addseed)
-                            .addComponent(btn_addregex))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(35, 35, 35)
+                                    .addComponent(btn_addseed))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btn_addpregex)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(btn_addnregex)))))
                 .addContainerGap(101, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
-                        .addComponent(jLabel1)
-                        .addGap(24, 24, 24))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_addseed))
-                        .addGap(18, 18, 18)))
-                .addGap(1, 1, 1)
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_addseed)
+                    .addComponent(jLabel1))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(txt_regex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_addregex))
-                .addGap(22, 22, 22)
+                    .addComponent(txt_pregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_addpregex))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_nregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_addnregex)
+                    .addComponent(jLabel5))
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txt_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -163,14 +185,17 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txt_threads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22)
+                .addGap(49, 49, 49)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_start)
                     .addComponent(btn_stop))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap())
         );
+
+        jLabel2.getAccessibleContext().setAccessibleName("允许的正则(可选)：");
+        jLabel5.getAccessibleContext().setAccessibleName("禁止的正则（可选）:");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -199,12 +224,12 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
         output("开始爬取，请前往"+localpath+"文件夹查看爬取文件,不要关闭此窗口！");
     }//GEN-LAST:event_btn_startActionPerformed
 
-    private void btn_addregexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addregexActionPerformed
+    private void btn_addpregexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addpregexActionPerformed
         // TODO add your handling code here:
-        String regex=txt_regex.getText();
-        crawler.addRegex(regex);
-        output("添加正则:"+regex);
-    }//GEN-LAST:event_btn_addregexActionPerformed
+        String regex=txt_pregex.getText();
+        crawler.addRegex("+"+regex);
+        output("添加正例正则:"+regex);
+    }//GEN-LAST:event_btn_addpregexActionPerformed
 
     
     private void output(String line){
@@ -217,6 +242,13 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
         output("停止");
         
     }//GEN-LAST:event_btn_stopActionPerformed
+
+    private void btn_addnregexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_addnregexActionPerformed
+        // TODO add your handling code here:
+        String regex=txt_pregex.getText();
+        crawler.addRegex("-"+regex);
+        output("添加反例正则:"+regex);
+    }//GEN-LAST:event_btn_addnregexActionPerformed
 
     /**
      * @param args the command line arguments
@@ -254,7 +286,8 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_addregex;
+    private javax.swing.JButton btn_addnregex;
+    private javax.swing.JButton btn_addpregex;
     private javax.swing.JButton btn_addseed;
     private javax.swing.JButton btn_start;
     private javax.swing.JButton btn_stop;
@@ -262,10 +295,12 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField txt_nregex;
     private javax.swing.JTextArea txt_output;
     private javax.swing.JTextField txt_path;
-    private javax.swing.JTextField txt_regex;
+    private javax.swing.JTextField txt_pregex;
     private javax.swing.JTextField txt_seed;
     private javax.swing.JTextField txt_threads;
     // End of variables declaration//GEN-END:variables

@@ -39,18 +39,33 @@
                           <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txt_threads" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txt_regex" alignment="0" pref="373" max="32767" attributes="0"/>
-                          <Component id="txt_seed" alignment="0" max="32767" attributes="0"/>
-                          <Component id="txt_path" alignment="0" pref="373" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="txt_nregex" pref="373" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="txt_threads" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txt_pregex" alignment="0" pref="373" max="32767" attributes="0"/>
+                              <Component id="txt_seed" alignment="0" max="32767" attributes="0"/>
+                              <Component id="txt_path" alignment="0" pref="373" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btn_addseed" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_addregex" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+                                  <Component id="btn_addseed" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btn_addpregex" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                              <Component id="btn_addnregex" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -61,28 +76,25 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txt_seed" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btn_addseed" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                  </Group>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txt_seed" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_addseed" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txt_regex" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="btn_addregex" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_pregex" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_addpregex" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <EmptySpace pref="22" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="txt_nregex" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btn_addnregex" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txt_path" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -92,14 +104,14 @@
                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txt_threads" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btn_start" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btn_stop" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="235" max="-2" attributes="0"/>
-              <EmptySpace pref="68" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -114,8 +126,11 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&#x6b63;&#x5219;(&#x53ef;&#x9009;):"/>
+        <Property name="text" type="java.lang.String" value="&#x5141;&#x8bb8;&#x7684;&#x6b63;&#x5219;(&#x53ef;&#x9009;):"/>
       </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="&#x5141;&#x8bb8;&#x7684;&#x6b63;&#x5219;(&#x53ef;&#x9009;)&#xff1a;"/>
+      </AccessibilityProperties>
     </Component>
     <Component class="javax.swing.JButton" name="btn_addseed">
       <Properties>
@@ -125,14 +140,14 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addseedActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JTextField" name="txt_regex">
+    <Component class="javax.swing.JTextField" name="txt_pregex">
     </Component>
-    <Component class="javax.swing.JButton" name="btn_addregex">
+    <Component class="javax.swing.JButton" name="btn_addpregex">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x6dfb;&#x52a0;"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addregexActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addpregexActionPerformed"/>
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane2">
@@ -183,6 +198,25 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txt_threads">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x7981;&#x6b62;&#x7684;&#x6b63;&#x5219;(&#x53ef;&#x9009;)&#xff1a;"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="&#x7981;&#x6b62;&#x7684;&#x6b63;&#x5219;&#xff08;&#x53ef;&#x9009;&#xff09;:"/>
+      </AccessibilityProperties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txt_nregex">
+    </Component>
+    <Component class="javax.swing.JButton" name="btn_addnregex">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&#x6dfb;&#x52a0;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_addnregexActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

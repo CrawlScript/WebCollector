@@ -124,7 +124,8 @@ public class BasicCrawler {
             @Override
             public boolean shouldFilter(Page page) {
                 for (String regex : regexs) {
-                    RegexFilter regexfilter = new RegexFilter(regex);
+                    RegexFilter regexfilter = new RegexFilter();
+                    regexfilter.addRule(regex);
                     if (regexfilter.shouldFilter(page.url)) {
                         return true;
                     } else {
