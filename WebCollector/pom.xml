@@ -78,6 +78,7 @@
                             <tasks>
 
                                 <copy todir="${project.build.directory}" file="start.bat"/> 
+                                <copy todir="${project.build.directory}" file="start.sh"/> 
                                     <!--
                                       Place any Ant task here. You can add anything
                                       you can add between <target> and </target> in a
