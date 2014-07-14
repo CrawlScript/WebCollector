@@ -24,7 +24,7 @@ public class HttpUtils {
         return fetchHttpResponse(url, null, count);
     }
 
-    public static Page fetchHttpResponse(String url) throws IOException {
+    public static Page fetchHttpResponse(String url) throws Exception {
         return fetchHttpResponse(url, null);
     }
 
@@ -33,7 +33,7 @@ public class HttpUtils {
         return httpretry.getResult(count);
     }
 
-    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig) throws IOException {
+    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig) throws Exception {
         URL _URL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) _URL.openConnection();
         con.setDoInput(true);

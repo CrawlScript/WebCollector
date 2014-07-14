@@ -7,6 +7,7 @@
 package org.webcollector.filter;
 
 import java.util.HashSet;
+import java.util.UUID;
 import org.webcollector.model.Page;
 
 /**
@@ -27,6 +28,14 @@ public class UniqueFilter extends Filter{
             return false;
         }
         
+    }
+    
+    public static void main(String[] args){
+        HashSet<String> test=new HashSet<String>();
+        for(int i=0;i<1000000000;i++){
+            System.out.println(i);
+            test.add("https://www.facebook.com/"+UUID.randomUUID()+UUID.randomUUID());
+        }
     }
     
 }
