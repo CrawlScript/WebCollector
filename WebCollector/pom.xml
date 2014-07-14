@@ -11,7 +11,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
     
-     <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -47,6 +47,21 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>org.webcollector.ui.BasicCrawlerUI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+
             </plugin>
         </plugins>
     </build>

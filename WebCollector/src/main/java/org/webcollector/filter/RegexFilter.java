@@ -53,8 +53,9 @@ public class RegexFilter extends Filter{
             }
         }
         
+        
         int count=0;
-        for(String pregex:negative){
+        for(String pregex:positive){
             if(Pattern.matches(pregex, url)){
                 count++;
             }
