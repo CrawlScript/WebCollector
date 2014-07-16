@@ -21,5 +21,10 @@ public class Page{
     public Map<String,List<String>> headers;
     public String html=null;
     public Document doc=null;
+    public int status;
+    public long fecthtime;
+    
+    public static final int UNFETCHED=1;
+    public static final int FETCHED=2;
     
 }

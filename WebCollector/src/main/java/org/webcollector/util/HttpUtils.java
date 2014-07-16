@@ -18,7 +18,7 @@ import org.webcollector.model.Page;
  */
 public class HttpUtils {
     
-    
+   
 
     public static Page fetchHttpResponse(String url, int count) {
         return fetchHttpResponse(url, null, count);

@@ -7,6 +7,7 @@
 package org.webcollector.task;
 
 import java.util.LinkedList;
+import org.webcollector.util.Log;
 
 /**
  *
@@ -28,6 +29,22 @@ public class WorkQueue
         }
     }
     
+    public boolean isAlive(){
+        synchronized(queue){
+            if(!queue.isEmpty())
+                return true;
+        }
+        for(PoolWorker thread:threads){
+            if(thread.status==1)
+                return true;
+        }
+        
+        
+        return false;
+    }
+    
+ 
+    
     public void killALl(){
         for(int i=0;i<threads.length;i++){
             threads[i].stop();
@@ -41,6 +58,7 @@ public class WorkQueue
         }
     }
     private class PoolWorker extends Thread {
+        int status=0;
         public void run() {
             Runnable r;
             while (true) {
@@ -55,6 +73,7 @@ public class WorkQueue
                         }
                     }
                     r = (Runnable) queue.removeFirst();
+                    status=1;
                 }
                 // If we don't catch RuntimeException, 
                 // the pool could leak threads
@@ -63,6 +82,8 @@ public class WorkQueue
                 }
                 catch (RuntimeException e) {
                     // You might want to log something here
+                }finally{
+                    status=0;
                 }
             }
         }

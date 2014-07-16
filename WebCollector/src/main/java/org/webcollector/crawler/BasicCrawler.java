@@ -152,9 +152,9 @@ public class BasicCrawler {
     public static void main(String[] args) {
 
         BasicCrawler crawler = new BasicCrawler();
-        crawler.addSeed("http://xautlinux.net/blog/");
+        crawler.addSeed("http://www.zhihu.com/");
         crawler.setRoot("/home/hu/data/xaut");
-        //crawler.addRegex("http://.*xinhuanet.com/.*");
+        
         crawler.start(30);
 
     }

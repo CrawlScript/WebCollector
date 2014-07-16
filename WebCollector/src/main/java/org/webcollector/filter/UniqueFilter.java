@@ -16,6 +16,10 @@ import org.webcollector.model.Page;
  */
 public class UniqueFilter extends Filter{
     public HashSet hashset=new HashSet();
+    
+    public void addUrl(String url){
+         hashset.add(url);
+    }
 
     @Override
     public boolean shouldFilter(Object object) {
@@ -24,7 +28,7 @@ public class UniqueFilter extends Filter{
             return true;
         }
         else{
-            hashset.add(url);
+           
             return false;
         }
         
