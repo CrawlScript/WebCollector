@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
-
 import org.webcollector.filter.UniqueFilter;
 import org.webcollector.handler.Handler;
 import org.webcollector.handler.Message;
@@ -37,7 +36,7 @@ import org.webcollector.util.Log;
 public class BreadthGenerator extends Generator {
 
     public String crawl_path;
-    public Integer topN=null;
+    public Integer topN = null;
 
     public void backup() throws IOException {
 
@@ -45,11 +44,11 @@ public class BreadthGenerator extends Generator {
         File currentfile = new File(crawl_path, Config.current_info_path);
         FileUtils.copy(currentfile, oldfile);
     }
-    
-    public void update() throws UnsupportedEncodingException, IOException{
+
+    public void update() throws UnsupportedEncodingException, IOException {
         File currentfile = new File(crawl_path, Config.current_info_path);
-       
-        byte[] content=oldinfo.toString().getBytes("utf-8");
+
+        byte[] content = oldinfo.toString().getBytes("utf-8");
         FileUtils.writeFileWithParent(currentfile, content);
     }
 
@@ -58,45 +57,43 @@ public class BreadthGenerator extends Generator {
     public int oldlength;
 
     UniqueFilter uniquefilter = new UniqueFilter();
+
     public void readOldinfo() throws IOException {
-        String oldinfostr = new String(FileUtils.readFile(new File(crawl_path,Config.old_info_path)), "utf-8");
+        String oldinfostr = new String(FileUtils.readFile(new File(crawl_path, Config.old_info_path)), "utf-8");
         oldinfo = new JSONArray(oldinfostr);
         oldlength = oldinfo.length();
-        for(int i=0;i<oldinfo.length();i++){
+        for (int i = 0; i < oldlength; i++) {
             uniquefilter.addUrl(oldinfo.getJSONObject(i).getString("url"));
         }
     }
 
-  
-
     public static void main(String[] args) throws IOException {
-        
-        
+
         String crawl_path = "/home/hu/data/crawl_test";
-        BreadthGenerator bg = new BreadthGenerator(null){
+        BreadthGenerator bg = new BreadthGenerator(null) {
 
             @Override
             public boolean shouldFilter(Page page) {
-               if(Pattern.matches("http://news.xinhuanet.com/world/.*", page.url))
-                   return false;
-               else
-                   return true;
+                if (Pattern.matches("http://news.xinhuanet.com/world/.*", page.url)) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
-        
+
         };
-        bg.topN=20;
+        bg.topN = 20;
         bg.run(crawl_path);
-                
+
     }
 
     public void run(String crawl_path) throws IOException {
-        this.crawl_path=crawl_path;
-       
+        this.crawl_path = crawl_path;
+
         backup();
         generate();
         update();
     }
-
 
     ConnectionConfig conconfig = null;
 
@@ -124,8 +121,6 @@ public class BreadthGenerator extends Generator {
         workqueue.killALl();
     }
 
-   
-
     int threads = 10;
 
     public boolean shouldFilter(Page page) {
@@ -139,7 +134,6 @@ public class BreadthGenerator extends Generator {
         public BreadthRunnable(int index) {
             this.index = index;
         }
-        
 
         @Override
         public void run() {
@@ -152,73 +146,73 @@ public class BreadthGenerator extends Generator {
             Page page = new Page();
             page.url = page_object.getString("url");
 
-           
-           
-
             page = HttpUtils.fetchHttpResponse(page.url, conconfig, 3);
-         
+
             page_object.put("status", Page.FETCHED);
-           
+
             page.fecthtime = System.currentTimeMillis();
             page_object.put("fetchtime", page.fecthtime);
-            Log.Info("fetch:"+page.url);
+            Log.Info("fetch:" + page.url);
             try {
                 if (page.headers.containsKey("Content-Type")) {
-                    String contenttype=page.headers.get("Content-Type").toString();
+                    String contenttype = page.headers.get("Content-Type").toString();
                     page_object.put("contenttype", contenttype);
                     if (contenttype.contains("text/html")) {
 
                         String charset = CharsetDetector.guessEncoding(page.content);
-                        page_object.put("charset",charset);
+                        page_object.put("charset", charset);
                         page.html = new String(page.content, charset);
                         page.doc = Jsoup.parse(page.html);
                         page.doc.setBaseUri(page.url);
-                        
-                        
+
                         ArrayList<String> outlinks = LinkParser.getLinks(page);
-                        for(int i=0;i<outlinks.size();i++){
-                            if(uniquefilter.shouldFilter(outlinks.get(i))){
+                        for (int i = 0; i < outlinks.size(); i++) {
+                            if (uniquefilter.shouldFilter(outlinks.get(i))) {
                                 outlinks.remove(i);
                                 i--;
                                 continue;
                             }
-                            Page tempp=new Page();
-                            tempp.url=outlinks.get(i);
-                            if(shouldFilter(tempp)){
+                            Page tempp = new Page();
+                            tempp.url = outlinks.get(i);
+                            if (shouldFilter(tempp)) {
                                 outlinks.remove(i);
                                 i--;
                                 continue;
                             }
-                            
+                            uniquefilter.addUrl(outlinks.get(i));
+
                         }
-                        int maxlink=-1;
-                        if(topN==null){
-                            maxlink=outlinks.size();
-                        }else{
-                            maxlink=topN;
-                            if(maxlink>outlinks.size())
-                                maxlink=outlinks.size();
+                        int maxlink = -1;
+                        if (topN == null) {
+                            maxlink = outlinks.size();
+                        } else {
+                            maxlink = topN;
+                            if (maxlink > outlinks.size()) {
+                                maxlink = outlinks.size();
+                            }
                         }
-                        for (int i=0;i<maxlink;i++) {
-                            String link=outlinks.get(i);
+                        for (int i = 0; i < maxlink; i++) {
+                            String link = outlinks.get(i);
                             JSONObject jo_link = new JSONObject();
                             jo_link.put("url", link);
                             jo_link.put("status", Page.UNFETCHED);
-                            synchronized(oldinfo){
-                            oldinfo.put(jo_link);
+                         
+                           
+                            synchronized (oldinfo) {
+
+                                oldinfo.put(jo_link);           
                             }
-                            uniquefilter.addUrl(link);
+                            
                         }
 
                     } else {
                         //System.out.println(page.headers.get("Content-Type"));
                     }
-                    
+
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
 
             Message msg = new Message();
             msg.obj = page;
@@ -229,7 +223,6 @@ public class BreadthGenerator extends Generator {
     }
 
     WorkQueue workqueue;
-    
 
     @Override
     public void generate() {
@@ -240,20 +233,19 @@ public class BreadthGenerator extends Generator {
         }
         workqueue = new WorkQueue(threads);
 
-        
         for (int i = 0; i < oldlength; i++) {
             BreadthRunnable breathrunnable = new BreadthRunnable(i);
             workqueue.execute(breathrunnable);
         }
-        
+
         try {
-            while(workqueue.isAlive()){
+            while (workqueue.isAlive()) {
                 Thread.sleep(5000);
             }
             stop();
-            
+
         } catch (InterruptedException ex) {
-                ex.printStackTrace();
+            ex.printStackTrace();
         }
 
     }

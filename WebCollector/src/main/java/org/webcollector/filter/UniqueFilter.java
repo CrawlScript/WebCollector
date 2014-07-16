@@ -15,14 +15,15 @@ import org.webcollector.model.Page;
  * @author hu
  */
 public class UniqueFilter extends Filter{
-    public HashSet hashset=new HashSet();
+    public HashSet<String> hashset=new HashSet<String>();
     
     public void addUrl(String url){
          hashset.add(url);
     }
 
     @Override
-    public boolean shouldFilter(Object object) {
+    public boolean  shouldFilter(Object object) {
+      
         String url=(String) object;
         if(hashset.contains(url)){
             return true;
@@ -31,6 +32,7 @@ public class UniqueFilter extends Filter{
            
             return false;
         }
+     
         
     }
     

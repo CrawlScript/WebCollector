@@ -46,7 +46,8 @@ public class BreadthCrawler {
             }
         
         };
-        int depth=6;
+        bg.topN=10;
+        int depth=3;
         for(int i=0;i<depth;i++){
             bg.run(crawl_path);
         }
