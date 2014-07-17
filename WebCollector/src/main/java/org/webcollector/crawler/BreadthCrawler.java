@@ -14,6 +14,7 @@ import org.webcollector.handler.Handler;
 import org.webcollector.handler.Message;
 import org.webcollector.model.Page;
 import org.webcollector.output.FileSystemOutput;
+import org.webcollector.util.Log;
 
 /**
  *
@@ -22,16 +23,16 @@ import org.webcollector.output.FileSystemOutput;
 public class BreadthCrawler {
     
     public static void main(String[] args) throws IOException{
-        String crawl_path="/home/hu/data/crawl_test";
-        final String root="/home/hu/data/world";
+        String crawl_path="/home/hu/data/crawl_vegnet";
+        final String root="/home/hu/data/cnmls";
         Injector injector=new Injector(crawl_path);
-        injector.inject("http://www.xinhuanet.com/");
+        injector.inject("http://www.cnmls.net/price/mlsjiage/39.html");
         Handler gene_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Page page = (Page) msg.obj;
                 FileSystemOutput fsoutput = new FileSystemOutput(root);
-                System.out.println("visit:" + page.url);
+                Log.Info("visiting " + page.url);
                 fsoutput.output(page);
             }
         };
@@ -39,15 +40,16 @@ public class BreadthCrawler {
 
             @Override
             public boolean shouldFilter(Page page) {
-               if(Pattern.matches("http://news.xinhuanet.com/world/.*", page.url))
+               if(Pattern.matches("http://www.cnmls.net/price/.*", page.url))
                    return false;
                else
                    return true;
             }
         
         };
-        bg.topN=10;
-        int depth=3;
+       // bg.topN=10;
+        bg.setThreads(10);
+        int depth=5;
         for(int i=0;i<depth;i++){
             bg.run(crawl_path);
         }

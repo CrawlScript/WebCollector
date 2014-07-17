@@ -12,6 +12,7 @@ import java.net.URL;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.webcollector.model.Page;
 import org.webcollector.util.FileUtils;
+import org.webcollector.util.Log;
 
 /**
  *
@@ -35,11 +36,20 @@ public class FileSystemOutput {
             String path = _URL.getPath();
             if(path.charAt(path.length()-1)=='/'){
                 path=path+"index.html";
+            }else{
+                
+                for(int i=path.length()-1;i>=0;i--){
+                    if(path.charAt(i)=='/'){
+                        if(!path.substring(i+1).contains(".")){
+                            path=path+".html";
+                        }
+                    }
+                }
             }
             path += query;
             File domain_path=new File(root,_URL.getHost());
             File f = new File(domain_path, path);
-            System.out.println("output:" + f.getAbsolutePath());
+            Log.Info("Output:" + f.getAbsolutePath());
             FileUtils.writeFileWithParent(f, page.content);
         } catch (Exception e) {
             e.printStackTrace();
