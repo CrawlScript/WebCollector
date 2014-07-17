@@ -24,9 +24,9 @@ public class BreadthCrawler {
     
     public static void main(String[] args) throws IOException{
         String crawl_path="/home/hu/data/crawl_vegnet";
-        final String root="/home/hu/data/cnmls";
+        final String root="/home/hu/data/hfut";
         Injector injector=new Injector(crawl_path);
-        injector.inject("http://www.cnmls.net/price/mlsjiage/39.html");
+        injector.inject("http://news.hfut.edu.cn/");
         Handler gene_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -40,7 +40,7 @@ public class BreadthCrawler {
 
             @Override
             public boolean shouldFilter(Page page) {
-               if(Pattern.matches("http://www.cnmls.net/price/.*", page.url))
+               if(Pattern.matches("http://news.hfut.edu.cn/.*", page.url))
                    return false;
                else
                    return true;
@@ -51,7 +51,9 @@ public class BreadthCrawler {
         bg.setThreads(10);
         int depth=5;
         for(int i=0;i<depth;i++){
+            Log.Info("depth "+(i+1)+" start...");
             bg.run(crawl_path);
+            Log.Info("depth "+(i+1)+" finish...");
         }
     }
     

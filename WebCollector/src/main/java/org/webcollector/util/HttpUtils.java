@@ -33,7 +33,7 @@ public class HttpUtils {
         return httpretry.getResult(count);
     }
 
-    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig) throws Exception {
+    public static Page fetchHttpResponseWithSize(String url, ConnectionConfig conconfig,int maxsize) throws Exception {
         URL _URL = new URL(url);
         HttpURLConnection con = (HttpURLConnection) _URL.openConnection();
         con.setDoInput(true);
@@ -41,11 +41,25 @@ public class HttpUtils {
         if (conconfig != null) {
             conconfig.config(con);
         }
-        InputStream is = con.getInputStream();
+        InputStream is;
+        if(con.getResponseCode()==403)
+            is = con.getErrorStream();
+        else
+            is=con.getInputStream();
         byte[] buf = new byte[2048];
         int read;
+        int sum=0;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         while ((read = is.read(buf)) != -1) {
+            if(maxsize>0){
+            sum=sum+read;
+                if(sum>maxsize){
+                    read=maxsize-(sum-read);
+                    bos.write(buf, 0, read);
+                    Log.Info("cut size to "+maxsize);
+                    break;
+                }
+            }
             bos.write(buf, 0, read);
         }
 
@@ -57,6 +71,10 @@ public class HttpUtils {
         page.headers=con.getHeaderFields();
         return page;
 
+    }
+    
+    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig) throws Exception{
+        return  fetchHttpResponseWithSize(url, conconfig, Config.maxsize);
     }
 
 }
