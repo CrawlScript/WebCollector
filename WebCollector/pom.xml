@@ -76,9 +76,18 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-
+                               
                                 <copy todir="${project.build.directory}" file="start.bat"/> 
                                 <copy todir="${project.build.directory}" file="start.sh"/> 
+                                <copy todir="bin">
+                                    <fileset dir="${project.build.directory}">
+                                        <include name="*.jar" />
+                                        <include name="*.sh" />
+                                        <include name="*.bat" />
+                                    </fileset>
+                                </copy>
+                                <zip basedir="bin" destfile="webcollector-${project.version}-bin.zip" />
+                           
                                 <!--
                                   Place any Ant task here. You can add anything
                                   you can add between <target> and </target> in a
