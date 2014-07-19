@@ -1,1 +1,0 @@
-java -jar WebCollector-1.0.jar
