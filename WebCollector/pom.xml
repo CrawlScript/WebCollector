@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.edu.huft.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -57,7 +57,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.webcollector.ui.BasicCrawlerUI</mainClass>
+                            <mainClass>cn.edu.hfut.dmic.webcollector.ui.BreadthCrawlerUI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

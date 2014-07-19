@@ -40,7 +40,12 @@ public class BreadthCrawler {
     public void addSeed(String seed) {
         seeds.add(seed);
     }
+    
+    
 
+    public void addRegex(String regex) {
+        regexs.add(regex);
+    }
     public void autoRegex() {
         for (String seed : seeds) {
             try {
@@ -91,12 +96,25 @@ public class BreadthCrawler {
             inject();
         }
 
+        initGenerator();
         for (int i = 0; i < depth; i++) {
             Log.Info("starting depth "+(i+1));
-            generate();
+            if(generator!=null)
+                generate();
+            else
+                break;
         }
     }
+    
+    
 
+    public void stop(){
+        BreadthGenerator temp=generator;
+        generator=null;
+        
+        temp.stop();
+    }
+    
     public void inject() throws IOException {
 
         Injector injector = new Injector(crawl_path);
@@ -105,9 +123,10 @@ public class BreadthCrawler {
         }
     }
 
-    public void generate() throws IOException {
-
-        conconfig = new ConnectionConfig() {
+    BreadthGenerator generator=null;
+    
+    public void initGenerator(){
+         conconfig = new ConnectionConfig() {
             @Override
             public void config(HttpURLConnection con) {
                 super.config(con);
@@ -122,7 +141,7 @@ public class BreadthCrawler {
                 visit(page);
             }
         };
-        BreadthGenerator generator = new BreadthGenerator(gene_handler) {
+        generator = new BreadthGenerator(gene_handler) {
 
             @Override
             public boolean shouldFilter(Page page) {
@@ -133,6 +152,10 @@ public class BreadthCrawler {
         };
         generator.setConconfig(conconfig);
         generator.setThreads(threads);
+        
+    }
+    public void generate() throws IOException {
+ 
         generator.run(crawl_path);
     }
 

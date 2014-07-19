@@ -1,1 +1,1 @@
-java -jar WebCollector-1.0-SNAPSHOT.jar
+java -jar WebCollector-1.0.jar
