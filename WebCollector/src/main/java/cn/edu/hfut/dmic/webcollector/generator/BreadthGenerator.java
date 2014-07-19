@@ -232,6 +232,23 @@ public class BreadthGenerator extends Generator {
             ex.printStackTrace();
         }
         workqueue = new WorkQueue(threads);
+        
+        int unfetched_count=0;
+        boolean hasUnfetched=false;
+        for(int i=0;i<oldlength;i++){
+            JSONObject page_object=oldinfo.getJSONObject(i);
+            if(page_object.getInt("status")==Page.UNFETCHED){
+                if(hasUnfetched==false)
+                    hasUnfetched=true;
+                unfetched_count++;
+                //break;
+            }
+        }
+        Log.Info(unfetched_count+" pages to fetch");
+        if(!hasUnfetched){
+            Log.Info("Nothing to fetch");
+            return;
+        }
 
         for (int i = 0; i < oldlength; i++) {
             BreadthRunnable breathrunnable = new BreadthRunnable(i);

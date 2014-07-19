@@ -31,8 +31,9 @@ public class WorkQueue
     
     public boolean isAlive(){
         synchronized(queue){
-            if(!queue.isEmpty())
+            if(!queue.isEmpty()){
                 return true;
+            }
         }
         for(PoolWorker thread:threads){
             if(thread.status==1)

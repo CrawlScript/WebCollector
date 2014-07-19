@@ -46,6 +46,8 @@ public class RegexFilter extends Filter{
     
     @Override
     public boolean shouldFilter(Object object) {
+        
+        
         String url=(String) object;
         for(String nregex:negative){
             if(Pattern.matches(nregex, url)){
