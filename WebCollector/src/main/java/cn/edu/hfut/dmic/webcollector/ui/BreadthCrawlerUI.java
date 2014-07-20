@@ -35,7 +35,7 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
 
     public BreadthCrawlerUI() {
         initComponents();
-        final DefaultTableModel tablemodel=new DefaultTableModel(new Object[][]{}, new String[]{"1","2"});
+        final DefaultTableModel tablemodel=new DefaultTableModel(new Object[][]{}, new String[]{"type","info"});
         tb_status.setModel(tablemodel);
         tb_status.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tb_status.getColumnModel().getColumn(0).setPreferredWidth(100);
