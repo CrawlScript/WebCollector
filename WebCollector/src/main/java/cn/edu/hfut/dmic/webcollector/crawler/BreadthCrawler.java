@@ -77,14 +77,14 @@ public class BreadthCrawler {
 
     public void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
-        Log.Info("visiting " + page.url);
+        Log.Info("visit",page.url);
         fsoutput.output(page);
     }
 
     public void start(int depth) throws IOException {
         if (!resumable) {
             if (seeds.size() == 0) {
-                Log.Info("Please add at least one seed");
+                Log.Info("error","Please add at least one seed");
                 return;
             }
             if (regexs.size() == 0) {
@@ -98,7 +98,7 @@ public class BreadthCrawler {
 
         initGenerator();
         for (int i = 0; i < depth; i++) {
-            Log.Info("starting depth "+(i+1));
+            Log.Info("info","starting depth "+(i+1));
             if(generator!=null)
                 generate();
             else

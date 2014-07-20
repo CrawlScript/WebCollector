@@ -152,7 +152,7 @@ public class BreadthGenerator extends Generator {
 
             page.fecthtime = System.currentTimeMillis();
             page_object.put("fetchtime", page.fecthtime);
-            Log.Info("Fetched:" + page.url);
+            Log.Info("fetch",page.url);
             try {
                 if (page.headers.containsKey("Content-Type")) {
                     String contenttype = page.headers.get("Content-Type").toString();
@@ -244,9 +244,9 @@ public class BreadthGenerator extends Generator {
                 //break;
             }
         }
-        Log.Info(unfetched_count+" pages to fetch");
+        Log.Info("info",unfetched_count+" pages to fetch");
         if(!hasUnfetched){
-            Log.Info("Nothing to fetch");
+            Log.Info("info","Nothing to fetch");
             return;
         }
 

@@ -27,7 +27,7 @@ public class BasicCrawlerUI extends javax.swing.JFrame {
         
         txt_threads.setText(threads+"");
         String help="至少添加一个种子（种子即爬虫的起始页面的网址，如果要爬去整个站点，可以用站点主页的网址作为种子)\n"
-                +"例如爬去新华网，就也可以添加一个种子： http://www.xinhuanet.com/\n"
+                +"例如爬取新华网，就也可以添加一个种子： http://www.xinhuanet.com/\n"
                 +"正则起到约束爬取页面的URL的作用，如果不添加正则，默认爬取种子所在域名下的所有网页和文件\n"
                 +"本地路径制定爬取页面在本地的存放路径\n";
         

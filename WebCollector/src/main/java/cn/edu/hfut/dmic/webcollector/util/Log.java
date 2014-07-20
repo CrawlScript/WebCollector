@@ -6,12 +6,25 @@
 
 package cn.edu.hfut.dmic.webcollector.util;
 
+import cn.edu.hfut.dmic.webcollector.handler.Handler;
+import cn.edu.hfut.dmic.webcollector.handler.Message;
+
 /**
  *
  * @author hu
  */
 public class Log {
-    public static void Info(String info){
-        System.out.println(info);
+    public static Handler handler=null;
+    public static void Info(String type,String info){
+        if(handler==null)
+            System.out.println(type+":"+info);
+        else{
+            Message msg=new Message();
+            msg.obj=new String[]{type,info};
+            handler.sendMessage(msg);
+        }
+            
+        
+        
     }
 }

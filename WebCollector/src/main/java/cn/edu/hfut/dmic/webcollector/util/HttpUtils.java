@@ -56,7 +56,7 @@ public class HttpUtils {
                 if(sum>maxsize){
                     read=maxsize-(sum-read);
                     bos.write(buf, 0, read);
-                    Log.Info("cut size to "+maxsize);
+                    Log.Info("cut","cut size to "+maxsize);
                     break;
                 }
             }

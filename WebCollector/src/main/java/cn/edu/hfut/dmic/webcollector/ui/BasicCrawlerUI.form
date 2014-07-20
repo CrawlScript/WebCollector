@@ -44,12 +44,10 @@
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="txt_nregex" pref="373" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="txt_threads" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txt_pregex" alignment="0" pref="373" max="32767" attributes="0"/>
-                              <Component id="txt_seed" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txt_path" alignment="0" pref="373" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="txt_threads" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_pregex" alignment="0" pref="373" max="32767" attributes="0"/>
+                          <Component id="txt_seed" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txt_path" alignment="0" pref="373" max="32767" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
