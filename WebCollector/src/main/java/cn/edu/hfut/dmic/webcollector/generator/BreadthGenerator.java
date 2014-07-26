@@ -182,8 +182,8 @@ public class BreadthGenerator extends Generator {
 
             page_record.put("status", Page.FETCHED);
 
-            page.fecthtime = System.currentTimeMillis();
-            page_record.put("fetchtime", page.fecthtime);
+            page.fetchtime = System.currentTimeMillis();
+            page_record.put("fetchtime", page.fetchtime);
             
             Log.Info("fetch",page.url);
 

@@ -14,8 +14,6 @@
     <build>
 
         <plugins>
-           
-  
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -65,13 +63,7 @@
                     </archive>
                 </configuration>
 
-            </plugin>
-            
-            
-            
-            
-            
-            
+            </plugin> 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
@@ -109,18 +101,7 @@
         </plugins>
        
     </build>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     <dependencies>
         <dependency><!-- jsoup HTML parser library @ http://jsoup.org/ -->
             <groupId>org.jsoup</groupId>
@@ -132,13 +113,11 @@
             <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
         </dependency>
-       
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
             <version>1.7.6</version>
         </dependency>
-
     </dependencies>
     
    
