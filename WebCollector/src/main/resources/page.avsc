@@ -1,0 +1,9 @@
+{"namespace": "cn.edu.hfut.dmic.webcollector.avro",
+ "type": "record",
+ "name": "Page",
+ "fields": [
+     {"name": "url", "type": "string"},
+     {"name": "status",  "type": "int"},
+     {"name": "fetchtime", "type":["long","null"]}
+ ]
+}

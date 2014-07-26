@@ -34,22 +34,26 @@ public class FileSystemOutput {
                 query = "_" + _URL.getQuery();
             }
             String path = _URL.getPath();
-            if(path.charAt(path.length()-1)=='/'){
-                path=path+"index.html";
-            }else{
-                
-                for(int i=path.length()-1;i>=0;i--){
-                    if(path.charAt(i)=='/'){
-                        if(!path.substring(i+1).contains(".")){
-                            path=path+".html";
+            if (path.length() == 0) {
+                path = "index.html";
+            } else {
+                if (path.charAt(path.length() - 1) == '/') {
+                    path = path + "index.html";
+                } else {
+
+                    for (int i = path.length() - 1; i >= 0; i--) {
+                        if (path.charAt(i) == '/') {
+                            if (!path.substring(i + 1).contains(".")) {
+                                path = path + ".html";
+                            }
                         }
                     }
                 }
             }
             path += query;
-            File domain_path=new File(root,_URL.getHost());
+            File domain_path = new File(root, _URL.getHost());
             File f = new File(domain_path, path);
-            Log.Info("output",f.getAbsolutePath());
+            Log.Info("output", f.getAbsolutePath());
             FileUtils.writeFileWithParent(f, page.content);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,8 +62,8 @@ public class FileSystemOutput {
 
     public static void main(String[] args) throws MalformedURLException, IOException {
 
-        URL _URL=new URL("http://www.zhihu.com/");
-        System.out.println(_URL.getProtocol()+"://"+_URL.getHost());
+        URL _URL = new URL("http://www.zhihu.com/");
+        System.out.println(_URL.getProtocol() + "://" + _URL.getHost());
         //System.out.println(f.getAbsolutePath());
         /*
          System.out.println(_URL.getProtocol());

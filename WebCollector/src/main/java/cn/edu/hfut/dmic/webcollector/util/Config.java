@@ -11,7 +11,7 @@ package cn.edu.hfut.dmic.webcollector.util;
  * @author hu
  */
 public class Config {
-    public static final String old_info_path="crawldb/old/info.json";
-    public static final String current_info_path="crawldb/current/info.json";
+    public static final String old_info_path="crawldb/old/info.avro";
+    public static final String current_info_path="crawldb/current/info.avro";
     public static int maxsize=1000*1000;
 }

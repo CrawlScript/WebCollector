@@ -5,20 +5,10 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import java.util.ArrayList;
-
-import java.util.regex.Pattern;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-
 import cn.edu.hfut.dmic.webcollector.filter.UniqueFilter;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
+import cn.edu.hfut.dmic.webcollector.model.AvroModel;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.LinkParser;
 import cn.edu.hfut.dmic.webcollector.task.WorkQueue;
@@ -28,6 +18,23 @@ import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumReader;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.DatumReader;
+import org.apache.avro.io.DatumWriter;
+
+
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -37,7 +44,10 @@ public class BreadthGenerator extends Generator {
 
     public String crawl_path;
     public Integer topN = null;
-
+    Schema schema=AvroModel.getPageSchema();
+  
+    
+    
     public void backup() throws IOException {
 
         File oldfile = new File(crawl_path, Config.old_info_path);
@@ -47,29 +57,50 @@ public class BreadthGenerator extends Generator {
 
     public void update() throws UnsupportedEncodingException, IOException {
         File currentfile = new File(crawl_path, Config.current_info_path);
+        if(!currentfile.getParentFile().exists()){
+            currentfile.getParentFile().mkdirs();
+        }
+        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<GenericRecord>(schema);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(datumWriter);
+        
+        dataFileWriter.create(schema, currentfile);
+        for(GenericRecord page_record:old_records){
+            dataFileWriter.append(page_record);
+        }
+        
+        dataFileWriter.close();
 
-        byte[] content = oldinfo.toString().getBytes("utf-8");
-        FileUtils.writeFileWithParent(currentfile, content);
     }
-
-    public JSONArray oldinfo;
-    public JSONArray currentinfo;
+    public ArrayList<GenericRecord> old_records=new ArrayList<GenericRecord>();
+   
+  
     public int oldlength;
 
     UniqueFilter uniquefilter = new UniqueFilter();
 
     public void readOldinfo() throws IOException {
-        String oldinfostr = new String(FileUtils.readFile(new File(crawl_path, Config.old_info_path)), "utf-8");
-        oldinfo = new JSONArray(oldinfostr);
-        oldlength = oldinfo.length();
-        for (int i = 0; i < oldlength; i++) {
-            uniquefilter.addUrl(oldinfo.getJSONObject(i).getString("url"));
+        
+        File oldfile=new File(crawl_path, Config.old_info_path);
+        DatumReader<GenericRecord> datumReader = new GenericDatumReader<GenericRecord>(schema);
+        DataFileReader<GenericRecord> dataFileReader = new DataFileReader<GenericRecord>(oldfile, datumReader);
+        GenericRecord page = null;
+        while (dataFileReader.hasNext()) {
+
+            page = dataFileReader.next(page);
+            old_records.add(page);
+            System.out.println(page);
+            String url=page.get("url").toString();
+            uniquefilter.addUrl(url);
         }
+        dataFileReader.close();
+        oldlength=old_records.size();
+
+        
     }
 
     public static void main(String[] args) throws IOException {
 
-        String crawl_path = "/home/hu/data/crawl_test";
+        String crawl_path = "/home/hu/data/crawl_avro";
         BreadthGenerator bg = new BreadthGenerator(null) {
 
             @Override
@@ -138,29 +169,32 @@ public class BreadthGenerator extends Generator {
         @Override
         public void run() {
 
-            JSONObject page_object = oldinfo.getJSONObject(index);
-            if (page_object.getInt("status") == Page.FETCHED) {
+            GenericRecord page_record=old_records.get(index);
+            
+            if ((int)page_record.get("status") == Page.FETCHED) {
                 return;
             }
-
+           
             Page page = new Page();
-            page.url = page_object.getString("url");
+            page.url = page_record.get("url").toString();
 
             page = HttpUtils.fetchHttpResponse(page.url, conconfig, 3);
 
-            page_object.put("status", Page.FETCHED);
+            page_record.put("status", Page.FETCHED);
 
             page.fecthtime = System.currentTimeMillis();
-            page_object.put("fetchtime", page.fecthtime);
+            page_record.put("fetchtime", page.fecthtime);
+            
             Log.Info("fetch",page.url);
+
             try {
                 if (page.headers.containsKey("Content-Type")) {
                     String contenttype = page.headers.get("Content-Type").toString();
-                    page_object.put("contenttype", contenttype);
+                    
                     if (contenttype.contains("text/html")) {
 
                         String charset = CharsetDetector.guessEncoding(page.content);
-                        page_object.put("charset", charset);
+                       
                         page.html = new String(page.content, charset);
                         page.doc = Jsoup.parse(page.html);
                         page.doc.setBaseUri(page.url);
@@ -193,14 +227,13 @@ public class BreadthGenerator extends Generator {
                         }
                         for (int i = 0; i < maxlink; i++) {
                             String link = outlinks.get(i);
-                            JSONObject jo_link = new JSONObject();
-                            jo_link.put("url", link);
-                            jo_link.put("status", Page.UNFETCHED);
-                         
+                            GenericRecord outlink_record=new GenericData.Record(schema);
+                            outlink_record.put("url", link);
+                            outlink_record.put("status", Page.UNFETCHED);
+                            
                            
-                            synchronized (oldinfo) {
-
-                                oldinfo.put(jo_link);           
+                            synchronized (old_records) {
+                                old_records.add(outlink_record);           
                             }
                             
                         }
@@ -236,13 +269,15 @@ public class BreadthGenerator extends Generator {
         int unfetched_count=0;
         boolean hasUnfetched=false;
         for(int i=0;i<oldlength;i++){
-            JSONObject page_object=oldinfo.getJSONObject(i);
-            if(page_object.getInt("status")==Page.UNFETCHED){
-                if(hasUnfetched==false)
+            GenericRecord page_record=old_records.get(i);
+            int status=(int)page_record.get("status");
+            if(status==Page.UNFETCHED){
+                if(hasUnfetched==false){
                     hasUnfetched=true;
+                }
                 unfetched_count++;
-                //break;
             }
+            
         }
         Log.Info("info",unfetched_count+" pages to fetch");
         if(!hasUnfetched){

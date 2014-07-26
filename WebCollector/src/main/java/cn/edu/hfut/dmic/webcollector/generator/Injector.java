@@ -6,15 +6,21 @@
 
 package cn.edu.hfut.dmic.webcollector.generator;
 
+import cn.edu.hfut.dmic.webcollector.model.AvroModel;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.FileUtils;
+
+import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileWriter;
+import org.apache.avro.generic.GenericData;
+import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.io.DatumWriter;
 
 /**
  *
@@ -34,25 +40,38 @@ public class Injector {
     }
     
     
+    
     public void inject(ArrayList<String> urls) throws UnsupportedEncodingException, IOException{
-        JSONArray ja=new JSONArray();
-        for(String url:urls){
-            JSONObject jo=new JSONObject();
-            jo.put("url",url);
-            jo.put("status", Page.UNFETCHED);
-            ja.put(jo);
-        }
-        byte[] content=ja.toString().getBytes("utf-8");
+         Schema schema = AvroModel.getPageSchema();
+        
         String info_path=Config.current_info_path;
         File inject_file=new File(crawl_path,info_path);
-        FileUtils.writeFileWithParent(inject_file, content);
+        if(!inject_file.getParentFile().exists()){
+            inject_file.getParentFile().mkdirs();
+        }
+        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<GenericRecord>(schema);
+        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(datumWriter);
+        
+        dataFileWriter.create(schema, inject_file);
+        
+        for(String url:urls){
+            GenericRecord page = new GenericData.Record(schema);
+            page.put("url", url);
+            page.put("status", Page.UNFETCHED);
+            dataFileWriter.append(page);
+        }
+        dataFileWriter.close();
+        
+        
+        
+        
         
     }
     
     
     
     public static void main(String[] args) throws IOException{
-        Injector inject=new Injector("/home/hu/data/crawl_test");
+        Injector inject=new Injector("/home/hu/data/crawl_avro");
         inject.inject("http://www.xinhuanet.com/");
     }
 }
