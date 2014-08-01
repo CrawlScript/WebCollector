@@ -6,8 +6,6 @@
 package cn.edu.hfut.dmic.webcollector.crawler;
 
 import cn.edu.hfut.dmic.webcollector.filter.RegexFilter;
-import java.io.IOException;
-import java.util.regex.Pattern;
 import cn.edu.hfut.dmic.webcollector.generator.BreadthGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
@@ -16,16 +14,29 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.Log;
+import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 
 /**
  *
  * @author hu
  */
 public class BreadthCrawler {
+    
+    public BreadthCrawler(){
+        taskname=RandomUtils.getTimeString();
+    }
 
+    public String taskname;
     private String crawl_path = "crawl";
     private String root = "data";
     private String cookie = null;
@@ -77,28 +88,29 @@ public class BreadthCrawler {
 
     public void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
-        Log.Info("visit",page.url);
+        Log.Infos("visit",page.url);
         fsoutput.output(page);
+    }
+    
+    public void failed(Page page){
+       
     }
 
     public void start(int depth) throws IOException {
         if (!resumable) {
             if (seeds.size() == 0) {
-                Log.Info("error","Please add at least one seed");
+                Log.Infos("error:"+"Please add at least one seed");
                 return;
             }
             if (regexs.size() == 0) {
                 autoRegex();
             }
         }
-
-        if (!resumable) {
-            inject();
-        }
+        inject();
 
         initGenerator();
         for (int i = 0; i < depth; i++) {
-            Log.Info("info","starting depth "+(i+1));
+            Log.Infos("info","starting depth "+(i+1));
             if(generator!=null)
                 generate();
             else
@@ -116,8 +128,13 @@ public class BreadthCrawler {
     }
     
     public void inject() throws IOException {
-
+        
         Injector injector = new Injector(crawl_path);
+        injector.setTaskname(taskname);
+        if(resumable && injector.hasInjected()){
+            Log.Infos("inject","no need to inject");
+            return;
+        }
         for (String seed : seeds) {
             injector.inject(seed);
         }
@@ -138,18 +155,30 @@ public class BreadthCrawler {
             @Override
             public void handleMessage(Message msg) {
                 Page page = (Page) msg.obj;
-                visit(page);
+                switch(msg.what){
+                    case BreadthGenerator.FETCH_SUCCESS:
+                        
+                        visit(page);
+                        break;
+                    case BreadthGenerator.FETCH_FAILED:
+                        failed(page);
+                        break;
+                    default:
+                        break;
+                       
+                }
             }
         };
         generator = new BreadthGenerator(gene_handler) {
 
             @Override
-            public boolean shouldFilter(Page page) {
+            public boolean shouldFilter(String url) {
                 
-                return BreadthCrawler.this.shouldFilter(page);
+                return BreadthCrawler.this.shouldFilter(url);
             }
 
         };
+        generator.setTaskname(taskname);
         generator.setConconfig(conconfig);
         generator.setThreads(threads);
         
@@ -159,22 +188,28 @@ public class BreadthCrawler {
         generator.run(crawl_path);
     }
 
-    public boolean shouldFilter(Page page) {
+    public boolean shouldFilter(String url) {
         RegexFilter regexfilter = new RegexFilter();
         for (String regex : regexs) {
             regexfilter.addRule(regex);
         }
-        return regexfilter.shouldFilter(page.url);
+        return regexfilter.shouldFilter(url);
     }
 
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut";
         String root = "/home/hu/data/hfut";
+        
+       
+        
         BreadthCrawler crawler=new BreadthCrawler();
+        crawler.taskname=RandomUtils.getTimeString()+"hfut";
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
         crawler.setResumable(false);
+       
+        
         crawler.start(5);
     }
 

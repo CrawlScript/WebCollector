@@ -18,8 +18,7 @@ public abstract class Retry<T> {
             try{
                 return (T)run();
             }catch(Exception e){
-                System.out.println("retry:");
-                e.printStackTrace();
+                Log.Infos("retry",e.toString());
                 count--;
             }
             

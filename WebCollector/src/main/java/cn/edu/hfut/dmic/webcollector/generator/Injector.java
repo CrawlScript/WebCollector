@@ -7,26 +7,25 @@
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.model.AvroModel;
+import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.model.WritablePage;
+import cn.edu.hfut.dmic.webcollector.util.Config;
+import cn.edu.hfut.dmic.webcollector.util.Task;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-
-import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.util.Config;
-
 import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericData;
-import org.apache.avro.generic.GenericDatumWriter;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.avro.io.DatumWriter;
+import org.apache.avro.reflect.ReflectDatumWriter;
+
 
 /**
  *
  * @author hu
  */
-public class Injector {
+public class Injector extends Task{
     
     String crawl_path;
     public Injector(String crawl_path){
@@ -39,6 +38,12 @@ public class Injector {
         inject(urls);
     }
     
+    public boolean hasInjected(){
+        String info_path=Config.current_info_path;
+        File inject_file=new File(crawl_path,info_path);
+        return inject_file.exists();
+    }
+    
     
     
     public void inject(ArrayList<String> urls) throws UnsupportedEncodingException, IOException{
@@ -49,16 +54,18 @@ public class Injector {
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
-        DatumWriter<GenericRecord> datumWriter = new GenericDatumWriter<GenericRecord>(schema);
-        DataFileWriter<GenericRecord> dataFileWriter = new DataFileWriter<GenericRecord>(datumWriter);
+        DatumWriter<WritablePage> datumWriter = new ReflectDatumWriter<WritablePage>(schema);
+        DataFileWriter<WritablePage> dataFileWriter = new DataFileWriter<WritablePage>(datumWriter);
         
         dataFileWriter.create(schema, inject_file);
         
         for(String url:urls){
-            GenericRecord page = new GenericData.Record(schema);
-            page.put("url", url);
-            page.put("status", Page.UNFETCHED);
+            WritablePage page=new WritablePage();
+            page.url=url;
+            page.status=Page.UNFETCHED;
             dataFileWriter.append(page);
+            
+            
         }
         dataFileWriter.close();
         

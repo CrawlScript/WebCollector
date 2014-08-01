@@ -7,12 +7,13 @@
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
+import cn.edu.hfut.dmic.webcollector.util.Task;
 
 /**
  *
  * @author hu
  */
-public abstract class Generator {
+public abstract class Generator extends Task{
     Handler handler;
     public Generator(Handler handler){
         this.handler=handler;

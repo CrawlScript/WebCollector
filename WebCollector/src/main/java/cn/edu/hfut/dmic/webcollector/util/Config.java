@@ -13,5 +13,7 @@ package cn.edu.hfut.dmic.webcollector.util;
 public class Config {
     public static final String old_info_path="crawldb/old/info.avro";
     public static final String current_info_path="crawldb/current/info.avro";
+    public static final String segment_prepath="segment";
     public static int maxsize=1000*1000;
+    public static long interval=1;//000*60*3;
 }

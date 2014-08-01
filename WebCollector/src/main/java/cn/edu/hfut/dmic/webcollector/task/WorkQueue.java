@@ -82,7 +82,7 @@ public class WorkQueue
                     r.run();
                 }
                 catch (RuntimeException e) {
-                    // You might want to log something here
+                  
                 }finally{
                     status=0;
                 }

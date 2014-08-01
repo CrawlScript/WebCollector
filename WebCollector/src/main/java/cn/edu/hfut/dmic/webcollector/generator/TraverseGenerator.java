@@ -5,6 +5,16 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
+import cn.edu.hfut.dmic.webcollector.filter.UniqueFilter;
+import cn.edu.hfut.dmic.webcollector.handler.Handler;
+import cn.edu.hfut.dmic.webcollector.handler.Message;
+import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.model.Link;
+import cn.edu.hfut.dmic.webcollector.parser.LinkUtils;
+import cn.edu.hfut.dmic.webcollector.task.WorkQueue;
+import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
+import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
+import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,15 +26,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import cn.edu.hfut.dmic.webcollector.filter.UniqueFilter;
-import cn.edu.hfut.dmic.webcollector.handler.Handler;
-import cn.edu.hfut.dmic.webcollector.handler.Message;
-import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.parser.LinkParser;
-import cn.edu.hfut.dmic.webcollector.task.WorkQueue;
-import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
-import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
-import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 
 /**
  *
@@ -103,10 +104,10 @@ public class TraverseGenerator extends Generator {
                         page.html = new String(page.content, charset);
                         page.doc = Jsoup.parse(page.html);
                         page.doc.setBaseUri(page.url);
-                        ArrayList<String> outlinks = LinkParser.getAll(page);
-                        for (String link : outlinks) {
+                        ArrayList<Link> links = LinkUtils.getAll(page);
+                        for (Link link : links) {
 
-                            workqueue.execute(new TraverseRunnable(link));
+                            workqueue.execute(new TraverseRunnable(link.url));
 
                         }
 

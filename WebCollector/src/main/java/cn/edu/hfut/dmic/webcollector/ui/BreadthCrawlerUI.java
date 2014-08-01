@@ -32,6 +32,7 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
     BreadthCrawler crawler = new BreadthCrawler();
     int threads = 10;
     int depth = 5;
+    public String crawl_path="crawl";
 
     public BreadthCrawlerUI() {
         initComponents();
@@ -45,7 +46,14 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg); //To change body of generated methods, choose Tools | Templates.
+                if(!msg.obj.getClass().isArray()){
+                    return;
+                }
+                
                 final String[] infos=(String[]) msg.obj;
+                if(infos.length<2){
+                    return;
+                }
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override
@@ -282,13 +290,15 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
     private void btn_startActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_startActionPerformed
         // TODO add your handling code here:
         final String localpath = txt_path.getText().trim();
+ 
+       
         Thread crawlthread = new Thread() {
             @Override
             public void run() {
 
                 crawler.setRoot(localpath);
                 crawler.setResumable(false);
-                crawler.setCrawl_path("crawl");
+                crawler.setCrawl_path(crawl_path);
                 try {
                     depth = Integer.valueOf(txt_depth.getText());
                     threads = Integer.valueOf(txt_threads.getText());
