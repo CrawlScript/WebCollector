@@ -97,20 +97,20 @@ public class BasicCrawler {
     public void setUseragent(String useragent){
         this.useragent=useragent;
     }
-    
+    class CommonConnectionConfig implements ConnectionConfig{
+        @Override
+            public void config(HttpURLConnection con) {
+               
+                configCon(con);
+            }
+    }
     public void start(int threads) {
 
         if (regexs.size() == 0) {
             autoRegex();
         }
 
-        conconfig = new ConnectionConfig() {
-            @Override
-            public void config(HttpURLConnection con) {
-                super.config(con);
-                configCon(con);
-            }
-        };
+        conconfig = new CommonConnectionConfig();
 
         Handler gene_handler = new Handler() {
             @Override

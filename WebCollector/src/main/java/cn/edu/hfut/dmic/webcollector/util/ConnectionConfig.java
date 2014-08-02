@@ -12,9 +12,7 @@ import java.net.HttpURLConnection;
  *
  * @author hu
  */
-public class ConnectionConfig {
-    public void config(HttpURLConnection con){
-        
-    }
+public interface ConnectionConfig {
+    public void config(HttpURLConnection con);
     
 }

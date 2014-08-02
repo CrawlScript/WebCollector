@@ -142,14 +142,16 @@ public class BreadthCrawler {
 
     BreadthGenerator generator=null;
     
-    public void initGenerator(){
-         conconfig = new ConnectionConfig() {
-            @Override
+    class CommonConnectionConfig implements ConnectionConfig{
+        @Override
             public void config(HttpURLConnection con) {
-                super.config(con);
+               
                 configCon(con);
             }
-        };
+    }
+    
+    public void initGenerator(){
+         conconfig = new CommonConnectionConfig();
 
         Handler gene_handler = new Handler() {
             @Override
