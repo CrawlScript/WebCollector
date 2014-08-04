@@ -25,10 +25,10 @@ You need to create a crawler class that extends BreadthCrawler.
         public void visit(Page page) {
             String question_regex="^http://www.zhihu.com/question/[0-9]+";         
             if(Pattern.matches(question_regex, page.url)){
+                
                 System.out.println("processing "+page.url);
-                /**
-                 *extract title of the page
-                */
+
+                /*extract title of the page*/
                 String title=page.doc.title();
                 System.out.println(title);
 
