@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.filter.IntervalFilter;
@@ -10,14 +11,12 @@ import cn.edu.hfut.dmic.webcollector.filter.UniqueFilter;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.AvroModel;
+import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.model.WritablePage;
 import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
-import cn.edu.hfut.dmic.webcollector.model.Link;
-import cn.edu.hfut.dmic.webcollector.parser.LinkUtils;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import cn.edu.hfut.dmic.webcollector.task.WorkQueue;
-import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
@@ -29,34 +28,30 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
-import org.apache.avro.Schema;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.DatumWriter;
-import org.apache.avro.reflect.ReflectData;
 import org.apache.avro.reflect.ReflectDatumReader;
 import org.apache.avro.reflect.ReflectDatumWriter;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  *
  * @author hu
  */
-public class BreadthGenerator extends Generator {
+public class ListGenerator extends Generator{
 
-    
     public static final int FETCH_SUCCESS=1;
     public static final int FETCH_FAILED=2;
     public String crawl_path;
-    public Integer topN = null;
 
-  
-    
-    
+
+
     public void backup() throws IOException {
 
         File oldfile = new File(crawl_path, Config.old_info_path);
@@ -104,29 +99,32 @@ public class BreadthGenerator extends Generator {
     }
 
     public static void main(String[] args) throws IOException {
+        Document doc=Jsoup.connect("http://www.mogujie.com/").get();
+        Elements links=doc.select("a[href]");
+        ArrayList<String> linklist=new ArrayList<String>();
+        for(Element link:links){
+            linklist.add(link.attr("href"));
+        }
         Injector inject=new Injector("/home/hu/data/crawl_avro");
-        inject.inject("http://www.xinhuanet.com/");
+        inject.inject(linklist);
         String crawl_path = "/home/hu/data/crawl_avro";
-        BreadthGenerator bg = new BreadthGenerator(null) {
+        Handler handler=new Handler(){
 
             @Override
-            public boolean shouldFilter(String url) {
-                if (Pattern.matches("http://news.xinhuanet.com/world/.*", url)) {
-                    return false;
-                } else {
-                    return true;
-                }
+            public void handleMessage(Message msg) {
+                Page page=(Page)msg.obj;
+                System.out.println(page.url);
             }
-
+            
         };
-        bg.topN = 20;
+        ListGenerator bg = new ListGenerator(handler);
+
         bg.run(crawl_path);
 
     }
 
     public void run(String crawl_path) throws IOException {
         this.crawl_path = crawl_path;
-        
         backup();
         generate();
         update();
@@ -150,7 +148,7 @@ public class BreadthGenerator extends Generator {
         this.threads = threads;
     }
 
-    public BreadthGenerator(Handler handler) {
+    public ListGenerator(Handler handler) {
         super(handler);
     }
 
@@ -175,9 +173,7 @@ public class BreadthGenerator extends Generator {
 
         @Override
         public void run() {
-
-            //GenericRecord page_record=old_records.get(index);
-            
+     
             if (page_record.status == Page.FETCHED) {
                 if(Config.interval==-1){
                     return;
@@ -194,9 +190,7 @@ public class BreadthGenerator extends Generator {
  
                 }
             }
-            
-           
-           
+          
             Page page = new Page();
             page.url = page_record.url;
             try{
@@ -209,6 +203,7 @@ public class BreadthGenerator extends Generator {
                 handler.sendMessage(msg);
                 return;
             }
+            
             
             if(page==null){
                  Log.Errors("failed ",page.url);
@@ -227,8 +222,6 @@ public class BreadthGenerator extends Generator {
             
             //Log.Info("fetch",taskname+":"+page.url);
             Log.Infos("fetch",page.url);
-          
-           
 
             try {
                 if (page.headers.containsKey("Content-Type")) {
@@ -239,38 +232,7 @@ public class BreadthGenerator extends Generator {
                         
                         HtmlParser htmlparser=new HtmlParser();
                         ParseResult parseresult=htmlparser.getParse(page);
-                        ArrayList<Link> links = parseresult.links;
-                        int updatesize;
-                        if(topN==null){
-                            updatesize=links.size();
-                        }else{
-                            updatesize=Math.min(topN, links.size());
-                        }
                         
-                        int sum=0;
-                        for(int i=0;i<links.size();i++){
-                            if(sum>=updatesize){
-                                break;
-                            }
-                            Link link=links.get(i);
-                            if(uniquefilter.shouldFilter(link.url)){
-                                continue;
-                            }
-                            if(shouldFilter(link.url)){
-                                continue;
-                            }
-                            uniquefilter.addUrl(link.url);
-                            WritablePage outlink_record=new WritablePage();
-                            outlink_record.url=link.url;
-                            outlink_record.status=Page.UNFETCHED;                                              
-                            synchronized (old_records) {
-                                old_records.add(outlink_record);           
-                            }
-                            sum++;
-                        }
-                        
-                       
-
                     } else {
                         //System.out.println(page.headers.get("Content-Type"));
                     }
@@ -311,32 +273,7 @@ public class BreadthGenerator extends Generator {
             ex.printStackTrace();
         }
         workqueue = new WorkQueue(threads);
-       
-        
-       
-        
-        /*
-        int unfetched_count=0;
-        boolean hasUnfetched=false;
-        for(int i=0;i<oldlength;i++){
-            GenericRecord page_record=old_records.get(i);
-            int status=(int)page_record.get("status");
-            if(status==Page.UNFETCHED){
-                if(hasUnfetched==false){
-                    hasUnfetched=true;
-                }
-                unfetched_count++;
-            }
-            
-        }
-        */
-      //Log.Info("info",unfetched_count+" pages to fetch");
-        /*
-        if(!hasUnfetched){
-            Log.Info("info","Nothing to fetch");
-            return;
-        }
-                */
+
         for (int i = 0; i < oldlength; i++) {
             WritablePage page_record=old_records.get(i);
             BreadthRunnable breathrunnable = new BreadthRunnable(page_record);
@@ -361,5 +298,5 @@ public class BreadthGenerator extends Generator {
    
     
     
-
+    
 }
