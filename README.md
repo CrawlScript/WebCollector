@@ -28,22 +28,26 @@ You need to create a crawler class that extends BreadthCrawler.
                 System.out.println("processing "+page.url);
                 /**
                  *extract title of the page
-                
                 */
                 String title=page.doc.title();
                 System.out.println(title);
 
-                /*抽取提问内容*/
+                /*extract the content of question*/
                 String question=page.doc.select("div[id=zh-question-detail]").text();
                 System.out.println(question);
              
             }
         }
  
-        /*启动爬虫*/
+        /**
+         * start crawling
+        */
         public static void main(String[] args) throws IOException{  
             ZhihuCrawler crawler=new ZhihuCrawler();
             crawler.addSeed("http://www.zhihu.com/question/21003086");
+            /**
+             start the crawler with depth=5
+             */
             crawler.start(5);  
         }
  
