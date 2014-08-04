@@ -50,5 +50,5 @@ You need to create a crawler class that extends BreadthCrawler.
    
     }
 
-    As can be seen in the above code,there are one function that should be overridden:
-    + _visit:_ This function is called after the content of a URL is downloaded successfully.You can easily get the url,text of the downloaded page.If the Content-Type of the downloaded page is text/html,you could also get the document and html of the page.The document is a dom tree parsed by JSOUP.The html is a String decoded by detected charset.
+As can be seen in the above code,there are one function that should be overridden:
++ _visit:_ This function is called after the content of a URL is downloaded successfully.You can easily get the url,text of the downloaded page.If the Content-Type of the downloaded page is text/html,you could also get the document and html of the page.The document is a dom tree parsed by JSOUP.The html is a String decoded by detected charset.
