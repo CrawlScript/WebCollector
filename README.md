@@ -17,8 +17,7 @@ You need to create a crawler class that extends BreadthCrawler.
         @Override
         public void visit(Page page) {
             String question_regex="^http://www.zhihu.com/question/[0-9]+";         
-            if(Pattern.matches(question_regex, page.url)){
-                
+            if(Pattern.matches(question_regex, page.url)){              
                 System.out.println("processing "+page.url);
 
                 /*extract title of the page*/
@@ -38,9 +37,7 @@ You need to create a crawler class that extends BreadthCrawler.
         public static void main(String[] args) throws IOException{  
             ZhihuCrawler crawler=new ZhihuCrawler();
             crawler.addSeed("http://www.zhihu.com/question/21003086");
-            /**
-             start the crawler with depth=5
-             */
+            /*start the crawler with depth=5*/
             crawler.start(5);  
         }
  
