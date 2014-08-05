@@ -226,7 +226,7 @@ public class BreadthGenerator extends Generator {
             page_record.fetchtime=page.fetchtime;
             
             //Log.Info("fetch",taskname+":"+page.url);
-            Log.Infos("fetch",page.url);
+            Log.Infos("fetch",BreadthGenerator.this.taskname,page.url);
           
            
 
