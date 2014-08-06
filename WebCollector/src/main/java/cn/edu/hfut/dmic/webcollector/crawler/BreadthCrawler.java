@@ -144,9 +144,9 @@ public class BreadthCrawler {
             Log.Infos("inject","no need to inject");
             return;
         }
-        for (String seed : seeds) {
-            injector.inject(seed);
-        }
+        
+        injector.inject(seeds);
+        
     }
 
     class CommonConnectionConfig implements ConnectionConfig{
