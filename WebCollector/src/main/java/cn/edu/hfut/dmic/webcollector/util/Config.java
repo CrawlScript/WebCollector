@@ -16,4 +16,6 @@ public class Config {
     public static final String segment_prepath="segment";
     public static int maxsize=1000*1000;
     public static long interval=1;//000*60*3;
+    public static final String lock_path="crawldb/lock";
+    public static Integer topN=null;
 }

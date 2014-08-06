@@ -6,7 +6,8 @@
 
 package cn.edu.hfut.dmic.webcollector.generator;
 
-import cn.edu.hfut.dmic.webcollector.handler.Handler;
+
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Task;
 
 /**
@@ -14,11 +15,9 @@ import cn.edu.hfut.dmic.webcollector.util.Task;
  * @author hu
  */
 public abstract class Generator extends Task{
-    Handler handler;
-    public Generator(Handler handler){
-        this.handler=handler;
-    }
+   
            
-    public abstract  void generate();
+    public abstract CrawlDatum next();
+ 
     
 }

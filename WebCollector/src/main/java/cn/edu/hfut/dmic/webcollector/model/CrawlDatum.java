@@ -12,7 +12,7 @@ import org.apache.avro.reflect.Nullable;
  *
  * @author hu
  */
-public class WritablePage {
+public class CrawlDatum {
     @Nullable public String url;
     @Nullable public int status=-1;
     @Nullable public long fetchtime=-1;

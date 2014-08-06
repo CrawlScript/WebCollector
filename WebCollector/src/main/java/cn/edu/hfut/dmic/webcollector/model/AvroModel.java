@@ -25,7 +25,7 @@ public class AvroModel {
     public static Schema index_schema=null;
     public static Schema getPageSchema(){
         if(page_schema==null){
-            page_schema=ReflectData.get().getSchema(WritablePage.class);
+            page_schema=ReflectData.get().getSchema(CrawlDatum.class);
         }
         return page_schema;
     }

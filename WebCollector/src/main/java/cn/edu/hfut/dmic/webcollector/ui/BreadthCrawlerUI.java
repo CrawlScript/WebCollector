@@ -5,7 +5,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.ui;
 
-import cn.edu.hfut.dmic.webcollector.crawler.BasicCrawler;
+
 import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
@@ -51,14 +51,15 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                 }
                 
                 final String[] infos=(String[]) msg.obj;
-                if(infos.length<2){
+                if(infos.length<3){
                     return;
                 }
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override
                     public void run() {
-                        tablemodel.addRow(infos);
+                        tablemodel.addRow(new String[]{infos[0],infos[2]});
+                   
                        // tb_status.scrollRectToVisible(tb_status.getCellRect(tb_status.getRowCount()-1,0,true));
                 
                     }
@@ -332,8 +333,12 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
     private void btn_stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_stopActionPerformed
         // TODO add your handling code here:
         btn_start.setEnabled(true);
-        crawler.stop();
-        output("停止");
+        try{
+            crawler.stop();
+            output("停止");
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
 
     }//GEN-LAST:event_btn_stopActionPerformed
 

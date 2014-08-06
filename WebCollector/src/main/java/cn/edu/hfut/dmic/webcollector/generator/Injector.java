@@ -8,7 +8,7 @@ package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.model.AvroModel;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.model.WritablePage;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.Task;
 import java.io.File;
@@ -54,13 +54,13 @@ public class Injector extends Task{
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
-        DatumWriter<WritablePage> datumWriter = new ReflectDatumWriter<WritablePage>(schema);
-        DataFileWriter<WritablePage> dataFileWriter = new DataFileWriter<WritablePage>(datumWriter);
+        DatumWriter<CrawlDatum> datumWriter = new ReflectDatumWriter<CrawlDatum>(schema);
+        DataFileWriter<CrawlDatum> dataFileWriter = new DataFileWriter<CrawlDatum>(datumWriter);
         
         dataFileWriter.create(schema, inject_file);
         
         for(String url:urls){
-            WritablePage page=new WritablePage();
+            CrawlDatum page=new CrawlDatum();
             page.url=url;
             page.status=Page.UNFETCHED;
             dataFileWriter.append(page);

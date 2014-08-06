@@ -5,13 +5,19 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
-import cn.edu.hfut.dmic.webcollector.filter.RegexFilter;
-import cn.edu.hfut.dmic.webcollector.generator.BreadthGenerator;
+import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+
+import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
+import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
+import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
+import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
+import cn.edu.hfut.dmic.webcollector.generator.filter.UniqueFilter;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
@@ -88,14 +94,18 @@ public class BreadthCrawler {
 
     public void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
-        Log.Infos("visit",page.url);
+        Log.Infos("visit",this.taskname,page.url);
         fsoutput.output(page);
     }
     
     public void failed(Page page){
        
     }
+    
 
+    public final static int RUNNING=1;
+    public final static int STOPED=2;
+    public int status;
     public void start(int depth) throws IOException {
         if (!resumable) {
             if (seeds.size() == 0) {
@@ -107,24 +117,23 @@ public class BreadthCrawler {
             }
         }
         inject();
-
-        initGenerator();
+        status=RUNNING;
         for (int i = 0; i < depth; i++) {
+           if(status==STOPED){
+               break;
+           }
             Log.Infos("info","starting depth "+(i+1));
-            if(generator!=null)
-                generate();
-            else
-                break;
+            Generator generator=getGenerator();
+            fetcher=getFecther();
+            fetcher.fetchAll(generator);
         }
     }
     
-    
+    Fetcher fetcher;
 
-    public void stop(){
-        BreadthGenerator temp=generator;
-        generator=null;
-        
-        temp.stop();
+    public void stop() throws IOException{
+       fetcher.stop();
+       status=STOPED;
     }
     
     public void inject() throws IOException {
@@ -140,8 +149,6 @@ public class BreadthCrawler {
         }
     }
 
-    BreadthGenerator generator=null;
-    
     class CommonConnectionConfig implements ConnectionConfig{
         @Override
             public void config(HttpURLConnection con) {
@@ -150,19 +157,19 @@ public class BreadthCrawler {
             }
     }
     
-    public void initGenerator(){
-         conconfig = new CommonConnectionConfig();
-
-        Handler gene_handler = new Handler() {
+    public Fetcher getFecther(){
+        
+        
+         Handler fetch_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Page page = (Page) msg.obj;
                 switch(msg.what){
-                    case BreadthGenerator.FETCH_SUCCESS:
+                    case Fetcher.FETCH_SUCCESS:
                         
                         visit(page);
                         break;
-                    case BreadthGenerator.FETCH_FAILED:
+                    case Fetcher.FETCH_FAILED:
                         failed(page);
                         break;
                     default:
@@ -171,48 +178,42 @@ public class BreadthCrawler {
                 }
             }
         };
-        generator = new BreadthGenerator(gene_handler) {
-
-            @Override
-            public boolean shouldFilter(String url) {
-                
-                return BreadthCrawler.this.shouldFilter(url);
-            }
-
-        };
-        generator.setTaskname(taskname);
-        generator.setConconfig(conconfig);
-        generator.setThreads(threads);
         
-    }
-    public void generate() throws IOException {
- 
-        generator.run(crawl_path);
-    }
 
-    public boolean shouldFilter(String url) {
-        RegexFilter regexfilter = new RegexFilter();
-        for (String regex : regexs) {
-            regexfilter.addRule(regex);
-        }
-        return regexfilter.shouldFilter(url);
+        
+        Fetcher fetcher=new Fetcher(crawl_path);
+        fetcher.setHandler(fetch_handler);
+        conconfig = new CommonConnectionConfig();
+        fetcher.setThreads(threads);
+        fetcher.setConconfig(conconfig);
+        return fetcher;
     }
+    
+    public Generator getGenerator(){
+
+        Generator generator = new StandardGenerator(crawl_path);
+        generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
+        generator.setTaskname(taskname);
+        return generator;
+    }
+   
+
+    
 
     public static void main(String[] args) throws IOException {
-        String crawl_path = "/home/hu/data/crawl_hfut";
-        String root = "/home/hu/data/hfut";
+        String crawl_path = "/home/hu/data/crawl_hfut1";
+        String root = "/home/hu/data/hfut1";
         
-       
-        
+        Config.topN=500;
+
         BreadthCrawler crawler=new BreadthCrawler();
         crawler.taskname=RandomUtils.getTimeString()+"hfut";
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
         crawler.setResumable(false);
-       
         
-        crawler.start(5);
+        crawler.start(4);
     }
 
     public String getUseragent() {

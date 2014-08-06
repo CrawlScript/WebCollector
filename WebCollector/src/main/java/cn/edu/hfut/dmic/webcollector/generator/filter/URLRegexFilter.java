@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package cn.edu.hfut.dmic.webcollector.filter;
+package cn.edu.hfut.dmic.webcollector.generator.filter;
 
+import cn.edu.hfut.dmic.webcollector.generator.Generator;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -13,16 +15,18 @@ import java.util.regex.Pattern;
  *
  * @author hu
  */
-public class RegexFilter extends Filter{
+public class URLRegexFilter extends Filter{
+     public ArrayList<String> positive=new ArrayList<String>();
+     public ArrayList<String> negative=new ArrayList<String>();
 
-    
-    public RegexFilter(){
+    public URLRegexFilter(Generator generator,ArrayList<String> rules) {
+        super(generator);
+        for(String rule:rules){
+            addRule(rule);
+        }
     }
-    
-    public ArrayList<String> positive=new ArrayList<String>();
-    public ArrayList<String> negative=new ArrayList<String>();
-    
-    public void addRule(String rule){
+     
+     public void addRule(String rule){
         if(rule.length()==0){
             return;
         }
@@ -36,22 +40,25 @@ public class RegexFilter extends Filter{
             addPositive(rule);
         }
     }
-    
+     
+     
     public void addPositive(String positiveregex){
         positive.add(positiveregex);        
     }
     public void addNegative(String negativeregex){
         negative.add(negativeregex);
     }
-    
+
     @Override
-    public boolean shouldFilter(Object object) {
-        
-        
-        String url=(String) object;
+    public CrawlDatum next() {
+        CrawlDatum crawldatum=generator.next();
+        if(crawldatum==null){
+            return null;
+        }
+        String url=crawldatum.url;
         for(String nregex:negative){
             if(Pattern.matches(nregex, url)){
-                return true;
+                return next();
             }
         }
         
@@ -63,10 +70,11 @@ public class RegexFilter extends Filter{
             }
         }
         if(count==0)
-            return true;
+            return next();
         else
-            return false;
+            return crawldatum;
     }
+    
     
     
 }
