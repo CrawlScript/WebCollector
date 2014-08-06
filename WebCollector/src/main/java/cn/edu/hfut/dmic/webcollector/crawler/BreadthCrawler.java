@@ -82,7 +82,7 @@ public class BreadthCrawler {
         }
     }
 
-    ConnectionConfig conconfig = null;
+    public ConnectionConfig conconfig = null;
 
     public void configCon(HttpURLConnection con) {
         con.setRequestProperty("User-Agent", useragent);
@@ -151,8 +151,7 @@ public class BreadthCrawler {
 
     class CommonConnectionConfig implements ConnectionConfig{
         @Override
-            public void config(HttpURLConnection con) {
-               
+            public void config(HttpURLConnection con) {               
                 configCon(con);
             }
     }
@@ -265,4 +264,14 @@ public class BreadthCrawler {
         this.resumable = resumable;
     }
 
+    public ConnectionConfig getConconfig() {
+        return conconfig;
+    }
+
+    public void setConconfig(ConnectionConfig conconfig) {
+        this.conconfig = conconfig;
+    }
+
+    
+    
 }
