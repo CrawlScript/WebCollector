@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package cn.edu.hfut.dmic.webcollector.task;
+package cn.edu.hfut.dmic.webcollector.util;
 
 import java.util.LinkedList;
 import cn.edu.hfut.dmic.webcollector.util.Log;

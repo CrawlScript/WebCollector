@@ -42,7 +42,7 @@ public class BreadthCrawler {
         taskname=RandomUtils.getTimeString();
     }
 
-    public String taskname;
+    private String taskname;
     private String crawl_path = "crawl";
     private String root = "data";
     private String cookie = null;
@@ -92,13 +92,13 @@ public class BreadthCrawler {
 
     }
 
-    public void visit(Page page) {
+    protected void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
         Log.Infos("visit",this.taskname,page.url);
         fsoutput.output(page);
     }
     
-    public void failed(Page page){
+    protected void failed(Page page){
        
     }
     
@@ -136,7 +136,7 @@ public class BreadthCrawler {
        status=STOPED;
     }
     
-    public void inject() throws IOException {
+    private void inject() throws IOException {
         
         Injector injector = new Injector(crawl_path);
         injector.setTaskname(taskname);
@@ -156,7 +156,7 @@ public class BreadthCrawler {
             }
     }
     
-    public Fetcher getFecther(){
+    private Fetcher getFecther(){
         
         
          Handler fetch_handler = new Handler() {
@@ -189,7 +189,7 @@ public class BreadthCrawler {
         return fetcher;
     }
     
-    public Generator getGenerator(){
+    private Generator getGenerator(){
 
         Generator generator = new StandardGenerator(crawl_path);
         generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
@@ -270,6 +270,14 @@ public class BreadthCrawler {
 
     public void setConconfig(ConnectionConfig conconfig) {
         this.conconfig = conconfig;
+    }
+
+    public String getTaskname() {
+        return taskname;
+    }
+
+    public void setTaskname(String taskname) {
+        this.taskname = taskname;
     }
 
     

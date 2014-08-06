@@ -16,7 +16,7 @@ import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
-import cn.edu.hfut.dmic.webcollector.task.WorkQueue;
+import cn.edu.hfut.dmic.webcollector.util.WorkQueue;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
