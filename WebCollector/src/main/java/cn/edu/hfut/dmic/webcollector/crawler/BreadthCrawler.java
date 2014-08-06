@@ -184,6 +184,7 @@ public class BreadthCrawler {
         Fetcher fetcher=new Fetcher(crawl_path);
         fetcher.setHandler(fetch_handler);
         conconfig = new CommonConnectionConfig();
+        fetcher.setTaskname(taskname);
         fetcher.setThreads(threads);
         fetcher.setConconfig(conconfig);
         return fetcher;
