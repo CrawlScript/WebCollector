@@ -59,7 +59,8 @@ You need to create a crawler class that extends BreadthCrawler.</p>
             System.out.println(title);
 
             /*extract the content of question*/
-            String question=page.doc.select("div[id=zh-question-detail]").text();
+            String question=page.doc.
+               select("div[id=zh-question-detail]").text();
             System.out.println(question);
 
         }
