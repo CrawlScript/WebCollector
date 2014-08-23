@@ -131,19 +131,22 @@ public class Fetcher extends Task {
         public void run() {
             Page page = new Page();
             page.url = url;
+            Page response=null;
             try {
-                page = HttpUtils.fetchHttpResponse(page.url, conconfig, retry);
+                response = HttpUtils.fetchHttpResponse(url, conconfig, retry);
             } catch (Exception ex) {
                 Log.Errors("failed ", page.url);
                 HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page),true);             
                 return;
             }
 
-            if (page == null) {
+            if (response == null) {
                 Log.Errors("failed ", page.url);
                 HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page),true);              
                 return;
             }
+            
+            page=response;
 
             CrawlDatum crawldatum = new CrawlDatum();
             crawldatum.url=url;
