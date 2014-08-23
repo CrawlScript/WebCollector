@@ -5,6 +5,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
+import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
@@ -38,6 +39,9 @@ import org.apache.avro.reflect.ReflectDatumWriter;
  * @author hu
  */
 public class Fetcher extends Task {
+    
+    public int retry=3;
+    
 
     public static final int FETCH_SUCCESS = 1;
     public static final int FETCH_FAILED = 2;
@@ -56,13 +60,8 @@ public class Fetcher extends Task {
     
     public DbUpdater dbUpdater = null;
 
-   
 
-    public static void main(String[] args) throws UnsupportedEncodingException, IOException {
-
-    }
-
-    public void start() throws IOException {
+    private void start() throws IOException {
         if (needUpdateDb) {
             this.dbUpdater = new DbUpdater(crawl_path);
             dbUpdater.initUpdater();
@@ -93,7 +92,7 @@ public class Fetcher extends Task {
 
     WorkQueue workqueue;
 
-    public void end() throws IOException {
+    private void end() throws IOException {
         try {
             while (workqueue.isAlive()) {
                 Thread.sleep(5000);
@@ -132,22 +131,26 @@ public class Fetcher extends Task {
             Page page = new Page();
             page.url = url;
             try {
-                page = HttpUtils.fetchHttpResponse(page.url, conconfig, 3);
+                page = HttpUtils.fetchHttpResponse(page.url, conconfig, retry);
             } catch (Exception ex) {
                 Log.Errors("failed ", page.url);
+                if(handler!=null){
                 Message msg = new Message();
                 msg.what = Fetcher.FETCH_FAILED;
                 msg.obj = page;
                 handler.sendMessage(msg);
+                }
                 return;
             }
 
             if (page == null) {
                 Log.Errors("failed ", page.url);
+                if(handler!=null){
                 Message msg = new Message();
                 msg.what = Fetcher.FETCH_FAILED;
                 msg.obj = page;
                 handler.sendMessage(msg);
+                }
                 return;
             }
 
@@ -156,16 +159,11 @@ public class Fetcher extends Task {
             crawldatum.status = Page.FETCHED;
             page.fetchtime = System.currentTimeMillis();
             crawldatum.fetchtime = page.fetchtime;
-            try {
-                dbUpdater.append(crawldatum);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-
             Log.Infos("fetch", Fetcher.this.taskname, page.url);
-            if (needUpdateDb) {
 
+            if (needUpdateDb) {              
                 try {
+                    dbUpdater.append(crawldatum);
                     if (page.headers.containsKey("Content-Type")) {
                         String contenttype = page.headers.get("Content-Type").toString();
 
@@ -191,10 +189,12 @@ public class Fetcher extends Task {
                     ex.printStackTrace();
                 }
             }
+            if(handler!=null){
             Message msg = new Message();
             msg.what = Fetcher.FETCH_SUCCESS;
             msg.obj = page;
             handler.sendMessage(msg);
+            }
         }
     }
 
@@ -222,7 +222,7 @@ public class Fetcher extends Task {
         this.handler = handler;
     }
 
-    public boolean isNeedUpdateDb() {
+    public boolean getNeedUpdateDb() {
         return needUpdateDb;
     }
 
@@ -231,7 +231,26 @@ public class Fetcher extends Task {
     }
 
     
+
+    public int getRetry() {
+        return retry;
+    }
+
+    public void setRetry(int retry) {
+        this.retry = retry;
+    }
     
+    
+
+    
+    public static void main(String[] args) throws IOException{
+        CollectionGenerator generator=new CollectionGenerator();
+        generator.addUrl("http://www.hfut.edu.cn/ch/");
+        generator.addUrl("http://news.hfut.edu.cn/");
+        Fetcher fetcher=new Fetcher();
+        fetcher.fetchAll(generator);
+        
+    }
     
     
 

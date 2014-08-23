@@ -57,23 +57,21 @@ public class DbUpdater extends Task{
     public void unlock() throws IOException {
         FileUtils.writeFile(crawl_path + "/" + Config.lock_path, "0".getBytes("utf-8"));
     }
-    DataFileWriter<CrawlDatum> dataFileWriter;
+   // DataFileWriter<CrawlDatum> dataFileWriter;
+    DbWriter updater_writer;
     int updaterCount;
     
     
     public void updateAll(ArrayList<CrawlDatum> datums) throws IOException{
-         File currentfile = new File(crawl_path, Config.current_info_path);
+        File currentfile = new File(crawl_path, Config.current_info_path);
         if (!currentfile.getParentFile().exists()) {
             currentfile.getParentFile().mkdirs();
         }
-        DatumWriter<CrawlDatum> datumWriter = new ReflectDatumWriter<CrawlDatum>(CrawlDatum.class);
-        DataFileWriter<CrawlDatum> alldataFileWriter = new DataFileWriter<CrawlDatum>(datumWriter);
-        alldataFileWriter.create(AvroModel.getPageSchema(), currentfile);
+        DbWriter writer=new DbWriter(currentfile);       
         for(CrawlDatum crawldatum:datums){
-            alldataFileWriter.append(crawldatum);
-            //System.out.println(crawldatum.url);
+            writer.write(crawldatum);           
         }
-        alldataFileWriter.close();
+        writer.close();
     }
 
     public void initUpdater() throws UnsupportedEncodingException, IOException {
@@ -81,37 +79,36 @@ public class DbUpdater extends Task{
         if (!currentfile.getParentFile().exists()) {
             currentfile.getParentFile().mkdirs();
         }
-        DatumWriter<CrawlDatum> datumWriter = new ReflectDatumWriter<CrawlDatum>(CrawlDatum.class);
-        dataFileWriter = new DataFileWriter<CrawlDatum>(datumWriter);
-        //dataFileWriter.create(AvroModel.getPageSchema(), currentfile);
-        dataFileWriter.appendTo(currentfile);
+        if(currentfile.exists()){
+            updater_writer=new DbWriter(currentfile,true);     
+        }else{
+            updater_writer=new DbWriter(currentfile,false);
+        }
         updaterCount = 0;
     }
 
     public synchronized void append(CrawlDatum crawldatum) throws IOException {
-       
-        dataFileWriter.append(crawldatum);
-         if (updaterCount % 200 == 0) {
-            dataFileWriter.flush();
-           
+        updater_writer.write(crawldatum);
+        if (updaterCount % 200 == 0) {
+            updater_writer.flush();
         }
         updaterCount++;
     }
 
     public void closeUpdater() throws IOException {
-        dataFileWriter.close();
+        updater_writer.close();
     }
     
     public void merge() throws IOException{
         
-        File oldfile=new File(crawl_path, Config.current_info_path);
-        DatumReader<CrawlDatum> datumReader = new ReflectDatumReader<CrawlDatum>(CrawlDatum.class);
-        DataFileReader<CrawlDatum> dataFileReader = new DataFileReader<CrawlDatum>(oldfile, datumReader);
+        File currentfile=new File(crawl_path, Config.current_info_path);
+        DbReader reader=new DbReader(currentfile);
+
         HashMap<String,Integer> indexmap=new HashMap<String, Integer>();
         ArrayList<CrawlDatum> origin_datums=new ArrayList<CrawlDatum>();
-        
- 
-        for(CrawlDatum crawldatum:dataFileReader){
+        CrawlDatum crawldatum=null;
+        while(reader.hasNext()){
+            crawldatum=reader.readNext();
             String url=crawldatum.url;
             if(indexmap.containsKey(crawldatum.url)){
                 int preindex=indexmap.get(url);
@@ -132,7 +129,7 @@ public class DbUpdater extends Task{
             
         }
        
-        dataFileReader.close();
+        reader.close();
         updateAll(origin_datums);
 
     }

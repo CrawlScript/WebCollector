@@ -8,9 +8,12 @@ package cn.edu.hfut.dmic.webcollector.generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.Config;
+import cn.edu.hfut.dmic.webcollector.util.URLUtils;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.reflect.ReflectDatumReader;
@@ -21,25 +24,21 @@ import org.apache.avro.reflect.ReflectDatumReader;
  */
 public class DbReader {
 
-    String dbpath;
+    
     Iterator<CrawlDatum> iterator;
     DataFileReader<CrawlDatum> dataFileReader;
 
     public DbReader(File dbfile) throws IOException {
-        initReader(dbfile);
-    }
-
-    public DbReader(String dbpath) throws IOException {
-        this.dbpath = dbpath;
-        File dbfile = new File(dbpath);
-        initReader(dbfile);
-    }
-
-    public void initReader(File dbfile) throws IOException {
         DatumReader<CrawlDatum> datumReader = new ReflectDatumReader<CrawlDatum>(CrawlDatum.class);
         dataFileReader = new DataFileReader<CrawlDatum>(dbfile, datumReader);
         iterator = dataFileReader.iterator();
     }
+
+    public DbReader(String dbpath) throws IOException {
+        this(new File(dbpath));
+    }
+
+   
 
     public CrawlDatum readNext() {
         return iterator.next();
@@ -65,7 +64,10 @@ public class DbReader {
         int sum=0;
         int sum_fetched=0;
         int sum_unfetched=0;
+        
+        
         CrawlDatum crawldatum=null;
+
         System.out.println("start read:");
         while(reader.hasNext()){
             crawldatum=reader.readNext();
@@ -79,10 +81,14 @@ public class DbReader {
                     break;
                     
             }
+            
+         
         }
         reader.close();
         System.out.println("Total urls:"+sum);
         System.out.println("status "+Page.FETCHED+" (fetched):"+sum_fetched);
         System.out.println("status "+Page.UNFETCHED+" (unfetched):"+sum_unfetched);
+        
+        
     }
 }

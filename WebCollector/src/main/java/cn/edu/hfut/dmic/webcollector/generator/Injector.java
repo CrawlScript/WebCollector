@@ -33,9 +33,17 @@ public class Injector extends Task{
     }
     
     public void inject(String url) throws IOException{
+        inject(url,false);
+    }
+    
+    public void inject(ArrayList<String> urls) throws IOException{
+        inject(urls,false);
+    }
+    
+    public void inject(String url,boolean append) throws IOException{
         ArrayList<String> urls=new ArrayList<>();
         urls.add(url);
-        inject(urls);
+        inject(urls,append);
     }
     
     public boolean hasInjected(){
@@ -46,7 +54,7 @@ public class Injector extends Task{
     
     
     
-    public void inject(ArrayList<String> urls) throws UnsupportedEncodingException, IOException{
+    public void inject(ArrayList<String> urls,boolean append) throws UnsupportedEncodingException, IOException{
          Schema schema = AvroModel.getPageSchema();
         
         String info_path=Config.current_info_path;
@@ -54,18 +62,15 @@ public class Injector extends Task{
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
-        DatumWriter<CrawlDatum> datumWriter = new ReflectDatumWriter<CrawlDatum>(schema);
-        DataFileWriter<CrawlDatum> dataFileWriter = new DataFileWriter<CrawlDatum>(datumWriter);
-        
-        dataFileWriter.create(schema, inject_file);
-        
+        DbWriter writer=new DbWriter(inject_file,append);
+       
         for(String url:urls){
             CrawlDatum crawldatum=new CrawlDatum();
             crawldatum.url=url;
             crawldatum.status=Page.UNFETCHED;
-            dataFileWriter.append(crawldatum);                        
+            writer.write(crawldatum);                    
         }
-        dataFileWriter.close();
+        writer.close();
         
         
         
