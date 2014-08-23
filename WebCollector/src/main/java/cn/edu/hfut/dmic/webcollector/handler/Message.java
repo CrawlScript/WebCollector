@@ -14,6 +14,18 @@ public class Message {
     public Object obj;
     public int what;
     
+    public Message(){
+        
+    }
+
+    public Message(int what,Object obj) {
+        this.what = what;
+        this.obj = obj;
+        
+    }
+    
+    
+    
     
     
     

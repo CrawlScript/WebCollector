@@ -21,6 +21,7 @@ import cn.edu.hfut.dmic.webcollector.util.WorkQueue;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
+import cn.edu.hfut.dmic.webcollector.util.HandlerUtils;
 import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.Task;
@@ -134,23 +135,13 @@ public class Fetcher extends Task {
                 page = HttpUtils.fetchHttpResponse(page.url, conconfig, retry);
             } catch (Exception ex) {
                 Log.Errors("failed ", page.url);
-                if(handler!=null){
-                Message msg = new Message();
-                msg.what = Fetcher.FETCH_FAILED;
-                msg.obj = page;
-                handler.sendMessage(msg);
-                }
+                HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page),true);             
                 return;
             }
 
             if (page == null) {
                 Log.Errors("failed ", page.url);
-                if(handler!=null){
-                Message msg = new Message();
-                msg.what = Fetcher.FETCH_FAILED;
-                msg.obj = page;
-                handler.sendMessage(msg);
-                }
+                HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page),true);              
                 return;
             }
 
@@ -189,12 +180,9 @@ public class Fetcher extends Task {
                     ex.printStackTrace();
                 }
             }
-            if(handler!=null){
-            Message msg = new Message();
-            msg.what = Fetcher.FETCH_SUCCESS;
-            msg.obj = page;
-            handler.sendMessage(msg);
-            }
+            
+            HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_SUCCESS, page),true);
+           
         }
     }
 

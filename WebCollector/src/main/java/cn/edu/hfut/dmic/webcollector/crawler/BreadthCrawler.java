@@ -22,15 +22,10 @@ import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
 
 /**
  *
@@ -108,11 +103,11 @@ public class BreadthCrawler {
     public int status;
     public void start(int depth) throws IOException {
         if (!resumable) {
-            if (seeds.size() == 0) {
+            if (seeds.isEmpty()) {
                 Log.Infos("error:"+"Please add at least one seed");
                 return;
             }
-            if (regexs.size() == 0) {
+            if (regexs.isEmpty()) {
                 autoRegex();
             }
         }
