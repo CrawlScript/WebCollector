@@ -20,17 +20,25 @@ public class HttpUtils {
     
    
 
-    public static Page fetchHttpResponse(String url, int count) {
-        return fetchHttpResponse(url, null, count);
+    public static Page fetchHttpResponse(String url, int retry) {
+        return fetchHttpResponse(url, null, retry);
     }
 
     public static Page fetchHttpResponse(String url) throws Exception {
         return fetchHttpResponse(url, null);
     }
 
-    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig, int count) {
-        HttpRetry httpretry = new HttpRetry(url, conconfig);
-        return httpretry.getResult(count);
+    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig, int retry) {
+        for(int i=0;i<retry;i++){
+            try{
+                Page page=fetchHttpResponse(url, conconfig);
+                return page;
+            }catch(Exception ex){
+                continue;
+            }
+        }
+        return null;
+ 
     }
 
     public static Page fetchHttpResponseWithSize(String url, ConnectionConfig conconfig,int maxsize) throws Exception {

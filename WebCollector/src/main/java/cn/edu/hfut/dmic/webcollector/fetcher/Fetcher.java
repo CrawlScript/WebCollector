@@ -132,13 +132,8 @@ public class Fetcher extends Task {
             Page page = new Page();
             page.url = url;
             Page response=null;
-            try {
-                response = HttpUtils.fetchHttpResponse(url, conconfig, retry);
-            } catch (Exception ex) {
-                Log.Errors("failed ", page.url);
-                HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page),true);             
-                return;
-            }
+           
+            response = HttpUtils.fetchHttpResponse(url, conconfig, retry);         
 
             if (response == null) {
                 Log.Errors("failed ", page.url);
