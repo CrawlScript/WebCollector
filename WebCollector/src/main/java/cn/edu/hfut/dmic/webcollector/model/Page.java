@@ -24,7 +24,10 @@ public class Page{
     public int status;
     public long fetchtime;
     
+    public static final int STATUS_UNDEFINED=-1;
     public static final int UNFETCHED=1;
     public static final int FETCHED=2;
+    
+    public static final int FETCHTIME_UNDEFINED=1;
     
 }

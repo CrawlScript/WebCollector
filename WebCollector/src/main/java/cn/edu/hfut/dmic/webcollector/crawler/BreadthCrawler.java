@@ -213,7 +213,7 @@ public class BreadthCrawler {
         crawler.setCrawl_path(crawl_path);
         crawler.setResumable(false);
         
-        crawler.start(4);
+        crawler.start(5);
     }
 
     public String getUseragent() {

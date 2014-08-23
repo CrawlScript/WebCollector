@@ -14,6 +14,6 @@ import org.apache.avro.reflect.Nullable;
  */
 public class CrawlDatum {
     @Nullable public String url;
-    @Nullable public int status=-1;
-    @Nullable public long fetchtime=-1;
+    @Nullable public int status=Page.STATUS_UNDEFINED;
+    @Nullable public long fetchtime=Page.FETCHTIME_UNDEFINED;
 }

@@ -60,12 +60,10 @@ public class Injector extends Task{
         dataFileWriter.create(schema, inject_file);
         
         for(String url:urls){
-            CrawlDatum page=new CrawlDatum();
-            page.url=url;
-            page.status=Page.UNFETCHED;
-            dataFileWriter.append(page);
-            
-            
+            CrawlDatum crawldatum=new CrawlDatum();
+            crawldatum.url=url;
+            crawldatum.status=Page.UNFETCHED;
+            dataFileWriter.append(crawldatum);                        
         }
         dataFileWriter.close();
         
