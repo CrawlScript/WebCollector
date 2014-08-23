@@ -34,6 +34,12 @@ public class DbUpdater extends Task{
         this.crawl_path=crawl_path;
     }
     
+    public static  void backup(String backuppath) throws IOException {
+        File oldfile = new File(backuppath, Config.old_info_path);
+        File currentfile = new File(backuppath, Config.current_info_path);
+        FileUtils.copy(currentfile, oldfile);
+    }
+    
 
     public boolean isLocked() throws IOException {
         File lockfile = new File(crawl_path + "/" + Config.lock_path);        

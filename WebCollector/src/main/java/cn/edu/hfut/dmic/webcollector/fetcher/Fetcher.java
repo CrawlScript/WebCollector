@@ -27,6 +27,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.avro.file.DataFileWriter;
 import org.apache.avro.io.DatumWriter;
 import org.apache.avro.reflect.ReflectDatumWriter;
@@ -36,48 +38,63 @@ import org.apache.avro.reflect.ReflectDatumWriter;
  * @author hu
  */
 public class Fetcher extends Task {
-    public static final int FETCH_SUCCESS=1;
-    public static final int FETCH_FAILED=2;
 
-    int threads=10;
+    public static final int FETCH_SUCCESS = 1;
+    public static final int FETCH_FAILED = 2;
+
+    int threads = 10;
     String crawl_path;
-    public Fetcher(String crawl_path){
-        this.crawl_path=crawl_path;
+
+    public Fetcher(String crawl_path) {
+        this.crawl_path = crawl_path;
+    }
+
+    public boolean needUpdateDb=true;
+    public Fetcher() {
+        needUpdateDb=false;
     }
     
-    public DbUpdater dbUpdater;
+    public DbUpdater dbUpdater = null;
+
+   
 
     public static void main(String[] args) throws UnsupportedEncodingException, IOException {
-        
+
     }
-    
-    public void start() throws IOException{
-        this.dbUpdater = new DbUpdater(crawl_path);
-        workqueue=new WorkQueue(threads);
-        dbUpdater.initUpdater();
-        dbUpdater.lock();
+
+    public void start() throws IOException {
+        if (needUpdateDb) {
+            this.dbUpdater = new DbUpdater(crawl_path);
+            dbUpdater.initUpdater();
+            dbUpdater.lock();
+        }
+        workqueue = new WorkQueue(threads);
+
     }
-    
-    public void fetchAll(Generator generator) throws IOException{
+
+    public void fetchAll(Generator generator) throws IOException {
         start();
-        CrawlDatum crawlDatum=null;
-        while((crawlDatum=generator.next())!=null){
+        CrawlDatum crawlDatum = null;
+        while ((crawlDatum = generator.next()) != null) {
             addFetcherThread(crawlDatum.url);
         }
         end();
-        
+
     }
-    
-    public void stop() throws IOException{
-         workqueue.killALl();
-         dbUpdater.closeUpdater();
-         dbUpdater.merge();
-         dbUpdater.unlock();
+
+    public void stop() throws IOException {
+        workqueue.killALl();
+        if (needUpdateDb) {
+            dbUpdater.closeUpdater();
+            dbUpdater.merge();
+            dbUpdater.unlock();
+        }
     }
 
     WorkQueue workqueue;
-    public void end() throws IOException{
-         try {
+
+    public void end() throws IOException {
+        try {
             while (workqueue.isAlive()) {
                 Thread.sleep(5000);
             }
@@ -86,21 +103,21 @@ public class Fetcher extends Task {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-        dbUpdater.closeUpdater();
-        dbUpdater.merge();
-        dbUpdater.unlock();
+        if (needUpdateDb) {
+            dbUpdater.closeUpdater();
+            dbUpdater.merge();
+            dbUpdater.unlock();
+        }
     }
-    public void addFetcherThread(String url){
-        FetcherThread fetcherthread=new FetcherThread(url);
+
+    public void addFetcherThread(String url) {
+        FetcherThread fetcherthread = new FetcherThread(url);
         workqueue.execute(fetcherthread);
     }
-  
 
     ConnectionConfig conconfig = null;
-    
+
     public Handler handler = null;
-    
-    
 
     class FetcherThread extends Thread {
 
@@ -135,38 +152,45 @@ public class Fetcher extends Task {
             }
 
             CrawlDatum crawldatum = new CrawlDatum();
+            crawldatum.url=url;
             crawldatum.status = Page.FETCHED;
             page.fetchtime = System.currentTimeMillis();
             crawldatum.fetchtime = page.fetchtime;
-
-            Log.Infos("fetch", Fetcher.this.taskname, page.url);
-
             try {
-                if (page.headers.containsKey("Content-Type")) {
-                    String contenttype = page.headers.get("Content-Type").toString();
-
-                    if (contenttype.contains("text/html")) {
-
-                        HtmlParser htmlparser = new HtmlParser(Config.topN);
-                        ParseResult parseresult = htmlparser.getParse(page);
-                        ArrayList<Link> links = parseresult.links;
-
-                        for (Link link : links) {
-                            CrawlDatum link_crawldatum = new CrawlDatum();
-                            link_crawldatum.url = link.url;
-                            link_crawldatum.status = Page.UNFETCHED;
-                            dbUpdater.append(link_crawldatum);
-                        }
-
-                    } else {
-                        //System.out.println(page.headers.get("Content-Type"));
-                    }
-
-                }
-            } catch (Exception ex) {
+                dbUpdater.append(crawldatum);
+            } catch (IOException ex) {
                 ex.printStackTrace();
             }
 
+            Log.Infos("fetch", Fetcher.this.taskname, page.url);
+            if (needUpdateDb) {
+
+                try {
+                    if (page.headers.containsKey("Content-Type")) {
+                        String contenttype = page.headers.get("Content-Type").toString();
+
+                        if (contenttype.contains("text/html")) {
+
+                            HtmlParser htmlparser = new HtmlParser(Config.topN);
+                            ParseResult parseresult = htmlparser.getParse(page);
+                            ArrayList<Link> links = parseresult.links;
+
+                            for (Link link : links) {
+                                CrawlDatum link_crawldatum = new CrawlDatum();
+                                link_crawldatum.url = link.url;
+                                link_crawldatum.status = Page.UNFETCHED;
+                                dbUpdater.append(link_crawldatum);
+                            }
+
+                        } else {
+                            //System.out.println(page.headers.get("Content-Type"));
+                        }
+
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
             Message msg = new Message();
             msg.what = Fetcher.FETCH_SUCCESS;
             msg.obj = page;
@@ -197,6 +221,15 @@ public class Fetcher extends Task {
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
+
+    public boolean isNeedUpdateDb() {
+        return needUpdateDb;
+    }
+
+    public void setNeedUpdateDb(boolean needUpdateDb) {
+        this.needUpdateDb = needUpdateDb;
+    }
+
     
     
     
