@@ -48,7 +48,7 @@ public class HtmlParser extends Parser {
         if (topN == null) {
             updatesize = origin_links.size();
         } else {
-            updatesize = Math.min(Config.topN, origin_links.size());
+            updatesize = Math.min(topN, origin_links.size());
         }
 
         int sum = 0;
