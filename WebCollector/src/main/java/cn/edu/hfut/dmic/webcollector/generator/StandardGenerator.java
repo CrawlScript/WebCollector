@@ -78,7 +78,10 @@ public class StandardGenerator extends Generator {
     public CrawlDatum next(){
         if(!dbreader.hasNext())
             return null;
+       
         CrawlDatum crawldatum=dbreader.readNext();   
+        
+        
         if(crawldatum==null){
             return null;
         }

@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
@@ -28,11 +40,15 @@ import java.util.ArrayList;
 
 
 /**
- *
+ *The web crawler that executes a breadth-first crawling.
+ * 
  * @author hu
  */
 public class BreadthCrawler {
     
+    /**
+     *
+     */
     public BreadthCrawler(){
         taskname=RandomUtils.getTimeString();
     }
@@ -58,6 +74,7 @@ public class BreadthCrawler {
     public void addRegex(String regex) {
         regexs.add(regex);
     }
+    /*
     public void autoRegex() {
         for (String seed : seeds) {
             try {
@@ -76,7 +93,7 @@ public class BreadthCrawler {
             }
         }
     }
-
+    */
     public ConnectionConfig conconfig = null;
 
     public void configCon(HttpURLConnection con) {
@@ -101,15 +118,23 @@ public class BreadthCrawler {
     public final static int RUNNING=1;
     public final static int STOPED=2;
     public int status;
+
+    /**
+     * start the crawler
+     * @param depth depth in bread-first search
+     * @throws IOException
+     */
     public void start(int depth) throws IOException {
         if (!resumable) {
             if (seeds.isEmpty()) {
                 Log.Infos("error:"+"Please add at least one seed");
                 return;
             }
-            if (regexs.isEmpty()) {
-                autoRegex();
-            }
+           
+        }
+        if (regexs.isEmpty()) {
+                Log.Infos("error:"+"Please add at least one regex rule");
+                return;
         }
         inject();
         status=RUNNING;
@@ -126,6 +151,10 @@ public class BreadthCrawler {
     
     Fetcher fetcher;
 
+    /**
+     *
+     * @throws IOException
+     */
     public void stop() throws IOException{
        fetcher.stop();
        status=STOPED;
@@ -133,14 +162,8 @@ public class BreadthCrawler {
     
     private void inject() throws IOException {
         
-        Injector injector = new Injector(crawl_path);
-        injector.setTaskname(taskname);
-        if(resumable && injector.hasInjected()){
-            Log.Infos("inject","no need to inject");
-            return;
-        }
-        
-        injector.inject(seeds);
+        Injector injector = new Injector(crawl_path);     
+        injector.inject(seeds,resumable);
         
     }
 
@@ -197,17 +220,15 @@ public class BreadthCrawler {
 
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut1";
-        String root = "/home/hu/data/hfut1";
-        
+        String root = "/home/hu/data/hfut1";       
         Config.topN=500;
-
         BreadthCrawler crawler=new BreadthCrawler();
         crawler.taskname=RandomUtils.getTimeString()+"hfut";
-        crawler.addSeed("http://news.hfut.edu.cn/");
+       // crawler.addSeed("http://news.hfut.edu.cn/");
+        crawler.addRegex("http://news.hfut.edu.cn/.*");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
-        crawler.setResumable(false);
-        
+        crawler.setResumable(true);      
         crawler.start(5);
     }
 

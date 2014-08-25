@@ -69,10 +69,12 @@ public class URLRegexFilter extends Filter{
                 count++;
             }
         }
-        if(count==0)
+        if(count==0){
             return next();
-        else
+        }
+        else{
             return crawldatum;
+        }
     }
     
     
