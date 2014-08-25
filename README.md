@@ -37,6 +37,7 @@ You need to create a crawler class that extends BreadthCrawler.
         public static void main(String[] args) throws IOException{  
             ZhihuCrawler crawler=new ZhihuCrawler();
             crawler.addSeed("http://www.zhihu.com/question/21003086");
+            crawler.addRegex("http://www.zhihu.com/.*");
             /*start the crawler with depth=5*/
             crawler.start(5);  
         }

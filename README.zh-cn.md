@@ -32,6 +32,7 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         public static void main(String[] args) throws IOException{  
             ZhihuCrawler crawler=new ZhihuCrawler();
             crawler.addSeed("http://www.zhihu.com/question/21003086");
+            crawler.addRegex("http://www.zhihu.com/.*");
             crawler.start(5);  
         }
  
