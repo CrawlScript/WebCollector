@@ -69,7 +69,7 @@ public class DbUpdater extends Task{
         }
         DbWriter writer=new DbWriter(currentfile);       
         for(CrawlDatum crawldatum:datums){
-            writer.write(crawldatum);           
+            writer.write(crawldatum);                  
         }
         writer.close();
     }
@@ -113,7 +113,7 @@ public class DbUpdater extends Task{
             if(indexmap.containsKey(crawldatum.url)){
                 int preindex=indexmap.get(url);
                 CrawlDatum pre_datum=origin_datums.get(preindex);
-                if(crawldatum.status==Page.UNFETCHED){
+                if(crawldatum.status==Page.UNFETCHED){                    
                     continue;
                 }else if(pre_datum.fetchtime>=crawldatum.fetchtime){
                     continue;

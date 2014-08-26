@@ -35,7 +35,7 @@ public class IntervalFilter extends Filter{
             return crawldatum;
         }
         if(Config.interval==-1){
-            return crawldatum;
+            return next();
         }
        
         Long lasttime=crawldatum.fetchtime;
