@@ -81,8 +81,8 @@ public class WorkQueue
                 try {
                     r.run();
                 }
-                catch (RuntimeException e) {
-                  
+                catch (Exception e) {
+                  e.printStackTrace();
                 }finally{
                     status=0;
                 }
