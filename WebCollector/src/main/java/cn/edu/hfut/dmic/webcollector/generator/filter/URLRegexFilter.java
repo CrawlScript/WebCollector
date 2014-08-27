@@ -57,12 +57,16 @@ public class URLRegexFilter extends Filter {
                 return null;
             }
             String url = crawldatum.url;
+            int state=0;
             for (String nregex : negative) {
                 if (Pattern.matches(nregex, url)) {
-                    continue;
+                   state=1;
+                   break;
                 }
             }
-
+            if(state==1){
+                continue;
+            }
             int count = 0;
             for (String pregex : positive) {
                 if (Pattern.matches(pregex, url)) {
