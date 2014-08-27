@@ -34,17 +34,19 @@ public class UniqueFilter extends Filter{
 
     @Override
     public CrawlDatum next() {
+        while(true){
         CrawlDatum crawldatum=generator.next();
         if(crawldatum==null){
             return null;
         }
         String url=crawldatum.url;
         if(hashset.contains(url)){
-            return next();
+            continue;
         }
         else{
             addUrl(url);
             return crawldatum;
+        }
         }
     }
     

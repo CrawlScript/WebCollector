@@ -23,7 +23,7 @@ public class IntervalFilter extends Filter{
 
     @Override
     public CrawlDatum next() {
-        
+        while(true){
         CrawlDatum crawldatum=generator.next();
         
          if(crawldatum==null){
@@ -35,14 +35,15 @@ public class IntervalFilter extends Filter{
             return crawldatum;
         }
         if(Config.interval==-1){
-            return next();
+            continue;
         }
        
         Long lasttime=crawldatum.fetchtime;
         if(lasttime+Config.interval>System.currentTimeMillis()){
-            return next();
+            continue;
         }
         return crawldatum;
+        }
     }
 
    
