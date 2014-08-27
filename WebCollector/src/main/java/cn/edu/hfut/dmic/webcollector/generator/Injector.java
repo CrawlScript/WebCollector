@@ -62,8 +62,11 @@ public class Injector extends Task{
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
-        DbWriter writer=new DbWriter(inject_file,append);
-       
+        DbWriter writer;
+        if(inject_file.exists())
+            writer=new DbWriter(inject_file,append);
+        else
+            writer=new DbWriter(inject_file,false);
         for(String url:urls){
             CrawlDatum crawldatum=new CrawlDatum();
             crawldatum.url=url;
