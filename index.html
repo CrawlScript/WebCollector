@@ -59,8 +59,7 @@ You need to create a crawler class that extends BreadthCrawler.</p>
             System.out.println(title);
 
             /*extract the content of question*/
-            String question=page.doc.
-               select("div[id=zh-question-detail]").text();
+            String question=page.doc.select("div[id=zh-question-detail]").text();
             System.out.println(question);
 
         }
@@ -72,6 +71,7 @@ You need to create a crawler class that extends BreadthCrawler.</p>
     public static void main(String[] args) throws IOException{  
         ZhihuCrawler crawler=new ZhihuCrawler();
         crawler.addSeed("http://www.zhihu.com/question/21003086");
+        crawler.addRegex("http://www.zhihu.com/.*");
         /*start the crawler with depth=5*/
         crawler.start(5);  
     }
