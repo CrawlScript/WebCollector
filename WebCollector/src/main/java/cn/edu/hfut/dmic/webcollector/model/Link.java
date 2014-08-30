@@ -13,7 +13,9 @@ package cn.edu.hfut.dmic.webcollector.model;
 public class Link {
     public String anchor;
     public String url;
-
+    public Link(){
+        
+    }
     public Link(String anchor, String url) {
         this.anchor = anchor;
         this.url = url;

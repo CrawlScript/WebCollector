@@ -18,24 +18,20 @@
 
 package cn.edu.hfut.dmic.webcollector.parser;
 
+import cn.edu.hfut.dmic.webcollector.util.Config;
+
 /**
  *
  * @author hu
  */
-public class ParseResult {
-    
-    public ParseData parsedata;
-    public ParseText parsetext;
-    
-    public ParseResult(){
-        
+public class ParserFactory {
+    public static Parser getParser(String contentType,String url){
+        if(contentType==null){
+            return null;
+        }
+        if (contentType.contains("text/html")) {
+            return new HtmlParser(Config.topN);
+        }
+        return null;
     }
-
-    public ParseResult(ParseData parsedata, ParseText parsetext) {
-        this.parsedata = parsedata;
-        this.parsetext = parsetext;
-    }
-    
-    
-    
 }

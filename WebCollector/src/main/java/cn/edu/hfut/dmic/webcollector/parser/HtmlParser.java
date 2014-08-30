@@ -38,8 +38,9 @@ public class HtmlParser extends Parser {
         page.doc = Jsoup.parse(page.html);
         page.doc.setBaseUri(page.url);
         ArrayList<Link> links = topNFilter(LinkUtils.getAll(page));
-        ParseResult parseresult = new ParseResult(page.doc.title(), links);
-        return parseresult;
+        ParseData parsedata = new ParseData(page.url,page.doc.title(), links);
+        ParseText parsetext=new ParseText(page.url, page.doc.text());
+        return new ParseResult(parsedata,parsetext);
     }
 
     public ArrayList<Link> topNFilter(ArrayList<Link> origin_links) {

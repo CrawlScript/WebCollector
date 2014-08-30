@@ -16,26 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package cn.edu.hfut.dmic.webcollector.parser;
+package cn.edu.hfut.dmic.webcollector.model;
+
+import org.apache.avro.reflect.Nullable;
 
 /**
  *
  * @author hu
  */
-public class ParseResult {
-    
-    public ParseData parsedata;
-    public ParseText parsetext;
-    
-    public ParseResult(){
-        
-    }
-
-    public ParseResult(ParseData parsedata, ParseText parsetext) {
-        this.parsedata = parsedata;
-        this.parsetext = parsetext;
-    }
-    
-    
-    
+public class Content {
+    @Nullable
+    public String url;
+    public byte[] content;
+    @Nullable
+    public String contentType;
 }

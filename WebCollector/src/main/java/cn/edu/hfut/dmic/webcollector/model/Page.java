@@ -6,6 +6,7 @@
 
 package cn.edu.hfut.dmic.webcollector.model;
 
+import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import java.util.List;
 import java.util.Map;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ public class Page{
     public Document doc=null;
     public int status;
     public long fetchtime;
+    public ParseResult parseResult=null;
     
     public static final int STATUS_UNDEFINED=-1;
     public static final int UNFETCHED=1;

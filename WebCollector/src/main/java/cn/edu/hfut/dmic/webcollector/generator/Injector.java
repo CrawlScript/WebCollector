@@ -55,18 +55,18 @@ public class Injector extends Task{
     
     
     public void inject(ArrayList<String> urls,boolean append) throws UnsupportedEncodingException, IOException{
-         Schema schema = AvroModel.getPageSchema();
+         
         
         String info_path=Config.current_info_path;
         File inject_file=new File(crawl_path,info_path);
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
-        DbWriter writer;
+        DbWriter<CrawlDatum> writer;
         if(inject_file.exists())
-            writer=new DbWriter(inject_file,append);
+            writer=new DbWriter<CrawlDatum>(CrawlDatum.class,inject_file,append);
         else
-            writer=new DbWriter(inject_file,false);
+            writer=new DbWriter<CrawlDatum>(CrawlDatum.class,inject_file,false);
         for(String url:urls){
             CrawlDatum crawldatum=new CrawlDatum();
             crawldatum.url=url;

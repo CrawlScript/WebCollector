@@ -6,18 +6,21 @@
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
+import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.AvroModel;
+import cn.edu.hfut.dmic.webcollector.model.Content;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
+import cn.edu.hfut.dmic.webcollector.parser.ParseData;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
-import cn.edu.hfut.dmic.webcollector.util.WorkQueue;
+import cn.edu.hfut.dmic.webcollector.parser.Parser;
+import cn.edu.hfut.dmic.webcollector.parser.ParserFactory;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
@@ -25,10 +28,14 @@ import cn.edu.hfut.dmic.webcollector.util.HandlerUtils;
 import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.Task;
+import cn.edu.hfut.dmic.webcollector.util.WorkQueue;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.avro.file.DataFileWriter;
@@ -49,7 +56,11 @@ public class Fetcher extends Task {
 
     int threads = 10;
     String crawl_path;
-
+    String segment_path; 
+    boolean isContentStored=true;
+    boolean parsing=true;
+    
+    
     public Fetcher(String crawl_path) {
         this.crawl_path = crawl_path;
     }
@@ -60,13 +71,20 @@ public class Fetcher extends Task {
     }
     
     public DbUpdater dbUpdater = null;
+    public SegmentWriter segmengwriter=null;
 
 
     private void start() throws IOException {
         if (needUpdateDb) {
             this.dbUpdater = new DbUpdater(crawl_path);
+            dbUpdater.setTaskname(this.taskname);
             dbUpdater.initUpdater();
             dbUpdater.lock();
+            
+            
+            
+            segment_path=crawl_path+"/segments/"+SegmentWriter.createSegmengName();
+            segmengwriter=new SegmentWriter(segment_path);
         }
         workqueue = new WorkQueue(threads);
 
@@ -86,7 +104,7 @@ public class Fetcher extends Task {
         workqueue.killALl();
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
-            dbUpdater.merge();
+            dbUpdater.merge(segment_path);
             dbUpdater.unlock();
         }
     }
@@ -105,8 +123,9 @@ public class Fetcher extends Task {
         }
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
-            dbUpdater.merge();
+            dbUpdater.merge(segment_path);
             dbUpdater.unlock();
+            segmengwriter.close();
         }
     }
 
@@ -152,28 +171,37 @@ public class Fetcher extends Task {
 
             if (needUpdateDb) {              
                 try {
-                    dbUpdater.append(crawldatum);
-                    if (page.headers.containsKey("Content-Type")) {
-                        String contenttype = page.headers.get("Content-Type").toString();
-
-                        if (contenttype.contains("text/html")) {
-
-                            HtmlParser htmlparser = new HtmlParser(Config.topN);
-                            ParseResult parseresult = htmlparser.getParse(page);
-                            ArrayList<Link> links = parseresult.links;
-
-                            for (Link link : links) {
-                                CrawlDatum link_crawldatum = new CrawlDatum();
-                                link_crawldatum.url = link.url;
-                                link_crawldatum.status = Page.UNFETCHED;
-                                dbUpdater.append(link_crawldatum);
-                            }
-
-                        } else {
-                            //System.out.println(page.headers.get("Content-Type"));
-                        }
-
+                    segmengwriter.wrtieFetch(crawldatum);
+                    String contentType;                   
+                    List<String> contentTypeList=page.headers.get("Content-Type");
+                    if(contentTypeList==null){
+                        contentType=null;
+                    }else{
+                        contentType=contentTypeList.get(0);
                     }
+                    
+                    if(isContentStored){
+                        Content content=new Content();
+                        content.url=page.url;
+                        if(page.content!=null){
+                            content.content=page.content;
+                        }else{
+                            content.content=new byte[0];
+                        }
+                        content.contentType=contentType;                       
+                        segmengwriter.wrtieContent(content);
+                    }
+                    if(parsing){
+                        Parser parser=ParserFactory.getParser(contentType, page.url);       
+                        if(parser!=null){
+                            ParseResult parseresult = parser.getParse(page);
+                            page.parseResult=parseresult;
+                            segmengwriter.wrtieParse(parseresult);                          
+                        }
+                    }
+                      
+
+                    
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -225,6 +253,23 @@ public class Fetcher extends Task {
     public void setRetry(int retry) {
         this.retry = retry;
     }
+
+    public boolean isIsContentStored() {
+        return isContentStored;
+    }
+
+    public void setIsContentStored(boolean isContentStored) {
+        this.isContentStored = isContentStored;
+    }
+
+    public boolean isParsing() {
+        return parsing;
+    }
+
+    public void setParsing(boolean parsing) {
+        this.parsing = parsing;
+    }
+    
     
     
 

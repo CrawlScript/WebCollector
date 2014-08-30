@@ -18,22 +18,25 @@
 
 package cn.edu.hfut.dmic.webcollector.parser;
 
+import org.apache.avro.reflect.Nullable;
+
 /**
  *
  * @author hu
  */
-public class ParseResult {
+public class ParseText {
+    @Nullable
+    public String url=null;
+    @Nullable
+    public String text=null;
     
-    public ParseData parsedata;
-    public ParseText parsetext;
-    
-    public ParseResult(){
+    public ParseText(){
         
     }
 
-    public ParseResult(ParseData parsedata, ParseText parsetext) {
-        this.parsedata = parsedata;
-        this.parsetext = parsetext;
+    public ParseText(String url,String text) {
+        this.url=url;
+        this.text=text;
     }
     
     

@@ -23,6 +23,21 @@ import java.util.regex.Pattern;
 public class StandardGenerator extends Generator {
 
     public String crawl_path;
+    
+    public String getSegmentPath(){
+        String[] segment_list=new File(crawl_path,"segments").list();
+        String segment_path=null;
+        long max=0;
+        for(String segment:segment_list){
+            long timestamp=Long.valueOf(segment);
+            if(timestamp>max){
+                max=timestamp;
+                segment_path=segment;
+            }
+        }
+        return segment_path;
+    }
+    
     public StandardGenerator(String crawl_path){
         this.crawl_path=crawl_path;
         try {
@@ -32,9 +47,14 @@ public class StandardGenerator extends Generator {
         }
         
         DbUpdater dbupdater=new DbUpdater(crawl_path);
+        dbupdater.setTaskname(this.taskname);
+        
         try {
             if(dbupdater.isLocked()){
-                dbupdater.merge();
+                String segment_path=getSegmentPath();
+                if(segment_path!=null){
+                    dbupdater.merge(segment_path);
+                }
                 dbupdater.unlock();
             }
         } catch (IOException ex) {
@@ -80,22 +100,22 @@ public class StandardGenerator extends Generator {
             return null;
        
         CrawlDatum crawldatum=dbreader.readNext();   
-        
-        
+
         if(crawldatum==null){
             return null;
         }
+
         if(shouldFilter(crawldatum.url)){
             return next();
         }
         return crawldatum;
     }
     
-    DbReader dbreader;
+    DbReader<CrawlDatum> dbreader;
 
     public void initReader() throws IOException{   
         File oldfile=new File(crawl_path, Config.old_info_path);
-        dbreader=new DbReader(oldfile);
+        dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
     }
 
     public boolean shouldFilter(String url) {

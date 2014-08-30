@@ -5,6 +5,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.Config;
@@ -22,25 +23,26 @@ import org.apache.avro.reflect.ReflectDatumReader;
  *
  * @author hu
  */
-public class DbReader {
+public class DbReader<T> {
 
-    
-    Iterator<CrawlDatum> iterator;
-    DataFileReader<CrawlDatum> dataFileReader;
+    Class<T> type;
+    Iterator<T> iterator;
+    DataFileReader<T> dataFileReader;
 
-    public DbReader(File dbfile) throws IOException {
-        DatumReader<CrawlDatum> datumReader = new ReflectDatumReader<CrawlDatum>(CrawlDatum.class);
-        dataFileReader = new DataFileReader<CrawlDatum>(dbfile, datumReader);
+    public DbReader(Class<T> type,File dbfile) throws IOException {
+        this.type=type;
+        DatumReader<T> datumReader = new ReflectDatumReader<T>(type);
+        dataFileReader = new DataFileReader<T>(dbfile, datumReader);
         iterator = dataFileReader.iterator();
     }
 
-    public DbReader(String dbpath) throws IOException {
-        this(new File(dbpath));
+    public DbReader(Class<T> type,String dbpath) throws IOException {
+        this(type,new File(dbpath));
     }
 
    
 
-    public CrawlDatum readNext() {
+    public T readNext() {
         return iterator.next();
     }
 
@@ -60,7 +62,7 @@ public class DbReader {
             return;
         }
         String dbpath=args[0];
-        DbReader reader=new DbReader(dbpath);
+        DbReader<CrawlDatum> reader=new DbReader<CrawlDatum>(CrawlDatum.class,dbpath);
         int sum=0;
         int sum_fetched=0;
         int sum_unfetched=0;

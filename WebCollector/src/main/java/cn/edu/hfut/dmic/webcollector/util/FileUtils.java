@@ -23,6 +23,18 @@ import java.nio.file.StandardCopyOption;
  */
 public class FileUtils {
     
+    public static void deleteDir(File dir){
+        File[] filelist=dir.listFiles();
+        for(File file:filelist){
+            if(file.isFile()){
+                file.delete();
+            }else{
+                deleteDir(file);
+            }
+        }
+        dir.delete();
+    }
+    
     public static void copy(File origin,File newfile) throws FileNotFoundException, IOException{
         if(!newfile.getParentFile().exists()){
             newfile.getParentFile().mkdirs();

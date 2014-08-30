@@ -31,8 +31,10 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
+import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -60,7 +62,9 @@ public class BreadthCrawler {
     private String useragent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0";
 
     private int threads=10;
-    private boolean resumable;
+    private boolean resumable=false;
+    private boolean isContentStored=true;
+    
 
     ArrayList<String> regexs = new ArrayList<String>();
     ArrayList<String> seeds = new ArrayList<String>();
@@ -126,6 +130,11 @@ public class BreadthCrawler {
      */
     public void start(int depth) throws IOException {
         if (!resumable) {
+            File crawl_dir=new File(crawl_path);
+            if(crawl_dir.exists()){
+                FileUtils.deleteDir(crawl_dir);
+            }
+                        
             if (seeds.isEmpty()) {
                 Log.Infos("error:"+"Please add at least one seed");
                 return;
@@ -199,6 +208,7 @@ public class BreadthCrawler {
 
         
         Fetcher fetcher=new Fetcher(crawl_path);
+        fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(fetch_handler);
         conconfig = new CommonConnectionConfig();
         fetcher.setTaskname(taskname);
@@ -221,15 +231,22 @@ public class BreadthCrawler {
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut1";
         String root = "/home/hu/data/hfut1";       
-        Config.topN=500;
-        BreadthCrawler crawler=new BreadthCrawler();
+        //Config.topN=100;
+        BreadthCrawler crawler=new BreadthCrawler(){
+            @Override
+            public void visit(Page page){
+            
+            }
+        };
         crawler.taskname=RandomUtils.getTimeString()+"hfut";
-       // crawler.addSeed("http://news.hfut.edu.cn/");
+        crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.addRegex("http://news.hfut.edu.cn/.*");
+        //crawler.addRegex(".*");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
-        crawler.setResumable(true);      
-        crawler.start(5);
+       
+        crawler.setResumable(false);      
+        crawler.start(3);
     }
 
     public String getUseragent() {
@@ -294,6 +311,14 @@ public class BreadthCrawler {
 
     public void setTaskname(String taskname) {
         this.taskname = taskname;
+    }
+
+    public boolean isIsContentStored() {
+        return isContentStored;
+    }
+
+    public void setIsContentStored(boolean isContentStored) {
+        this.isContentStored = isContentStored;
     }
 
     
