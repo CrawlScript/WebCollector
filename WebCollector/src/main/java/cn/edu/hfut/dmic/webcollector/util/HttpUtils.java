@@ -6,7 +6,6 @@
 package cn.edu.hfut.dmic.webcollector.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,12 +28,12 @@ public class HttpUtils {
     }
 
     public static Page fetchHttpResponse(String url, ConnectionConfig conconfig, int retry) {
-        for(int i=0;i<retry;i++){
+        for(int i=0;i<=retry;i++){
             try{
                 Page page=fetchHttpResponse(url, conconfig);
                 return page;
             }catch(Exception ex){
-                continue;
+                
             }
         }
         return null;
