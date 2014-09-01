@@ -18,7 +18,6 @@
 package cn.edu.hfut.dmic.webcollector.crawler;
 
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
@@ -29,15 +28,16 @@ import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
-import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
+import cn.edu.hfut.dmic.webcollector.util.ProxyServer;
 import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.ArrayList;
 
 
@@ -64,6 +64,7 @@ public class BreadthCrawler {
     private int threads=10;
     private boolean resumable=false;
     private boolean isContentStored=true;
+    private Proxy proxy=null;
     
 
     ArrayList<String> regexs = new ArrayList<String>();
@@ -208,6 +209,7 @@ public class BreadthCrawler {
 
         
         Fetcher fetcher=new Fetcher(crawl_path);
+        fetcher.setProxy(proxy);
         fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(fetch_handler);
         conconfig = new CommonConnectionConfig();
@@ -231,16 +233,19 @@ public class BreadthCrawler {
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut1";
         String root = "/home/hu/data/hfut1";       
+      
         //Config.topN=100;
         BreadthCrawler crawler=new BreadthCrawler(){
             @Override
             public void visit(Page page){
-            
+            System.out.println(page.doc.title());
             }
         };
-        crawler.taskname=RandomUtils.getTimeString()+"hfut";
+   
+        crawler.setTaskname(RandomUtils.getTimeString()+"hfut");
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.addRegex("http://news.hfut.edu.cn/.*");
+        
         //crawler.addRegex(".*");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
@@ -321,6 +326,15 @@ public class BreadthCrawler {
         this.isContentStored = isContentStored;
     }
 
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
+    }
+
+    
     
     
 }

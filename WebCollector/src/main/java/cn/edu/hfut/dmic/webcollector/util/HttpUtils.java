@@ -5,11 +5,12 @@
  */
 package cn.edu.hfut.dmic.webcollector.util;
 
+import cn.edu.hfut.dmic.webcollector.model.Page;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 
 /**
  *
@@ -19,18 +20,12 @@ public class HttpUtils {
     
    
 
-    public static Page fetchHttpResponse(String url, int retry) {
-        return fetchHttpResponse(url, null, retry);
-    }
+   
 
-    public static Page fetchHttpResponse(String url) throws Exception {
-        return fetchHttpResponse(url, null);
-    }
-
-    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig, int retry) {
+    public static Page fetchHttpResponse(String url,Proxy proxy, ConnectionConfig conconfig, int retry) {
         for(int i=0;i<=retry;i++){
             try{
-                Page page=fetchHttpResponse(url, conconfig);
+                Page page=fetchHttpResponse(url,proxy, conconfig);
                 return page;
             }catch(Exception ex){
                 
@@ -40,9 +35,15 @@ public class HttpUtils {
  
     }
 
-    public static Page fetchHttpResponseWithSize(String url, ConnectionConfig conconfig,int maxsize) throws Exception {
+    public static Page fetchHttpResponseWithSize(String url,Proxy proxy, ConnectionConfig conconfig,int maxsize) throws Exception {
         URL _URL = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) _URL.openConnection();
+        
+        HttpURLConnection con;
+        if(proxy==null){
+            con=(HttpURLConnection) _URL.openConnection();
+        }else{
+            con=(HttpURLConnection) _URL.openConnection(proxy);
+        }
         con.setDoInput(true);
         con.setDoOutput(true);
         if (conconfig != null) {
@@ -80,8 +81,8 @@ public class HttpUtils {
 
     }
     
-    public static Page fetchHttpResponse(String url, ConnectionConfig conconfig) throws Exception{
-        return  fetchHttpResponseWithSize(url, conconfig, Config.maxsize);
+    public static Page fetchHttpResponse(String url,Proxy proxy, ConnectionConfig conconfig) throws Exception{
+        return  fetchHttpResponseWithSize(url, proxy,conconfig, Config.maxsize);
     }
 
 }

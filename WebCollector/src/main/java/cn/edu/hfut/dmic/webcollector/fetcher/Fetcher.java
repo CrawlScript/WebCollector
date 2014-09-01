@@ -8,39 +8,24 @@ package cn.edu.hfut.dmic.webcollector.fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
-import cn.edu.hfut.dmic.webcollector.model.AvroModel;
 import cn.edu.hfut.dmic.webcollector.model.Content;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
-import cn.edu.hfut.dmic.webcollector.parser.ParseData;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import cn.edu.hfut.dmic.webcollector.parser.Parser;
 import cn.edu.hfut.dmic.webcollector.parser.ParserFactory;
-import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
-import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.HandlerUtils;
 import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
 import cn.edu.hfut.dmic.webcollector.util.Task;
 import cn.edu.hfut.dmic.webcollector.util.WorkQueue;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.net.Proxy;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.reflect.ReflectDatumWriter;
+
 
 /**
  *
@@ -49,6 +34,8 @@ import org.apache.avro.reflect.ReflectDatumWriter;
 public class Fetcher extends Task {
     
     public int retry=3;
+    
+    public Proxy proxy=null;
     
 
     public static final int FETCH_SUCCESS = 1;
@@ -152,7 +139,7 @@ public class Fetcher extends Task {
             page.url = url;
             Page response=null;
            
-            response = HttpUtils.fetchHttpResponse(url, conconfig, retry);         
+            response = HttpUtils.fetchHttpResponse(url,proxy, conconfig, retry);         
 
             if (response == null) {
                 Log.Errors("failed ", Fetcher.this.taskname, page.url);
@@ -269,6 +256,14 @@ public class Fetcher extends Task {
     public void setParsing(boolean parsing) {
         this.parsing = parsing;
     }
+
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
+    }
     
     
     
@@ -280,6 +275,7 @@ public class Fetcher extends Task {
         generator.addUrl("http://news.hfut.edu.cn/");
         Fetcher fetcher=new Fetcher();
         fetcher.fetchAll(generator);
+        
         
     }
     
