@@ -11,8 +11,8 @@ package cn.edu.hfut.dmic.webcollector.model;
  * @author hu
  */
 public class Link {
-    public String anchor;
-    public String url;
+    private String anchor;
+    private String url;
     public Link(){
         
     }
@@ -20,6 +20,28 @@ public class Link {
         this.anchor = anchor;
         this.url = url;
     }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
+    public void setAnchor(String anchor) {
+        this.anchor = anchor;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    
+    
+    
+    
+    
+    
     
     
 }

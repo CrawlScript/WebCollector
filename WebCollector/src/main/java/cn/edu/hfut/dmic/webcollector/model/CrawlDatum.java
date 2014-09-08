@@ -13,7 +13,43 @@ import org.apache.avro.reflect.Nullable;
  * @author hu
  */
 public class CrawlDatum {
-    @Nullable public String url;
-    @Nullable public int status=Page.STATUS_UNDEFINED;
-    @Nullable public long fetchtime=Page.FETCHTIME_UNDEFINED;
+    
+    public static final int STATUS_DB_UNDEFINED=-1;
+    public static final int STATUS_DB_UNFETCHED=1;
+    public static final int STATUS_DB_FETCHED=2;
+    
+    public static final int FETCHTIME_UNDEFINED=1;
+    
+    @Nullable private String url;
+    @Nullable private int status=CrawlDatum.STATUS_DB_UNDEFINED;
+    @Nullable private long fetchTime=CrawlDatum.FETCHTIME_UNDEFINED;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getFetchTime() {
+        return fetchTime;
+    }
+
+    public void setFetchTime(long fetchTime) {
+        this.fetchTime = fetchTime;
+    }
+
+    
+    
+    
+    
 }

@@ -31,12 +31,11 @@ import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.Log;
-import cn.edu.hfut.dmic.webcollector.util.ProxyServer;
 import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
+import cn.edu.hfut.dmic.webcollector.util.Task;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.ArrayList;
 
@@ -46,16 +45,16 @@ import java.util.ArrayList;
  * 
  * @author hu
  */
-public class BreadthCrawler {
+public class BreadthCrawler extends Task{
     
     /**
      *
      */
     public BreadthCrawler(){
-        taskname=RandomUtils.getTimeString();
+        setTaskName(RandomUtils.getTimeString());
     }
 
-    private String taskname;
+    private String taskName;
     private String crawl_path = "crawl";
     private String root = "data";
     private String cookie = null;
@@ -99,7 +98,7 @@ public class BreadthCrawler {
         }
     }
     */
-    public ConnectionConfig conconfig = null;
+    private ConnectionConfig conconfig = null;
 
     public void configCon(HttpURLConnection con) {
         con.setRequestProperty("User-Agent", useragent);
@@ -111,7 +110,7 @@ public class BreadthCrawler {
 
     protected void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
-        Log.Infos("visit",this.taskname,page.url);
+        Log.Infos("visit",this.getTaskName(),page.getUrl());
         fsoutput.output(page);
     }
     
@@ -122,7 +121,7 @@ public class BreadthCrawler {
 
     public final static int RUNNING=1;
     public final static int STOPED=2;
-    public int status;
+    private int status;
 
     /**
      * start the crawler
@@ -213,7 +212,7 @@ public class BreadthCrawler {
         fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(fetch_handler);
         conconfig = new CommonConnectionConfig();
-        fetcher.setTaskname(taskname);
+        fetcher.setTaskName(this.getTaskName());
         fetcher.setThreads(threads);
         fetcher.setConconfig(conconfig);
         return fetcher;
@@ -223,7 +222,7 @@ public class BreadthCrawler {
 
         Generator generator = new StandardGenerator(crawl_path);
         generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
-        generator.setTaskname(taskname);
+        generator.setTaskName(getTaskName());
         return generator;
     }
    
@@ -238,20 +237,30 @@ public class BreadthCrawler {
         BreadthCrawler crawler=new BreadthCrawler(){
             @Override
             public void visit(Page page){
-            System.out.println(page.doc.title());
+            System.out.println(page.getUrl()+" "+page.getResponse().getCode());
+            System.out.println(page.getDoc().title());
             }
         };
    
-        crawler.setTaskname(RandomUtils.getTimeString()+"hfut");
+        crawler.setTaskName(RandomUtils.getTimeString()+"hfut");
+        
+        
+        
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.addRegex("http://news.hfut.edu.cn/.*");
+        crawler.addRegex("-.*#.*");
+        crawler.addRegex("-.*png.*");
+        crawler.addRegex("-.*jpg.*");
+        crawler.addRegex("-.*gif.*");
+        crawler.addRegex("-.*js.*");
+        crawler.addRegex("-.*css.*");
         
         //crawler.addRegex(".*");
         crawler.setRoot(root);
         crawler.setCrawl_path(crawl_path);
        
         crawler.setResumable(false);      
-        crawler.start(3);
+        crawler.start(1);
     }
 
     public String getUseragent() {
@@ -310,13 +319,7 @@ public class BreadthCrawler {
         this.conconfig = conconfig;
     }
 
-    public String getTaskname() {
-        return taskname;
-    }
-
-    public void setTaskname(String taskname) {
-        this.taskname = taskname;
-    }
+    
 
     public boolean isIsContentStored() {
         return isContentStored;

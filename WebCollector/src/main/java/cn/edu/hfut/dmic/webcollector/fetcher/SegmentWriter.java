@@ -47,7 +47,7 @@ public class SegmentWriter {
         return datestr;
     }
 
-    String segment_path;
+    private String segment_path;
 
     public SegmentWriter(String segment_path) {
         this.segment_path = segment_path;
@@ -65,13 +65,13 @@ public class SegmentWriter {
         }
     }
 
-    DbWriter<CrawlDatum> fetchWriter;
-    DbWriter<Content> contentWriter;
-    DbWriter<ParseData> parseDataWriter;
-    DbWriter<ParseText> parseTextWriter;
-    public int count_content;
-    public int count_parse;
-    public int count_fetch;
+    private DbWriter<CrawlDatum> fetchWriter;
+    private DbWriter<Content> contentWriter;
+    private DbWriter<ParseData> parseDataWriter;
+    private DbWriter<ParseText> parseTextWriter;
+    private int count_content;
+    private int count_parse;
+    private int count_fetch;
 
     public synchronized void wrtieFetch(CrawlDatum fetch) throws IOException {
         fetchWriter.write(fetch);

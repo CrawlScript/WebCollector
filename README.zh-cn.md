@@ -16,13 +16,13 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         @Override
         public void visit(Page page) {
             String question_regex="^http://www.zhihu.com/question/[0-9]+";
-            if(Pattern.matches(question_regex, page.url)){
-                System.out.println("正在抽取"+page.url);
+            if(Pattern.matches(question_regex, page.getUrl())){
+                System.out.println("正在抽取"+page.getUrl());
                 /*抽取标题*/
-                String title=page.doc.title();
+                String title=page.getDoc().title();
                 System.out.println(title);
                 /*抽取提问内容*/
-                String question=page.doc.select("div[id=zh-question-detail]").text();
+                String question=page.getDoc().select("div[id=zh-question-detail]").text();
                 System.out.println(question);
              
             }

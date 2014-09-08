@@ -31,14 +31,14 @@ public class IntervalFilter extends Filter{
         }
          
         
-        if(crawldatum.status==Page.UNFETCHED){
+        if(crawldatum.getStatus()==CrawlDatum.STATUS_DB_UNFETCHED){
             return crawldatum;
         }
         if(Config.interval==-1){
             continue;
         }
        
-        Long lasttime=crawldatum.fetchtime;
+        Long lasttime=crawldatum.getFetchTime();
         if(lasttime+Config.interval>System.currentTimeMillis()){
             continue;
         }

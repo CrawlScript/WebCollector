@@ -39,7 +39,7 @@ public class UniqueFilter extends Filter{
         if(crawldatum==null){
             return null;
         }
-        String url=crawldatum.url;
+        String url=crawldatum.getUrl();
         if(hashset.contains(url)){
             continue;
         }

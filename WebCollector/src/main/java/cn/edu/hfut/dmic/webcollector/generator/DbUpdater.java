@@ -5,10 +5,9 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
-import cn.edu.hfut.dmic.webcollector.model.AvroModel;
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Link;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.ParseData;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
@@ -19,12 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.apache.avro.file.DataFileReader;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.reflect.ReflectDatumReader;
-import org.apache.avro.reflect.ReflectDatumWriter;
+
 
 /**
  *
@@ -32,7 +26,9 @@ import org.apache.avro.reflect.ReflectDatumWriter;
  */
 public class DbUpdater extends Task {
 
-    String crawl_path;
+    private String crawl_path;
+    private DbWriter<CrawlDatum> updater_writer;
+    private int updaterCount;
 
     public DbUpdater(String crawl_path) {
         this.crawl_path = crawl_path;
@@ -61,8 +57,7 @@ public class DbUpdater extends Task {
         FileUtils.writeFile(crawl_path + "/" + Config.lock_path, "0".getBytes("utf-8"));
     }
     // DataFileWriter<CrawlDatum> dataFileWriter;
-    DbWriter<CrawlDatum> updater_writer;
-    int updaterCount;
+    
 
     public void updateAll(ArrayList<CrawlDatum> datums) throws IOException {
         File currentfile = new File(crawl_path, Config.current_info_path);
@@ -104,7 +99,7 @@ public class DbUpdater extends Task {
 
     public void merge(String segment_path) throws IOException {
 
-        Log.Infos("merge",taskname,segment_path);
+        Log.Infos("merge",getTaskName(),segment_path);
         File file_fetch = new File(segment_path, "fetch");
         if (!file_fetch.exists()) {
             return;
@@ -121,23 +116,23 @@ public class DbUpdater extends Task {
         while (reader_current.hasNext()) {
             datum = reader_current.readNext();
             datums_origin.add(datum);
-            indexmap.put(datum.url, datums_origin.size() - 1);
+            indexmap.put(datum.getUrl(), datums_origin.size() - 1);
         }
 
         while (reader_fetch.hasNext()) {
             datum = reader_fetch.readNext();
-            if (indexmap.containsKey(datum.url)) {
-                if (datum.status == Page.UNFETCHED) {
+            if (indexmap.containsKey(datum.getUrl())) {
+                if (datum.getStatus() == CrawlDatum.STATUS_DB_UNFETCHED) {
                     continue;
                 } else {
-                    int preindex = indexmap.get(datum.url);
+                    int preindex = indexmap.get(datum.getUrl());
                     datums_origin.set(preindex, datum);
-                    indexmap.put(datum.url, preindex);
+                    indexmap.put(datum.getUrl(), preindex);
                 }
 
             } else {
                 datums_origin.add(datum);
-                indexmap.put(datum.url, datums_origin.size() - 1);
+                indexmap.put(datum.getUrl(), datums_origin.size() - 1);
             }
 
         }
@@ -151,13 +146,13 @@ public class DbUpdater extends Task {
                 parseresult = reader_parse.readNext();
                 for (Link link : parseresult.links) {
                     datum = new CrawlDatum();
-                    datum.url = link.url;
-                    datum.status = Page.UNFETCHED;
-                    if (indexmap.containsKey(datum.url)) {
+                    datum.setUrl(link.getUrl());
+                    datum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
+                    if (indexmap.containsKey(datum.getUrl())) {
                         continue;
                     } else {
                         datums_origin.add(datum);
-                        indexmap.put(datum.url, datums_origin.size() - 1);
+                        indexmap.put(datum.getUrl(), datums_origin.size() - 1);
                     }
                 }
             }

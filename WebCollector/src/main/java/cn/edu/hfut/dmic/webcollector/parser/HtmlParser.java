@@ -13,6 +13,7 @@ import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  *
@@ -33,13 +34,24 @@ public class HtmlParser extends Parser {
 
     @Override
     public ParseResult getParse(Page page) throws UnsupportedEncodingException {
-        String charset = CharsetDetector.guessEncoding(page.content);
-        page.html = new String(page.content, charset);
-        page.doc = Jsoup.parse(page.html);
-        page.doc.setBaseUri(page.url);
+        String url=page.getUrl();
+        
+        String charset = CharsetDetector.guessEncoding(page.getContent());
+        
+        String html=new String(page.getContent(), charset);
+        page.setHtml(html);
+        
+        Document doc=Jsoup.parse(page.getHtml());
+        doc.setBaseUri(url);      
+        page.setDoc(doc);
+        
+        String title=doc.title();
+        String text=doc.text();
+     
         ArrayList<Link> links = topNFilter(LinkUtils.getAll(page));
-        ParseData parsedata = new ParseData(page.url,page.doc.title(), links);
-        ParseText parsetext=new ParseText(page.url, page.doc.text());
+        ParseData parsedata = new ParseData(url,title, links);
+        ParseText parsetext=new ParseText(url,text);
+        
         return new ParseResult(parsedata,parsetext);
     }
 

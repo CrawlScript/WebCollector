@@ -12,15 +12,17 @@ package cn.edu.hfut.dmic.webcollector.util;
  */
 public class Task {
     
-    public String taskname;
+    private String taskName;
 
-    public String getTaskname() {
-        return taskname;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTaskname(String taskname) {
-        this.taskname = taskname;
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
     }
+
+    
     
     
 }

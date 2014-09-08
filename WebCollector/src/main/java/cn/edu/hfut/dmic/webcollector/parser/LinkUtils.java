@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.util.HttpUtils;
+
 
 /**
  *
@@ -67,7 +67,7 @@ public class LinkUtils {
     
     public static ArrayList<Link> getLinks(Page page) {
         try {
-            return getLinks(page.doc);
+            return getLinks(page.getDoc());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -77,10 +77,10 @@ public class LinkUtils {
     
     public static ArrayList<Link> getAll(Page page) {
         try {
-            ArrayList<Link> result=getLinks(page.doc);
-            result.addAll(getImgs(page.doc));
-            result.addAll(getCSS(page.doc));
-            result.addAll(getJS(page.doc));
+            ArrayList<Link> result=getLinks(page.getDoc());
+            result.addAll(getImgs(page.getDoc()));
+            result.addAll(getCSS(page.getDoc()));
+            result.addAll(getJS(page.getDoc()));
             return result;
         } catch (Exception e) {
             e.printStackTrace();

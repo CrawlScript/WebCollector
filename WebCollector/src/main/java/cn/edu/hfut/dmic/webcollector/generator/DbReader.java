@@ -7,14 +7,12 @@ package cn.edu.hfut.dmic.webcollector.generator;
 
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.URLUtils;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+
 import java.util.Iterator;
-import java.util.Map.Entry;
+
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.reflect.ReflectDatumReader;
@@ -74,11 +72,11 @@ public class DbReader<T> {
         while(reader.hasNext()){
             crawldatum=reader.readNext();
             sum++;
-            switch(crawldatum.status){
-                case Page.FETCHED:
+            switch(crawldatum.getStatus()){
+                case CrawlDatum.STATUS_DB_FETCHED:
                     sum_fetched++;
                     break;
-                case Page.UNFETCHED:
+                case CrawlDatum.STATUS_DB_UNFETCHED:
                     sum_unfetched++;
                     break;
                     
@@ -87,10 +85,7 @@ public class DbReader<T> {
          
         }
         reader.close();
-        System.out.println("Total urls:"+sum);
-        System.out.println("status "+Page.FETCHED+" (fetched):"+sum_fetched);
-        System.out.println("status "+Page.UNFETCHED+" (unfetched):"+sum_unfetched);
-        
+       
         
     }
 }

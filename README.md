@@ -17,15 +17,15 @@ You need to create a crawler class that extends BreadthCrawler.
         @Override
         public void visit(Page page) {
             String question_regex="^http://www.zhihu.com/question/[0-9]+";         
-            if(Pattern.matches(question_regex, page.url)){              
-                System.out.println("processing "+page.url);
+            if(Pattern.matches(question_regex, page.getUrl())){              
+                System.out.println("processing "+page.getUrl());
 
                 /*extract title of the page*/
-                String title=page.doc.title();
+                String title=page.getDoc().title();
                 System.out.println(title);
 
                 /*extract the content of question*/
-                String question=page.doc.select("div[id=zh-question-detail]").text();
+                String question=page.getDoc().select("div[id=zh-question-detail]").text();
                 System.out.println(question);
              
             }

@@ -263,11 +263,11 @@ public class ProxyServer extends Thread {
         BreadthCrawler crawler = new BreadthCrawler() {
             @Override
             public void visit(Page page) {
-                System.out.println(page.doc.title());
+                System.out.println(page.getDoc().title());
             }
         };
         crawler.setProxy(proxy);
-        crawler.setTaskname(RandomUtils.getTimeString() + "hfut");
+        crawler.setTaskName(RandomUtils.getTimeString() + "hfut");
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.addRegex("http://news.hfut.edu.cn/.*");
 

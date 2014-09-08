@@ -6,14 +6,37 @@
 
 package cn.edu.hfut.dmic.webcollector.model;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
+import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
+import java.io.IOException;
+
+
 
 /**
  *
  * @author hu
  */
 public class CommonURL {
+    public static void main(String[] args) throws IOException {
+        CollectionGenerator generator = new CollectionGenerator();
+        generator.addUrl("http://www.hfut.edu.cn/ch/");
+        generator.addUrl("http://news.hfut.edu.cn/");
+        Fetcher fetcher = new Fetcher();
+        fetcher.fetchAll(generator);
+        
+        BreadthCrawler bc=new BreadthCrawler();
+        
+                
+        
+        
+
+    }
+    
+    
+    
+    
+    /*
     public String baseurl;
     public HashMap<String,String> params_map=new HashMap<String, String>();
     public CommonURL(String url){
@@ -45,5 +68,5 @@ public class CommonURL {
         commonurl.print();
     }
     
-    
+    */
 }

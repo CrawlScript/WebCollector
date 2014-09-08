@@ -7,7 +7,6 @@
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,9 +31,9 @@ public class CollectionGenerator extends Generator{
     public void addUrls(Collection<String> urls){
         for(String url:urls){
             CrawlDatum crawldatum=new CrawlDatum();
-            crawldatum.url=url;
-            crawldatum.fetchtime=Page.FETCHTIME_UNDEFINED;
-            crawldatum.status=Page.UNFETCHED;
+            crawldatum.setUrl(url);
+            crawldatum.setFetchTime(CrawlDatum.FETCHTIME_UNDEFINED);
+            crawldatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
             data.add(crawldatum);
         }
         iterator=data.iterator();
@@ -43,9 +42,9 @@ public class CollectionGenerator extends Generator{
     public void addUrl(String url){
        
         CrawlDatum crawldatum=new CrawlDatum();
-        crawldatum.url=url;
-        crawldatum.fetchtime=Page.FETCHTIME_UNDEFINED;
-        crawldatum.status=Page.UNFETCHED;
+        crawldatum.setUrl(url);
+        crawldatum.setFetchTime(CrawlDatum.FETCHTIME_UNDEFINED);
+        crawldatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
         data.add(crawldatum);
         iterator=data.iterator();
     }
@@ -73,7 +72,7 @@ public class CollectionGenerator extends Generator{
         generator.addUrl("http://abc2.com");
         CrawlDatum crawldatum;
         while((crawldatum=generator.next())!=null){
-            System.out.println(crawldatum.url);
+            System.out.println(crawldatum.getUrl());
         }
     }
     

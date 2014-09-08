@@ -33,7 +33,8 @@ public class ParseUtils {
     } 
     
     public static Page parseDocument(Page page){
-        page.doc=parseDocument(page.content, page.url);
+        Document doc=parseDocument(page.getContent(), page.getUrl());
+        page.setDoc(doc);
         return page;
     }
 }

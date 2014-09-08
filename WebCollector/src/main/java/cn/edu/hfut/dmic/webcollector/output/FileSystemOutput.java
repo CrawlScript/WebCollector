@@ -28,7 +28,7 @@ public class FileSystemOutput {
 
     public void output(Page page) {
         try {
-            URL _URL = new URL(page.url);
+            URL _URL = new URL(page.getUrl());
             String query = "";
             if (_URL.getQuery() != null) {
                 query = "_" + _URL.getQuery();
@@ -54,7 +54,7 @@ public class FileSystemOutput {
             File domain_path = new File(root, _URL.getHost());
             File f = new File(domain_path, path);
             Log.Infos("output",null, f.getAbsolutePath());
-            FileUtils.writeFileWithParent(f, page.content);
+            FileUtils.writeFileWithParent(f, page.getContent());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -9,7 +9,6 @@ package cn.edu.hfut.webcollector.generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.junit.Assert;
@@ -40,9 +39,9 @@ public class TestStandardGenerator {
         
         Assert.assertEquals(seeds.size(),datums.size());
         for(int i=0;i<seeds.size();i++){           
-            Assert.assertEquals(-1, datums.get(i).fetchtime);
-            Assert.assertEquals(Page.UNFETCHED, datums.get(i).status);
-            Assert.assertEquals(seeds.get(i), datums.get(i).url);
+            Assert.assertEquals(-1, datums.get(i).getFetchTime());
+            Assert.assertEquals(CrawlDatum.STATUS_DB_UNFETCHED, datums.get(i).getStatus());
+            Assert.assertEquals(seeds.get(i), datums.get(i).getUrl());
         }
         
         System.out.println("123123");

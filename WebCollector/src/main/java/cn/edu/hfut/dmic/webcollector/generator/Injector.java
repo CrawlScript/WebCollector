@@ -6,8 +6,7 @@
 
 package cn.edu.hfut.dmic.webcollector.generator;
 
-import cn.edu.hfut.dmic.webcollector.model.AvroModel;
-import cn.edu.hfut.dmic.webcollector.model.Page;
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.Task;
@@ -15,10 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import org.apache.avro.Schema;
-import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.io.DatumWriter;
-import org.apache.avro.reflect.ReflectDatumWriter;
+
 
 
 /**
@@ -69,8 +65,8 @@ public class Injector extends Task{
             writer=new DbWriter<CrawlDatum>(CrawlDatum.class,inject_file,false);
         for(String url:urls){
             CrawlDatum crawldatum=new CrawlDatum();
-            crawldatum.url=url;
-            crawldatum.status=Page.UNFETCHED;
+            crawldatum.setUrl(url);
+            crawldatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
             writer.write(crawldatum);                    
         }
         writer.close();

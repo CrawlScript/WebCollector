@@ -56,7 +56,7 @@ public class URLRegexFilter extends Filter {
             if (crawldatum == null) {
                 return null;
             }
-            String url = crawldatum.url;
+            String url = crawldatum.getUrl();
             int state=0;
             for (String nregex : negative) {
                 if (Pattern.matches(nregex, url)) {

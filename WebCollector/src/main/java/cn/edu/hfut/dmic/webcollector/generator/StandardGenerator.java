@@ -47,7 +47,7 @@ public class StandardGenerator extends Generator {
         }
         
         DbUpdater dbupdater=new DbUpdater(crawl_path);
-        dbupdater.setTaskname(this.taskname);
+        dbupdater.setTaskName(this.getTaskName());
         
         try {
             if(dbupdater.isLocked()){
@@ -105,7 +105,7 @@ public class StandardGenerator extends Generator {
             return null;
         }
 
-        if(shouldFilter(crawldatum.url)){
+        if(shouldFilter(crawldatum.getUrl())){
             return next();
         }
         return crawldatum;
