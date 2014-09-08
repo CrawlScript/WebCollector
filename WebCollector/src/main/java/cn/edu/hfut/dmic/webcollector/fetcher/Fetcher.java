@@ -181,7 +181,7 @@ public class Fetcher extends Task {
                     
                     Page page=new Page();
                     page.setUrl(url);
-                    page.setFetchtime(crawldatum.getFetchTime());
+                    page.setFetchTime(crawldatum.getFetchTime());
                     
                     
                     

@@ -24,7 +24,7 @@ public class Page{
     private Document doc=null;
     
     //public int status=;
-    private long fetchtime;
+    private long fetchTime;
     private ParseResult parseResult=null;
     
     public void setResponse(Response response){
@@ -77,13 +77,15 @@ public class Page{
         this.doc = doc;
     }
 
-    public long getFetchtime() {
-        return fetchtime;
+    public long getFetchTime() {
+        return fetchTime;
     }
 
-    public void setFetchtime(long fetchtime) {
-        this.fetchtime = fetchtime;
+    public void setFetchTime(long fetchTime) {
+        this.fetchTime = fetchTime;
     }
+
+    
 
     public ParseResult getParseResult() {
         return parseResult;
