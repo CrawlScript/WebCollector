@@ -260,7 +260,9 @@ public class BreadthCrawler extends Task{
         crawler.setCrawl_path(crawl_path);
        
         crawler.setResumable(false);      
-        crawler.start(1);
+        crawler.start(3);
+        
+        
     }
 
     public String getUseragent() {

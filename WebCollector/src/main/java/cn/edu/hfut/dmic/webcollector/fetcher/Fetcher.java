@@ -31,8 +31,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -48,15 +48,14 @@ public class Fetcher extends Task {
 
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
-    
-    
+
     private DbUpdater dbUpdater = null;
     private SegmentWriter segmengwriter = null;
-    
+
     private ConnectionConfig conconfig = null;
 
     private Handler handler = null;
-    
+
     private boolean needUpdateDb = true;
 
     public static class FetchItem {
@@ -73,6 +72,10 @@ public class Fetcher extends Task {
 
         public AtomicInteger totalSize = new AtomicInteger(0);
         public List<FetchItem> queue = Collections.synchronizedList(new LinkedList<FetchItem>());
+
+        public synchronized void clear() {
+            queue.clear();
+        }
 
         public int getSize() {
             return queue.size();
@@ -159,43 +162,38 @@ public class Fetcher extends Task {
                             return;
                         }
                     }
-                    
+
                     CrawlDatum crawldatum = new CrawlDatum();
-                    String url=item.datum.getUrl();
+                    String url = item.datum.getUrl();
                     crawldatum.setUrl(url);
 
-                    Request request=RequestFactory.createRequest(url,proxy,conconfig);
-                    Response response=null;
-                    for(int i=0;i<=retry;i++){
-                        try{
-                            response=request.getResponse(crawldatum);
+                    Request request = RequestFactory.createRequest(url, proxy, conconfig);
+                    Response response = null;
+                    for (int i = 0; i <= retry; i++) {
+                        try {
+                            response = request.getResponse(crawldatum);
                             break;
-                        }catch(Exception ex){
-                            
+                        } catch (Exception ex) {
+
                         }
                     }
-                    
-                    
+
                     crawldatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
                     crawldatum.setFetchTime(System.currentTimeMillis());
-                    
-                    Page page=new Page();
+
+                    Page page = new Page();
                     page.setUrl(url);
                     page.setFetchTime(crawldatum.getFetchTime());
-                    
-                    
-                    
-                    if(response==null){                       
+
+                    if (response == null) {
                         Log.Errors("failed ", Fetcher.this.getTaskName(), url);
                         HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page), true);
                         continue;
                     }
-                    
+
                     page.setResponse(response);
 
-                      
                     Log.Infos("fetch", Fetcher.this.getTaskName(), url);
-                    
 
                     if (needUpdateDb) {
                         try {
@@ -261,13 +259,9 @@ public class Fetcher extends Task {
         this.crawl_path = crawl_path;
     }
 
-    
-
     public Fetcher() {
         needUpdateDb = false;
     }
-
-    
 
     private void start() throws IOException {
         if (needUpdateDb) {
@@ -279,46 +273,45 @@ public class Fetcher extends Task {
             segment_path = crawl_path + "/segments/" + SegmentWriter.createSegmengName();
             segmengwriter = new SegmentWriter(segment_path);
         }
-        
-        
-        running=true;
+
+        running = true;
 
     }
 
     public void fetchAll(Generator generator) throws IOException {
         start();
-        
-        fetchQueue=new FetchQueue();
-        feeder=new QueueFeeder(fetchQueue,generator,1000);
+
+        fetchQueue = new FetchQueue();
+        feeder = new QueueFeeder(fetchQueue, generator, 1000);
         feeder.start();
-        
-        for(int i=0;i<threads;i++){
-            FetcherThread fetcherThread=new FetcherThread();
+
+        for (int i = 0; i < threads; i++) {
+            FetcherThread fetcherThread = new FetcherThread();
             fetcherThread.start();
         }
-        
-        do{
+
+        do {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
             }
-        }while(activeThreads.get()>0 && running);
-        
-        
+
+        } while (activeThreads.get() > 0 && running);
+
+        feeder.stop();
+        fetchQueue.clear();
         end();
 
     }
 
-    
     boolean running;
-    public void stop() throws IOException {
-        running=false;
+
+    public void stop() {
+        running = false;
     }
 
-
-
     private void end() throws IOException {
-       
+
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
             dbUpdater.merge(segment_path);
@@ -326,12 +319,6 @@ public class Fetcher extends Task {
             segmengwriter.close();
         }
     }
-
-   
-
-    
-
-    
 
     public ConnectionConfig getConconfig() {
         return conconfig;
@@ -397,15 +384,6 @@ public class Fetcher extends Task {
         this.proxy = proxy;
     }
 
-    public static void main(String[] args) throws IOException {
-        CollectionGenerator generator = new CollectionGenerator();
-        generator.addUrl("http://www.hfut.edu.cn/ch/");
-        generator.addUrl("http://news.hfut.edu.cn/");
-        Fetcher fetcher = new Fetcher();
-        fetcher.fetchAll(generator);
-        
-        
-
-    }
+    
 
 }
