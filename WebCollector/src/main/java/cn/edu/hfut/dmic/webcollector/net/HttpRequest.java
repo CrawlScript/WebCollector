@@ -91,25 +91,20 @@ public class HttpRequest implements Request{
     
 
     public static void main(String[] args) throws Exception{
-        Request request=RequestFactory.createRequest("http://www.xinhuanet.com");
-        CrawlDatum datum=new CrawlDatum();
-        Response response=request.getResponse(datum);
-        System.out.println("status="+datum.getStatus());
-        System.out.println("code="+response.getCode());
-        System.out.println(response.getHeaders());
+       
     }
 
-    @Override
+  
     public void setProxy(Proxy proxy) {
         this.proxy=proxy;
     }
 
-    @Override
+    
     public Proxy getProxy() {
         return proxy;
     }
 
-    @Override
+    
     public void setConnectionConfig(ConnectionConfig config) {
         this.config=config;
     }

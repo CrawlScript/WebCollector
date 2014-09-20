@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
@@ -22,10 +34,10 @@ import java.util.regex.Pattern;
  */
 public class StandardGenerator extends Generator {
 
-    public String crawl_path;
+    public String crawlPath;
     
     public String getSegmentPath(){
-        String[] segment_list=new File(crawl_path,"segments").list();
+        String[] segment_list=new File(crawlPath,"segments").list();
         String segment_path=null;
         long max=0;
         for(String segment:segment_list){
@@ -38,16 +50,15 @@ public class StandardGenerator extends Generator {
         return segment_path;
     }
     
-    public StandardGenerator(String crawl_path){
-        this.crawl_path=crawl_path;
+    public StandardGenerator(String crawlPath){
+        this.crawlPath=crawlPath;
         try {
             backup();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
-        DbUpdater dbupdater=new DbUpdater(crawl_path);
-        dbupdater.setTaskName(this.getTaskName());
+        DbUpdater dbupdater=new DbUpdater(crawlPath);
         
         try {
             if(dbupdater.isLocked()){
@@ -68,7 +79,7 @@ public class StandardGenerator extends Generator {
     }
 
     public void backup() throws IOException {
-        DbUpdater.backup(crawl_path);
+        DbUpdater.backup(crawlPath);
     }
 
 
@@ -114,7 +125,7 @@ public class StandardGenerator extends Generator {
     DbReader<CrawlDatum> dbreader;
 
     public void initReader() throws IOException{   
-        File oldfile=new File(crawl_path, Config.old_info_path);
+        File oldfile=new File(crawlPath, Config.old_info_path);
         dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
     }
 

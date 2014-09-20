@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.edu.huft.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>1.21</version>
+    <version>1.25</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -84,11 +84,7 @@
                                 </copy>
                                 <zip basedir="${project.build.directory}/bin" destfile="../webcollector-${project.version}-bin.zip" />
                            
-                                <!--
-                                  Place any Ant task here. You can add anything
-                                  you can add between <target> and </target> in a
-                                  build.xml.
-                                -->
+                                
 
                             </tasks>
                         </configuration>

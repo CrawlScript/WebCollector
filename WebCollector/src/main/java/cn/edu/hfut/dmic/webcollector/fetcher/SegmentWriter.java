@@ -23,6 +23,7 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.parser.ParseData;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import cn.edu.hfut.dmic.webcollector.parser.ParseText;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,19 +48,19 @@ public class SegmentWriter {
         return datestr;
     }
 
-    private String segment_path;
+    private String segmentPath;
 
-    public SegmentWriter(String segment_path) {
-        this.segment_path = segment_path;
+    public SegmentWriter(String segmentPath) {
+        this.segmentPath = segmentPath;
         count_fetch = 0;
         count_content = 0;
         count_parse = 0;
 
         try {
-            fetchWriter = new DbWriter<CrawlDatum>(CrawlDatum.class, segment_path + "/fetch");
-            contentWriter = new DbWriter<Content>(Content.class, segment_path + "/content");
-            parseDataWriter = new DbWriter<ParseData>(ParseData.class, segment_path + "/parse_data");
-            parseTextWriter = new DbWriter<ParseText>(ParseText.class, segment_path + "/parse_text");
+            fetchWriter = new DbWriter<CrawlDatum>(CrawlDatum.class, segmentPath + "/fetch");
+            contentWriter = new DbWriter<Content>(Content.class, segmentPath + "/content");
+            parseDataWriter = new DbWriter<ParseData>(ParseData.class, segmentPath + "/parse_data");
+            parseTextWriter = new DbWriter<ParseText>(ParseText.class, segmentPath + "/parse_text");
         } catch (IOException ex) {
             Logger.getLogger(SegmentWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -75,7 +76,7 @@ public class SegmentWriter {
 
     public synchronized void wrtieFetch(CrawlDatum fetch) throws IOException {
         fetchWriter.write(fetch);
-        count_fetch = (count_fetch++) % 50;
+        count_fetch = (count_fetch++) % Config.segmentwriter_buffer_size;
         if (count_fetch == 0) {
             fetchWriter.flush();
         }
@@ -83,16 +84,16 @@ public class SegmentWriter {
 
     public synchronized void wrtieContent(Content content) throws IOException {
         contentWriter.write(content);
-        count_content = (count_content++) % 50;
+        count_content = (count_content++) % Config.segmentwriter_buffer_size;
         if (count_content == 0) {
             contentWriter.flush();
         }
     }
 
     public synchronized void wrtieParse(ParseResult parseresult) throws IOException {
-        parseDataWriter.write(parseresult.parsedata);
-        parseTextWriter.write(parseresult.parsetext);
-        count_parse = (count_parse++) % 50;
+        parseDataWriter.write(parseresult.getParsedata());
+        parseTextWriter.write(parseresult.getParsetext());
+        count_parse = (count_parse++) % Config.segmentwriter_buffer_size;
         if (count_parse == 0) {
             parseDataWriter.flush();
             parseTextWriter.flush();

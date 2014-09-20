@@ -18,4 +18,5 @@ public class Config {
     public static long interval=-1;//000*60*3;
     public static final String lock_path="crawldb/lock";
     public static Integer topN=null;
+    public static int segmentwriter_buffer_size=50;
 }

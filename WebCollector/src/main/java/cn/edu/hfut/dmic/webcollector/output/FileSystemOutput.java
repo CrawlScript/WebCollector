@@ -9,10 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import cn.edu.hfut.dmic.webcollector.util.Log;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 
 /**
  *
@@ -52,9 +51,9 @@ public class FileSystemOutput {
             }
             path += query;
             File domain_path = new File(root, _URL.getHost());
-            File f = new File(domain_path, path);
-            Log.Infos("output",null, f.getAbsolutePath());
+            File f = new File(domain_path, path);           
             FileUtils.writeFileWithParent(f, page.getContent());
+            LogUtils.getLogger().info("output "+f.getAbsolutePath());
         } catch (Exception e) {
             e.printStackTrace();
         }

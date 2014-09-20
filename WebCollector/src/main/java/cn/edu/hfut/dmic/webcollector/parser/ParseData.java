@@ -17,13 +17,13 @@ import org.apache.avro.reflect.Nullable;
  */
 public class ParseData {
     @Nullable 
-    public String url;
+    private String url;
     @Nullable
-    public String title;
+    private String title;
     @Nullable
-    public ArrayList<Link> links;
+    private ArrayList<Link> links;
     @Nullable
-    public HashMap<String,String> parseMap=new HashMap<String, String>();
+    private HashMap<String,String> parseMap=new HashMap<String, String>();
     
     public ParseData(){
         
@@ -33,4 +33,38 @@ public class ParseData {
         this.title=title;
         this.links=links;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public ArrayList<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(ArrayList<Link> links) {
+        this.links = links;
+    }
+
+    public HashMap<String, String> getParseMap() {
+        return parseMap;
+    }
+
+    public void setParseMap(HashMap<String, String> parseMap) {
+        this.parseMap = parseMap;
+    }
+    
+    
 }

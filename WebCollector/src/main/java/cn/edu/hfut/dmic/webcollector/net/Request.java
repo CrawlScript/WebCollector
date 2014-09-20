@@ -20,10 +20,10 @@ public interface Request {
     public URL getURL();
     public void setURL(URL url);
     
-    public void setProxy(Proxy proxy);
-    public Proxy getProxy();
+    //public void setProxy(Proxy proxy);
+    //public Proxy getProxy();
     
-    public void setConnectionConfig(ConnectionConfig config);
+    //public void setConnectionConfig(ConnectionConfig config);
     
     public Response getResponse(CrawlDatum datum) throws Exception;
 

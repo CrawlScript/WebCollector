@@ -24,8 +24,8 @@ package cn.edu.hfut.dmic.webcollector.parser;
  */
 public class ParseResult {
     
-    public ParseData parsedata;
-    public ParseText parsetext;
+    private ParseData parsedata;
+    private ParseText parsetext;
     
     public ParseResult(){
         
@@ -35,6 +35,25 @@ public class ParseResult {
         this.parsedata = parsedata;
         this.parsetext = parsetext;
     }
+
+    public ParseData getParsedata() {
+        return parsedata;
+    }
+
+    public void setParsedata(ParseData parsedata) {
+        this.parsedata = parsedata;
+    }
+
+    public ParseText getParsetext() {
+        return parsetext;
+    }
+
+    public void setParsetext(ParseText parsetext) {
+        this.parsetext = parsetext;
+    }
+    
+    
+    
     
     
     

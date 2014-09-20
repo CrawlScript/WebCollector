@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
@@ -11,8 +23,8 @@ import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.parser.ParseData;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import cn.edu.hfut.dmic.webcollector.util.Log;
-import cn.edu.hfut.dmic.webcollector.util.Task;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,7 +36,7 @@ import java.util.HashMap;
  *
  * @author hu
  */
-public class DbUpdater extends Task {
+public class DbUpdater{
 
     private String crawl_path;
     private DbWriter<CrawlDatum> updater_writer;
@@ -98,8 +110,8 @@ public class DbUpdater extends Task {
     }
 
     public void merge(String segment_path) throws IOException {
-
-        Log.Infos("merge",getTaskName(),segment_path);
+        
+        LogUtils.getLogger().info("merge "+segment_path);
         File file_fetch = new File(segment_path, "fetch");
         if (!file_fetch.exists()) {
             return;
@@ -144,7 +156,7 @@ public class DbUpdater extends Task {
             ParseData parseresult = null;
             while (reader_parse.hasNext()) {
                 parseresult = reader_parse.readNext();
-                for (Link link : parseresult.links) {
+                for (Link link : parseresult.getLinks()) {
                     datum = new CrawlDatum();
                     datum.setUrl(link.getUrl());
                     datum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);

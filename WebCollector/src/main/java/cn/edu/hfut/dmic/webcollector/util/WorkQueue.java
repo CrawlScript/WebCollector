@@ -7,7 +7,7 @@
 package cn.edu.hfut.dmic.webcollector.util;
 
 import java.util.LinkedList;
-import cn.edu.hfut.dmic.webcollector.util.Log;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 
 /**
  *

@@ -30,9 +30,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import cn.edu.hfut.dmic.webcollector.util.Log;
-import cn.edu.hfut.dmic.webcollector.util.RandomUtils;
-import cn.edu.hfut.dmic.webcollector.util.Task;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -41,21 +39,14 @@ import java.util.ArrayList;
 
 
 /**
- *The web crawler that executes a breadth-first crawling.
+ * 广度遍历爬虫
  * 
  * @author hu
  */
-public class BreadthCrawler extends Task{
+public class BreadthCrawler{
     
-    /**
-     *
-     */
-    public BreadthCrawler(){
-        setTaskName(RandomUtils.getTimeString());
-    }
 
-    private String taskName;
-    private String crawl_path = "crawl";
+    private String crawlPath = "crawl";
     private String root = "data";
     private String cookie = null;
     private String useragent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0";
@@ -64,85 +55,72 @@ public class BreadthCrawler extends Task{
     private boolean resumable=false;
     private boolean isContentStored=true;
     private Proxy proxy=null;
-    
-
-    ArrayList<String> regexs = new ArrayList<String>();
-    ArrayList<String> seeds = new ArrayList<String>();
-
-    public void addSeed(String seed) {
-        seeds.add(seed);
-    }
-    
-    
-
-    public void addRegex(String regex) {
-        regexs.add(regex);
-    }
-    /*
-    public void autoRegex() {
-        for (String seed : seeds) {
-            try {
-                URL _URL = new URL(seed);
-                String host = _URL.getHost();
-                if (host.startsWith("www.")) {
-                    host = host.substring(4);
-                    host = ".*" + host;
-                }
-                String autoregex = _URL.getProtocol() + "://" + host + ".*";
-
-                regexs.add(autoregex);
-                System.out.println("autoregex:" + autoregex);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    */
     private ConnectionConfig conconfig = null;
-
-    public void configCon(HttpURLConnection con) {
-        con.setRequestProperty("User-Agent", useragent);
-        if (cookie != null) {
-            con.setRequestProperty("Cookie", cookie);
-        }
-
-    }
-
-    protected void visit(Page page) {
-        FileSystemOutput fsoutput = new FileSystemOutput(root);
-        Log.Infos("visit",this.getTaskName(),page.getUrl());
-        fsoutput.output(page);
-    }
     
-    protected void failed(Page page){
-       
-    }
-    
+
+    private ArrayList<String> regexs = new ArrayList<String>();
+    private ArrayList<String> seeds = new ArrayList<String>();
 
     public final static int RUNNING=1;
     public final static int STOPED=2;
     private int status;
+    private Fetcher fetcher;
 
     /**
-     * start the crawler
-     * @param depth depth in bread-first search
+     * 添加一个种子url
+     * @param seed 种子url
+     */
+    public void addSeed(String seed) {
+        seeds.add(seed);
+    }
+    
+    /**
+     * 添加一个正则过滤规则
+     * @param regex 正则过滤规则
+     */
+    public void addRegex(String regex) {
+        regexs.add(regex);
+    }
+
+
+    /**
+     * 对每个成功爬取的页面（文件）进行的操作，可以通过Override这个方法来完成用户对这些页面的自定义处理
+     * @param page 爬取的页面（文件）
+     */
+    protected void visit(Page page) {
+        FileSystemOutput fsoutput = new FileSystemOutput(root);
+        LogUtils.getLogger().info("visit "+page.getUrl());
+        fsoutput.output(page);
+    }
+    
+    /**
+     * 对每个失败爬取的页面（文件）进行的操作，可以通过Override这个方法来完成用户对这些页面的自定义处理
+     * @param page
+     */
+    protected void failed(Page page){
+       
+    }
+    
+    /**
+     * 启动爬虫
+     * @param depth 广度遍历的深度
      * @throws IOException
      */
     public void start(int depth) throws IOException {
         if (!resumable) {
-            File crawl_dir=new File(crawl_path);
-            if(crawl_dir.exists()){
-                FileUtils.deleteDir(crawl_dir);
+            File crawlDir=new File(crawlPath);
+            if(crawlDir.exists()){
+                FileUtils.deleteDir(crawlDir);
             }
                         
             if (seeds.isEmpty()) {
-                Log.Infos("error:"+"Please add at least one seed");
+                LogUtils.getLogger().info("error:Please add at least one seed");
                 return;
             }
            
         }
         if (regexs.isEmpty()) {
-                Log.Infos("error:"+"Please add at least one regex rule");
+                LogUtils.getLogger().info("error:Please add at least one regex rule");
                 return;
         }
         inject();
@@ -150,18 +128,18 @@ public class BreadthCrawler extends Task{
         for (int i = 0; i < depth; i++) {
            if(status==STOPED){
                break;
-           }
-            Log.Infos("info","starting depth "+(i+1));
-            Generator generator=getGenerator();
-            fetcher=getFecther();
+            }
+            LogUtils.getLogger().info("starting depth "+(i+1));
+            Generator generator=createGenerator();
+            fetcher=createFecther();
             fetcher.fetchAll(generator);
         }
     }
     
-    Fetcher fetcher;
+    
 
     /**
-     *
+     * 停止爬虫
      * @throws IOException
      */
     public void stop() throws IOException{
@@ -171,7 +149,7 @@ public class BreadthCrawler extends Task{
     
     private void inject() throws IOException {
         
-        Injector injector = new Injector(crawl_path);     
+        Injector injector = new Injector(crawlPath);     
         injector.inject(seeds,resumable);
         
     }
@@ -179,14 +157,20 @@ public class BreadthCrawler extends Task{
     class CommonConnectionConfig implements ConnectionConfig{
         @Override
             public void config(HttpURLConnection con) {               
-                configCon(con);
+                con.setRequestProperty("User-Agent", useragent);
+                if (cookie != null) {
+                    con.setRequestProperty("Cookie", cookie);
+                }
             }
     }
     
-    private Fetcher getFecther(){
-        
-        
-         Handler fetch_handler = new Handler() {
+    /**
+     * 生成处理抓取消息的Handler，默认通过BreadthCrawler的visit方法来处理成功抓取的页面，
+     * 通过failed方法来处理失败抓取的页面
+     * @return
+     */
+    protected Handler createFetcherHandler(){
+        Handler fetch_handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 Page page = (Page) msg.obj;
@@ -204,47 +188,233 @@ public class BreadthCrawler extends Task{
                 }
             }
         };
-        
-
-        
-        Fetcher fetcher=new Fetcher(crawl_path);
+        return fetch_handler;
+    }
+    
+    /**
+     * 生成Fetcher(抓取器)的方法，可以通过Override这个方法来完成自定义Fetcher
+     * @return 生成的抓取器
+     */
+    protected Fetcher createFecther(){
+  
+        Fetcher fetcher=new Fetcher(crawlPath);
         fetcher.setProxy(proxy);
         fetcher.setIsContentStored(isContentStored);
-        fetcher.setHandler(fetch_handler);
+        fetcher.setHandler(createFetcherHandler());
         conconfig = new CommonConnectionConfig();
-        fetcher.setTaskName(this.getTaskName());
+        
         fetcher.setThreads(threads);
         fetcher.setConconfig(conconfig);
         return fetcher;
     }
     
-    private Generator getGenerator(){
+    /**
+     * 生成Generator(抓取任务生成器）的方法，可以通过Override这个方法来完成自定义Generator
+     * @return 生成的抓取任务生成器
+     */
+    private Generator createGenerator(){
 
-        Generator generator = new StandardGenerator(crawl_path);
+        Generator generator = new StandardGenerator(crawlPath);
         generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
-        generator.setTaskName(getTaskName());
+  
         return generator;
     }
    
+   
+
+    /**
+     * 返回User-Agent
+     * @return
+     */
+    public String getUseragent() {
+        return useragent;
+    }
+
+    /**
+     * 设置User-Agent
+     * @param useragent
+     */
+    public void setUseragent(String useragent) {
+        this.useragent = useragent;
+    }
+
+    /**
+     * 返回爬虫的线程数
+     * @return
+     */
+    public int getThreads() {
+        return threads;
+    }
+
+    /**
+     * 设置爬虫的线程数
+     * @param threads 线程数
+     */
+    public void setThreads(int threads) {
+        this.threads = threads;
+    }
+
+    /**
+     * 返回存储爬虫爬取信息的文件夹
+     * @return
+     */
+    public String getCrawlPath() {
+        return crawlPath;
+    }
+
+    /**
+     * 设置存储爬虫爬取信息的文件夹
+     * @param crawlPath
+     */
+    public void setCrawlPath(String crawlPath) {
+        this.crawlPath = crawlPath;
+    }
+
+    /**
+     * 返回Cookie
+     * @return
+     */
+    public String getCookie() {
+        return cookie;
+    }
+
+    /**
+     * 设置http请求的cookie
+     * @param cookie
+     */
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
+    /**
+     * 如果使用默认的visit，返回存储网页文件的路径
+     * @return
+     */
+    @Deprecated
+    public String getRoot() {
+        return root;
+    }
+
+    /**
+     * 如果使用默认的visit,设置存储网页文件的路径
+     * @param root
+     */
+    @Deprecated
+    public void setRoot(String root) {
+        this.root = root;
+    }
+
+    /**
+     * 返回爬虫是否为断点爬取模式
+     * @return
+     */
+    public boolean getResumable() {
+        return resumable;
+    }
+
+    /**
+     * 设置爬虫是否为可断点模式
+     * @param resumable
+     */
+    public void setResumable(boolean resumable) {
+        this.resumable = resumable;
+    }
+
+    /**
+     * 返回http连接配置对象
+     * @return
+     */
+    public ConnectionConfig getConconfig() {
+        return conconfig;
+    }
+
+    /**
+     * 设置http连接配置对象
+     * @param conconfig
+     */
+    public void setConconfig(ConnectionConfig conconfig) {
+        this.conconfig = conconfig;
+    }
+
+    /**
+     * 返回是否存储网页/文件的内容
+     * @return
+     */
+    public boolean isIsContentStored() {
+        return isContentStored;
+    }
+
+    /**
+     * 设置是否存储网页／文件的内容
+     * @param isContentStored
+     */
+    public void setIsContentStored(boolean isContentStored) {
+        this.isContentStored = isContentStored;
+    }
+
+    /**
+     * 返回代理
+     * @return
+     */
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    /**
+     * 设置代理
+     * @param proxy
+     */
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
+    }
+
+    /**
+     * 返回正则过滤规则列表
+     * @return
+     */
+    public ArrayList<String> getRegexs() {
+        return regexs;
+    }
+
+    /**
+     * 设置正则过滤规则列表
+     * @param regexs
+     */
+    public void setRegexs(ArrayList<String> regexs) {
+        this.regexs = regexs;
+    }
+
+    /**
+     * 返回种子url列表
+     * @return
+     */
+    public ArrayList<String> getSeeds() {
+        return seeds;
+    }
+
+    /**
+     * 设置种子url列表
+     * @param seeds
+     */
+    public void setSeeds(ArrayList<String> seeds) {
+        this.seeds = seeds;
+    }
 
     
-
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut1";
         String root = "/home/hu/data/hfut1";       
-      
+        LogUtils.setLogger(LogUtils.createCommonLogger("hfut"));
         //Config.topN=100;
         BreadthCrawler crawler=new BreadthCrawler(){
             @Override
             public void visit(Page page){
             System.out.println(page.getUrl()+" "+page.getResponse().getCode());
             System.out.println(page.getDoc().title());
+            
             }
         };
-   
-        crawler.setTaskName(RandomUtils.getTimeString()+"hfut");
-        
-        
+
         
         crawler.addSeed("http://news.hfut.edu.cn/");
         crawler.addRegex("http://news.hfut.edu.cn/.*");
@@ -257,88 +427,14 @@ public class BreadthCrawler extends Task{
         
         //crawler.addRegex(".*");
         crawler.setRoot(root);
-        crawler.setCrawl_path(crawl_path);
+        crawler.setCrawlPath(crawl_path);
        
         crawler.setResumable(false);      
         crawler.start(3);
         
         
     }
-
-    public String getUseragent() {
-        return useragent;
-    }
-
-    public void setUseragent(String useragent) {
-        this.useragent = useragent;
-    }
-
-    public int getThreads() {
-        return threads;
-    }
-
-    public void setThreads(int threads) {
-        this.threads = threads;
-    }
-
-    public String getCrawl_path() {
-        return crawl_path;
-    }
-
-    public void setCrawl_path(String crawl_path) {
-        this.crawl_path = crawl_path;
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-
-    public String getRoot() {
-        return root;
-    }
-
-    public void setRoot(String root) {
-        this.root = root;
-    }
-
-    public boolean isResumable() {
-        return resumable;
-    }
-
-    public void setResumable(boolean resumable) {
-        this.resumable = resumable;
-    }
-
-    public ConnectionConfig getConconfig() {
-        return conconfig;
-    }
-
-    public void setConconfig(ConnectionConfig conconfig) {
-        this.conconfig = conconfig;
-    }
-
     
-
-    public boolean isIsContentStored() {
-        return isContentStored;
-    }
-
-    public void setIsContentStored(boolean isContentStored) {
-        this.isContentStored = isContentStored;
-    }
-
-    public Proxy getProxy() {
-        return proxy;
-    }
-
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
-    }
-
     
     
     

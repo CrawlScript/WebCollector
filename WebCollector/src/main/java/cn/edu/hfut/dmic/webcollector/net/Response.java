@@ -27,7 +27,7 @@ public interface Response {
   public Map<String,List<String>> getHeaders();
   public void setHeaders(Map<String,List<String>> headers);
  
- 
+  public String getContentType();
   public byte[] getContent();
   
 }

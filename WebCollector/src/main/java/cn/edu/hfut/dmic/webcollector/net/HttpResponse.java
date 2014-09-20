@@ -30,6 +30,10 @@ public class HttpResponse implements Response{
     public URL getUrl() {
         return url;
     }
+    
+    public void setUrl(URL url) {
+        this.url = url;
+    }
 
     @Override
     public int getCode() {
@@ -45,6 +49,10 @@ public class HttpResponse implements Response{
     public byte[] getContent() {
         return content;
     }
+    
+    public void setContent(byte[] content) {
+        this.content = content;
+    }
 
     public void setCode(int code) {
         this.code = code;
@@ -59,6 +67,28 @@ public class HttpResponse implements Response{
     public void setHeaders(Map<String, List<String>> headers) {
         this.headers=headers;
     }
+
+    @Override
+    public String getContentType() {
+        try{
+        String contentType;
+        List<String> contentTypeList = getHeader("Content-Type");
+        if (contentTypeList == null) {
+            contentType = null;
+        } else {
+            contentType = contentTypeList.get(0);
+        }
+            return contentType;
+        }catch(Exception ex){
+            return null;
+        }
+    }
+
+    
+
+    
+    
+    
     
     
     

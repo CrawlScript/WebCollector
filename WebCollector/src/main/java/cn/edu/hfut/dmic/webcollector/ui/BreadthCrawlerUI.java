@@ -7,18 +7,26 @@ package cn.edu.hfut.dmic.webcollector.ui;
 
 
 import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-import cn.edu.hfut.dmic.webcollector.handler.Handler;
-import cn.edu.hfut.dmic.webcollector.handler.Message;
-import cn.edu.hfut.dmic.webcollector.util.Log;
+
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JScrollBar;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+import java.io.PipedReader;
+import java.io.PipedWriter;
+import java.util.Scanner;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+
+
+import org.apache.log4j.Appender;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
+import org.apache.log4j.net.TelnetAppender;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  *
@@ -32,16 +40,67 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
     BreadthCrawler crawler = new BreadthCrawler();
     int threads = 10;
     int depth = 5;
-    public String crawl_path="crawl";
+    public String crawlPath="crawl";
+    
+    
+    public class TextAreaAppender extends AppenderSkeleton implements DocumentListener{
+        
+        public PatternLayout layout;
+        
+        public TextAreaAppender(){
+            logArea.getDocument().addDocumentListener(this);
+            layout=new PatternLayout("%d{yyyy-MM-dd HH:mm:ss} %p %c %x - %m%n ");
+        }
+
+        @Override
+        protected void append(final LoggingEvent le) {
+             EventQueue.invokeLater(new Runnable(){
+
+                    @Override
+                    public void run() {
+                        logArea.append(layout.format(le));
+                    }
+                    
+                });
+        }
+
+        @Override
+        public void close() {
+        }
+
+        @Override
+        public boolean requiresLayout() {
+            return false;
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+        }
+        
+    }
+    
+    
+               
+        
+        
+    
 
     public BreadthCrawlerUI() {
         initComponents();
-        final DefaultTableModel tablemodel=new DefaultTableModel(new Object[][]{}, new String[]{"type","info"});
-        tb_status.setModel(tablemodel);
-        tb_status.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        tb_status.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tb_status.getColumnModel().getColumn(1).setPreferredWidth(700);
-        Log.handler=new Handler(){
+        LogUtils.getLogger().removeAppender("default");
+        LogUtils.getLogger().addAppender(new TextAreaAppender());
+        
+        
+        /*
+        LogUtils.handler=new Handler(){
 
             @Override
             public void handleMessage(Message msg) {
@@ -66,8 +125,9 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                 });
                
             }
+        
             
-        };
+        };*/
         File f = new File("download");
         txt_path.setText(f.getAbsolutePath());
         
@@ -80,7 +140,7 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                 +"    http://www.xinhuanet.com/\n\n"
                 +"2.正则\n"
                 + "正则起到约束爬取页面的URL的作用。\n"
-                +"如果不添加正则，默认爬取种子所在域名下的所有网页和文件\n\n"
+                +"至少添加一个\"允许的正则\"\n\n"
                 +"3.本地路径\n"
                 +"本地路径制定爬取页面在本地的存放路径\n";
 
@@ -117,15 +177,15 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
         btn_addnregex = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         txt_depth = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tb_status = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        logArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("基础爬虫");
 
         jLabel1.setText("种子:");
 
-        jLabel2.setText("允许的正则(可选):");
+        jLabel2.setText("允许的正则:");
 
         btn_addseed.setText("添加");
         btn_addseed.addActionListener(new java.awt.event.ActionListener() {
@@ -178,18 +238,9 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
 
         jLabel6.setText("深度:");
 
-        tb_status.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(tb_status);
+        logArea.setColumns(20);
+        logArea.setRows(5);
+        jScrollPane3.setViewportView(logArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -199,40 +250,42 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                 .addGap(76, 76, 76)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btn_start)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_stop))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_nregex, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                            .addComponent(txt_threads)
-                            .addComponent(txt_pregex, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                            .addComponent(txt_seed)
-                            .addComponent(txt_path, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                            .addComponent(txt_depth))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(35, 35, 35)
-                                    .addComponent(btn_addseed))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btn_addpregex)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(5, 5, 5)
-                                .addComponent(btn_addnregex)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel3)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel6))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txt_nregex, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                    .addComponent(txt_threads)
+                                    .addComponent(txt_pregex, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                    .addComponent(txt_seed)
+                                    .addComponent(txt_path, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                    .addComponent(txt_depth))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addGap(35, 35, 35)
+                                            .addComponent(btn_addseed))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(btn_addpregex)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGap(5, 5, 5)
+                                        .addComponent(btn_addnregex))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_start)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btn_stop)))
                         .addGap(71, 71, 71)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 414, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap(31, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
+                .addContainerGap(83, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -244,36 +297,42 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                             .addComponent(txt_seed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btn_addseed)
                             .addComponent(jLabel1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(txt_pregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_addpregex))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txt_nregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_addnregex)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(txt_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(txt_threads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(27, 27, 27)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(txt_depth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(btn_addpregex)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btn_addnregex)
+                                .addGap(115, 115, 115))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(txt_pregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel5)
+                                    .addComponent(txt_nregex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(txt_path, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel4)
+                                    .addComponent(txt_threads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel6)
+                                    .addComponent(txt_depth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(50, 50, 50)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btn_start)
+                                    .addComponent(btn_stop)))))
                     .addComponent(jScrollPane2))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_start)
-                    .addComponent(btn_stop))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(145, 145, 145))
+                .addGap(39, 39, 39)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50))
         );
 
         jLabel2.getAccessibleContext().setAccessibleName("允许的正则(可选)：");
@@ -299,7 +358,7 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
 
                 crawler.setRoot(localpath);
                 crawler.setResumable(false);
-                crawler.setCrawl_path(crawl_path);
+                crawler.setCrawlPath(crawlPath);
                 try {
                     depth = Integer.valueOf(txt_depth.getText());
                     threads = Integer.valueOf(txt_threads.getText());
@@ -396,9 +455,9 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable tb_status;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea logArea;
     private javax.swing.JTextField txt_depth;
     private javax.swing.JTextField txt_nregex;
     private javax.swing.JTextArea txt_output;

@@ -1,7 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
 package cn.edu.hfut.dmic.webcollector.generator;
@@ -9,7 +21,7 @@ package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.Task;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -21,11 +33,11 @@ import java.util.ArrayList;
  *
  * @author hu
  */
-public class Injector extends Task{
+public class Injector{
     
-    String crawl_path;
-    public Injector(String crawl_path){
-        this.crawl_path=crawl_path;
+    private String crawlPath;
+    public Injector(String crawlPath){
+        this.crawlPath=crawlPath;
     }
     
     public void inject(String url) throws IOException{
@@ -43,8 +55,8 @@ public class Injector extends Task{
     }
     
     public boolean hasInjected(){
-        String info_path=Config.current_info_path;
-        File inject_file=new File(crawl_path,info_path);
+        String infoPath=Config.current_info_path;
+        File inject_file=new File(crawlPath,infoPath);
         return inject_file.exists();
     }
     
@@ -54,7 +66,7 @@ public class Injector extends Task{
          
         
         String info_path=Config.current_info_path;
-        File inject_file=new File(crawl_path,info_path);
+        File inject_file=new File(crawlPath,info_path);
         if(!inject_file.getParentFile().exists()){
             inject_file.getParentFile().mkdirs();
         }
@@ -67,7 +79,8 @@ public class Injector extends Task{
             CrawlDatum crawldatum=new CrawlDatum();
             crawldatum.setUrl(url);
             crawldatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
-            writer.write(crawldatum);                    
+            writer.write(crawldatum);  
+            LogUtils.getLogger().info("inject "+url);
         }
         writer.close();
         

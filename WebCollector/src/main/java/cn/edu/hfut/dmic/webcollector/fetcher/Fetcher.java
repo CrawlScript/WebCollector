@@ -1,11 +1,22 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
-import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.handler.Handler;
@@ -13,38 +24,42 @@ import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.Content;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.Request;
-import cn.edu.hfut.dmic.webcollector.net.RequestFactory;
+
 import cn.edu.hfut.dmic.webcollector.net.Response;
+import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import cn.edu.hfut.dmic.webcollector.parser.Parser;
-import cn.edu.hfut.dmic.webcollector.parser.ParserFactory;
+
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.HandlerUtils;
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 
-import cn.edu.hfut.dmic.webcollector.util.Log;
-import cn.edu.hfut.dmic.webcollector.util.Task;
+
 
 import java.io.IOException;
 import java.net.Proxy;
+import java.net.URL;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
  * @author hu
  */
-public class Fetcher extends Task {
+public class Fetcher{
 
     private int retry = 3;
-
     private Proxy proxy = null;
-
     private AtomicInteger activeThreads = new AtomicInteger(0);
+    private AtomicInteger spinWaiting=new AtomicInteger(0);
+    
+    
 
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
@@ -141,6 +156,39 @@ public class Fetcher extends Task {
         }
 
     }
+    
+    /**
+     * 根据url生成Request(http请求)的方法，可以通过Override这个方法来自定义Request
+     * @param url
+     * @return 实现Request接口的对象
+     * @throws Exception
+     */
+    protected Request createRequest(String url) throws Exception{
+        HttpRequest request=new HttpRequest();
+        URL _URL=new URL(url);
+        request.setURL(_URL);
+        request.setProxy(proxy);
+        request.setConnectionConfig(conconfig);
+        return request;
+    }
+    
+    /**
+     * 根据网页的url和contentType，来创建Parser(解析器)，可以通过Override这个方法来自定义Parser
+     * @param url
+     * @param contentType
+     * @return 实现Parser接口的对象
+     * @throws Exception
+     */
+    protected Parser createParser(String url,String contentType) throws Exception{                
+        if(contentType==null){
+            return null;
+        }
+        if (contentType.contains("text/html")) {
+            return new HtmlParser(Config.topN);
+        }
+        return null;
+    }
+    
 
     private class FetcherThread extends Thread {
 
@@ -153,10 +201,12 @@ public class Fetcher extends Task {
                     FetchItem item = fetchQueue.getFetchItem();
                     if (item == null) {
                         if (feeder.isAlive() || fetchQueue.getSize() > 0) {
+                            spinWaiting.incrementAndGet();
                             try {
                                 Thread.sleep(500);
                             } catch (Exception ex) {
                             }
+                            spinWaiting.decrementAndGet();
                             continue;
                         } else {
                             return;
@@ -167,9 +217,13 @@ public class Fetcher extends Task {
                     String url = item.datum.getUrl();
                     crawldatum.setUrl(url);
 
-                    Request request = RequestFactory.createRequest(url, proxy, conconfig);
+                    Request request = createRequest(url);
                     Response response = null;
+                    
                     for (int i = 0; i <= retry; i++) {
+                        if(i>0){
+                            LogUtils.getLogger().info("retry "+i+"th "+url);
+                        }
                         try {
                             response = request.getResponse(crawldatum);
                             break;
@@ -186,26 +240,33 @@ public class Fetcher extends Task {
                     page.setFetchTime(crawldatum.getFetchTime());
 
                     if (response == null) {
-                        Log.Errors("failed ", Fetcher.this.getTaskName(), url);
+                        LogUtils.getLogger().info("failed "+url);
                         HandlerUtils.sendMessage(handler, new Message(Fetcher.FETCH_FAILED, page), true);
                         continue;
                     }
 
                     page.setResponse(response);
 
-                    Log.Infos("fetch", Fetcher.this.getTaskName(), url);
+
+                    LogUtils.getLogger().info("fetch "+url);
+                    
+                    String contentType=response.getContentType();
+                    
+                    if(parsing){
+                        try{
+                        Parser parser=createParser(url, contentType);
+                            if (parser != null) {
+                                ParseResult parseresult = parser.getParse(page);
+                                page.setParseResult(parseresult);
+                            }
+                        }catch(Exception ex){
+                            LogUtils.getLogger().info("Exception", ex);
+                        }
+                    }
 
                     if (needUpdateDb) {
                         try {
-                            segmengwriter.wrtieFetch(crawldatum);
-                            String contentType;
-                            List<String> contentTypeList = response.getHeader("Content-Type");
-                            if (contentTypeList == null) {
-                                contentType = null;
-                            } else {
-                                contentType = contentTypeList.get(0);
-                            }
-
+                            segmengwriter.wrtieFetch(crawldatum);                            
                             if (isContentStored) {
                                 Content content = new Content();
                                 content.setUrl(url);
@@ -217,17 +278,13 @@ public class Fetcher extends Task {
                                 content.setContentType(contentType);
                                 segmengwriter.wrtieContent(content);
                             }
-                            if (parsing) {
-                                Parser parser = ParserFactory.getParser(contentType, page.getUrl());
-                                if (parser != null) {
-                                    ParseResult parseresult = parser.getParse(page);
-                                    page.setParseResult(parseresult);
-                                    segmengwriter.wrtieParse(parseresult);
-                                }
+                            if (parsing&&page.getParseResult()!=null) {                                    
+                                    segmengwriter.wrtieParse(page.getParseResult());                                
                             }
 
                         } catch (Exception ex) {
-                            ex.printStackTrace();
+                            LogUtils.getLogger().info("Exception", ex);
+                            
                         }
 
                     }
@@ -237,7 +294,8 @@ public class Fetcher extends Task {
                 }
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                LogUtils.getLogger().info("Exception", ex);
+               
             } finally {
                 activeThreads.decrementAndGet();
             }
@@ -250,37 +308,51 @@ public class Fetcher extends Task {
     public static final int FETCH_FAILED = 2;
 
     int threads = 10;
-    String crawl_path;
-    String segment_path;
+    String crawlPath;
+    String segmentPath;
     boolean isContentStored = true;
     boolean parsing = true;
 
-    public Fetcher(String crawl_path) {
-        this.crawl_path = crawl_path;
+    /**
+     * 构建一个Fetcher,抓取器会将爬取信息存储在crawlPath目录中
+     * @param crawlPath
+     */
+    public Fetcher(String crawlPath) {
+        this.crawlPath = crawlPath;
+        this.needUpdateDb=true;
     }
 
+    /**
+     * 构建一个Fetcher,抓取器不会存储爬取信息
+     */
     public Fetcher() {
         needUpdateDb = false;
     }
 
-    private void start() throws IOException {
+    private void before() throws IOException {
         if (needUpdateDb) {
-            this.dbUpdater = new DbUpdater(crawl_path);
-            dbUpdater.setTaskName(this.getTaskName());
+            this.dbUpdater = new DbUpdater(crawlPath);            
             dbUpdater.initUpdater();
             dbUpdater.lock();
 
-            segment_path = crawl_path + "/segments/" + SegmentWriter.createSegmengName();
-            segmengwriter = new SegmentWriter(segment_path);
+            segmentPath = crawlPath + "/segments/" + SegmentWriter.createSegmengName();
+            segmengwriter = new SegmentWriter(segmentPath);
         }
 
         running = true;
 
     }
 
+    /**
+     * 启动抓取
+     * @param generator 给抓取提供任务的Generator(抓取任务生成器)
+     * @throws IOException
+     */
     public void fetchAll(Generator generator) throws IOException {
-        start();
+        before();
 
+        activeThreads=new AtomicInteger(0);
+        spinWaiting=new AtomicInteger(0);
         fetchQueue = new FetchQueue();
         feeder = new QueueFeeder(fetchQueue, generator, 1000);
         feeder.start();
@@ -295,91 +367,161 @@ public class Fetcher extends Task {
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
             }
+            LogUtils.getLogger().info("-activeThreads="+activeThreads.get()+
+                    ", spinWaiting="+spinWaiting.get()+", fetchQueue.size="+
+                    fetchQueue.getSize());
 
         } while (activeThreads.get() > 0 && running);
 
         feeder.stop();
         fetchQueue.clear();
-        end();
+        after();
 
     }
 
     boolean running;
 
+    /**
+     *
+     */
     public void stop() {
         running = false;
     }
 
-    private void end() throws IOException {
+    private void after() throws IOException {
 
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
-            dbUpdater.merge(segment_path);
+            dbUpdater.merge(segmentPath);
             dbUpdater.unlock();
             segmengwriter.close();
         }
     }
 
+    /**
+     * 返回http连接配置对象
+     * @return
+     */
     public ConnectionConfig getConconfig() {
         return conconfig;
     }
 
+    /**
+     * 设置http连接配置对象
+     * @param conconfig
+     */
     public void setConconfig(ConnectionConfig conconfig) {
         this.conconfig = conconfig;
     }
 
+    /**
+     * 返回爬虫的线程数
+     * @return
+     */
     public int getThreads() {
         return threads;
     }
 
+    /**
+     * 设置爬虫的线程数
+     * @param threads
+     */
     public void setThreads(int threads) {
         this.threads = threads;
     }
 
+    /**
+     * 返回处理抓取消息的Handler
+     * @return
+     */
     public Handler getHandler() {
         return handler;
     }
 
+    /**
+     * 设置处理抓取消息的Handler
+     * @param handler
+     */
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
 
+    /**
+     * 返回是否存储爬取信息
+     * @return
+     */
     public boolean getNeedUpdateDb() {
         return needUpdateDb;
     }
 
+    /**
+     * 设置是否存储爬取信息
+     * @param needUpdateDb
+     */
     public void setNeedUpdateDb(boolean needUpdateDb) {
         this.needUpdateDb = needUpdateDb;
     }
 
+    /**
+     * 返回http请求失败后重试的次数
+     * @return
+     */
     public int getRetry() {
         return retry;
     }
 
+    /**
+     * 设置http请求失败后重试的次数
+     * @param retry
+     */
     public void setRetry(int retry) {
         this.retry = retry;
     }
 
+    /**
+     * 返回是否存储网页/文件的内容
+     * @return
+     */
     public boolean isIsContentStored() {
         return isContentStored;
     }
 
+    /**
+     * 设置是否存储网页／文件的内容
+     * @param isContentStored
+     */
     public void setIsContentStored(boolean isContentStored) {
         this.isContentStored = isContentStored;
     }
 
+    /**
+     * 返回是否解析网页（解析链接、文本）
+     * @return
+     */
     public boolean isParsing() {
         return parsing;
     }
 
+    /**
+     * 设置是否解析网页（解析链接、文本）
+     * @param parsing
+     */
     public void setParsing(boolean parsing) {
         this.parsing = parsing;
     }
 
+    /**
+     * 返回代理
+     * @return
+     */
     public Proxy getProxy() {
         return proxy;
     }
 
+    /**
+     * 设置代理
+     * @param proxy
+     */
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;
     }

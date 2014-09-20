@@ -1,1 +1,1 @@
-java -jar WebCollector-1.0.jar
+java -cp ./* cn.edu.hfut.dmic.webcollector.ui.BreadthCrawlerUI
