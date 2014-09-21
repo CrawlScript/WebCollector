@@ -33,15 +33,15 @@ public interface Response {
  
   /**
    * 返回http响应码
-   * @return 
+   * @return http响应码
    */
   public int getCode();
 
 
   /**
-   * 返回指定http响应头字段的值。
+   * 返回指定http响应头字段的值
    * @param name 头字段的名称
-   * @return 
+   * @return 指定http响应头字段的值
    */
   public List<String> getHeader(String name);
  
@@ -60,7 +60,7 @@ public interface Response {
   /**
    * 返回http响应中的content-type，返回的content-type会影响到爬取/解析流程中
    * 对状态的判断
-   * @return 
+   * @return http响应中的content-type
    */
   public String getContentType();
   

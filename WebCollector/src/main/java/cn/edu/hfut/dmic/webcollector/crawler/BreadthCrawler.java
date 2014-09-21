@@ -17,6 +17,13 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.util.ArrayList;
+
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
@@ -31,11 +38,7 @@ import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.util.ArrayList;
+
 
 
 /**
@@ -95,7 +98,7 @@ public class BreadthCrawler{
     
     /**
      * 对每个失败爬取的页面（文件）进行的操作，可以通过Override这个方法来完成用户对这些页面的自定义处理
-     * @param page
+     * @param page 爬取的页面（文件）
      */
     protected void failed(Page page){
        
@@ -167,7 +170,7 @@ public class BreadthCrawler{
     /**
      * 生成处理抓取消息的Handler，默认通过BreadthCrawler的visit方法来处理成功抓取的页面，
      * 通过failed方法来处理失败抓取的页面
-     * @return
+     * @return 处理抓取消息的Handler
      */
     protected Handler createFetcherHandler(){
         Handler fetch_handler = new Handler() {
@@ -224,7 +227,7 @@ public class BreadthCrawler{
 
     /**
      * 返回User-Agent
-     * @return
+     * @return User-Agent
      */
     public String getUseragent() {
         return useragent;
@@ -240,7 +243,7 @@ public class BreadthCrawler{
 
     /**
      * 返回爬虫的线程数
-     * @return
+     * @return 爬虫的线程数
      */
     public int getThreads() {
         return threads;
@@ -255,16 +258,16 @@ public class BreadthCrawler{
     }
 
     /**
-     * 返回存储爬虫爬取信息的文件夹
-     * @return
+     * 返回存储爬虫爬取信息的文件夹路径
+     * @return 存储爬虫爬取信息的文件夹路径
      */
     public String getCrawlPath() {
         return crawlPath;
     }
 
     /**
-     * 设置存储爬虫爬取信息的文件夹
-     * @param crawlPath
+     * 设置存储爬虫爬取信息的文件夹路径
+     * @param crawlPath 存储爬虫爬取信息的文件夹路径
      */
     public void setCrawlPath(String crawlPath) {
         this.crawlPath = crawlPath;
@@ -272,7 +275,7 @@ public class BreadthCrawler{
 
     /**
      * 返回Cookie
-     * @return
+     * @return Cookie
      */
     public String getCookie() {
         return cookie;
@@ -280,7 +283,7 @@ public class BreadthCrawler{
 
     /**
      * 设置http请求的cookie
-     * @param cookie
+     * @param cookie Cookie
      */
     public void setCookie(String cookie) {
         this.cookie = cookie;
@@ -288,7 +291,7 @@ public class BreadthCrawler{
 
     /**
      * 如果使用默认的visit，返回存储网页文件的路径
-     * @return
+     * @return 如果使用默认的visit，存储网页文件的路径
      */
     @Deprecated
     public String getRoot() {
@@ -297,7 +300,7 @@ public class BreadthCrawler{
 
     /**
      * 如果使用默认的visit,设置存储网页文件的路径
-     * @param root
+     * @param root 如果使用默认的visit,存储网页文件的路径
      */
     @Deprecated
     public void setRoot(String root) {
@@ -306,7 +309,7 @@ public class BreadthCrawler{
 
     /**
      * 返回爬虫是否为断点爬取模式
-     * @return
+     * @return 爬虫是否为断点爬取模式
      */
     public boolean getResumable() {
         return resumable;
@@ -314,7 +317,7 @@ public class BreadthCrawler{
 
     /**
      * 设置爬虫是否为可断点模式
-     * @param resumable
+     * @param resumable 爬虫是否为可断点模式
      */
     public void setResumable(boolean resumable) {
         this.resumable = resumable;
@@ -322,7 +325,7 @@ public class BreadthCrawler{
 
     /**
      * 返回http连接配置对象
-     * @return
+     * @return http连接配置对象
      */
     public ConnectionConfig getConconfig() {
         return conconfig;
@@ -330,7 +333,7 @@ public class BreadthCrawler{
 
     /**
      * 设置http连接配置对象
-     * @param conconfig
+     * @param conconfig http连接配置对象
      */
     public void setConconfig(ConnectionConfig conconfig) {
         this.conconfig = conconfig;
@@ -338,7 +341,7 @@ public class BreadthCrawler{
 
     /**
      * 返回是否存储网页/文件的内容
-     * @return
+     * @return 是否存储网页/文件的内容
      */
     public boolean isIsContentStored() {
         return isContentStored;
@@ -346,7 +349,7 @@ public class BreadthCrawler{
 
     /**
      * 设置是否存储网页／文件的内容
-     * @param isContentStored
+     * @param isContentStored 是否存储网页/文件的内容
      */
     public void setIsContentStored(boolean isContentStored) {
         this.isContentStored = isContentStored;
@@ -354,7 +357,7 @@ public class BreadthCrawler{
 
     /**
      * 返回代理
-     * @return
+     * @return 代理
      */
     public Proxy getProxy() {
         return proxy;
@@ -362,7 +365,7 @@ public class BreadthCrawler{
 
     /**
      * 设置代理
-     * @param proxy
+     * @param proxy 代理
      */
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;
@@ -370,7 +373,7 @@ public class BreadthCrawler{
 
     /**
      * 返回正则过滤规则列表
-     * @return
+     * @return 正则过滤规则列表
      */
     public ArrayList<String> getRegexs() {
         return regexs;
@@ -378,7 +381,7 @@ public class BreadthCrawler{
 
     /**
      * 设置正则过滤规则列表
-     * @param regexs
+     * @param regexs 正则过滤规则列表
      */
     public void setRegexs(ArrayList<String> regexs) {
         this.regexs = regexs;
@@ -386,7 +389,7 @@ public class BreadthCrawler{
 
     /**
      * 返回种子url列表
-     * @return
+     * @return 种子url列表
      */
     public ArrayList<String> getSeeds() {
         return seeds;
@@ -394,13 +397,13 @@ public class BreadthCrawler{
 
     /**
      * 设置种子url列表
-     * @param seeds
+     * @param seeds 种子url列表
      */
     public void setSeeds(ArrayList<String> seeds) {
         this.seeds = seeds;
     }
 
-    
+    /*
     public static void main(String[] args) throws IOException {
         String crawl_path = "/home/hu/data/crawl_hfut1";
         String root = "/home/hu/data/hfut1";       
@@ -434,7 +437,7 @@ public class BreadthCrawler{
         
         
     }
-    
+    */
     
     
     

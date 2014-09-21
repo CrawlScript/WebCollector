@@ -117,7 +117,7 @@ public class StandardGenerator extends Generator {
     /**
      * 用户自定义的过滤规则，可以通过Override这个函数，来定义自己的StandardGenerator
      * @param url
-     * @return
+     * @return 是否需要过滤这个url
      */
     protected boolean shouldFilter(String url) {
         return false;

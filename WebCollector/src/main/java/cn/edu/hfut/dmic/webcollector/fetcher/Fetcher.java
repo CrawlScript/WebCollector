@@ -400,7 +400,7 @@ public class Fetcher{
 
     /**
      * 返回http连接配置对象
-     * @return
+     * @return http连接配置对象
      */
     public ConnectionConfig getConconfig() {
         return conconfig;

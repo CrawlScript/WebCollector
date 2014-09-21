@@ -38,7 +38,7 @@ public class SegmentWriter {
 
     /**
      * 根据时间，为segment文件夹生成唯一的名称
-     * @return
+     * @return 根据时间，为segment文件夹生成的唯一的名称
      */
     public static synchronized String createSegmengName() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

@@ -49,8 +49,8 @@ public class Page{
     }
     
     /**
-     * 返回存储的http响应，如果没有，返回null
-     * @return
+     * 返回存储的http响应
+     * @return http响应
      */
     public Response getResponse(){
         return response;
