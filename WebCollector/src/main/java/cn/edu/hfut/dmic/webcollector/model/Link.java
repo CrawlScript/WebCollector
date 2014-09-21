@@ -7,12 +7,21 @@
 package cn.edu.hfut.dmic.webcollector.model;
 
 /**
- *
+ * 保存网页链接的类
  * @author hu
  */
 public class Link {
+    
+    /**
+     * 链接的锚文本
+     */
     private String anchor;
+    
+    /**
+     * 链接的url
+     */
     private String url;
+    
     public Link(){
         
     }

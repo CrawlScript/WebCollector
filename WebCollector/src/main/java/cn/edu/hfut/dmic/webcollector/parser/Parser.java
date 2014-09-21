@@ -13,5 +13,12 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
  * @author hu
  */
 public interface Parser {
+
+    /**
+     * 对指定页面进行解析，返回解析结果
+     * @param page 待解析页面
+     * @return 解析结果
+     * @throws Exception
+     */
     public ParseResult getParse(Page page) throws Exception;
 }

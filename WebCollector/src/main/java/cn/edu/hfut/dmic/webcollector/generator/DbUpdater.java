@@ -33,25 +33,38 @@ import java.util.HashMap;
 
 
 /**
- *
+ * 用于更新爬取任务列表的类
  * @author hu
  */
 public class DbUpdater{
 
     private String crawl_path;
     private DbWriter<CrawlDatum> updater_writer;
-    private int updaterCount;
-
+    
+    /**
+     * 构建一个对指定爬取信息文件夹进行更新操作的更新器
+     * @param crawl_path
+     */
     public DbUpdater(String crawl_path) {
         this.crawl_path = crawl_path;
     }
 
+    /**
+     * 备份爬取任务列表
+     * @param backuppath
+     * @throws IOException
+     */
     public static void backup(String backuppath) throws IOException {
         File oldfile = new File(backuppath, Config.old_info_path);
         File currentfile = new File(backuppath, Config.current_info_path);
         FileUtils.copy(currentfile, oldfile);
     }
 
+    /**
+     * 判断更新器是否在上锁状态
+     * @return 是否上锁
+     * @throws IOException
+     */
     public boolean isLocked() throws IOException {
         File lockfile = new File(crawl_path + "/" + Config.lock_path);
         if (!lockfile.exists()) {
@@ -61,17 +74,25 @@ public class DbUpdater{
         return lock.equals("1");
     }
 
+    /**
+     * 上锁该更新器
+     * @throws IOException
+     */
     public void lock() throws IOException {
         FileUtils.writeFile(crawl_path + "/" + Config.lock_path, "1".getBytes("utf-8"));
     }
 
+    /**
+     * 解锁该更新器
+     * @throws IOException
+     */
     public void unlock() throws IOException {
         FileUtils.writeFile(crawl_path + "/" + Config.lock_path, "0".getBytes("utf-8"));
     }
     // DataFileWriter<CrawlDatum> dataFileWriter;
     
-
-    public void updateAll(ArrayList<CrawlDatum> datums) throws IOException {
+   
+    private void updateAll(ArrayList<CrawlDatum> datums) throws IOException {
         File currentfile = new File(crawl_path, Config.current_info_path);
         if (!currentfile.getParentFile().exists()) {
             currentfile.getParentFile().mkdirs();
@@ -83,6 +104,11 @@ public class DbUpdater{
         writer.close();
     }
 
+    /**
+     * 初始化该更新器
+     * @throws UnsupportedEncodingException
+     * @throws IOException
+     */
     public void initUpdater() throws UnsupportedEncodingException, IOException {
         File currentfile = new File(crawl_path, Config.current_info_path);
         if (!currentfile.getParentFile().exists()) {
@@ -93,22 +119,25 @@ public class DbUpdater{
         } else {
             updater_writer = new DbWriter<CrawlDatum>(CrawlDatum.class, currentfile, false);
         }
-        updaterCount = 0;
+        
     }
 
-    /*
-     public synchronized void append(CrawlDatum crawldatum) throws IOException {
-     updater_writer.write(crawldatum);
-     if (updaterCount % 200 == 0) {
-     updater_writer.flush();
-     }
-     updaterCount++;
-     }
+    
+
+    /**
+     * 关闭该更新器
+     * @throws IOException
      */
+    
     public void closeUpdater() throws IOException {
         updater_writer.close();
     }
 
+    /**
+     * 将爬取记录和爬取任务列表合并，更新爬取任务列表
+     * @param segment_path
+     * @throws IOException
+     */
     public void merge(String segment_path) throws IOException {
         
         LogUtils.getLogger().info("merge "+segment_path);
@@ -177,40 +206,5 @@ public class DbUpdater{
 
     }
 
-    /*
-     public void merge() throws IOException{
-        
-     File currentfile=new File(crawl_path, Config.current_info_path);
-     DbReader<CrawlDatum> reader=new DbReader<CrawlDatum>(CrawlDatum.class,currentfile);
-
-     HashMap<String,Integer> indexmap=new HashMap<String, Integer>();
-     ArrayList<CrawlDatum> origin_datums=new ArrayList<CrawlDatum>();
-     CrawlDatum crawldatum=null;
-     while(reader.hasNext()){
-     crawldatum=reader.readNext();
-     String url=crawldatum.url;
-     if(indexmap.containsKey(crawldatum.url)){
-     int preindex=indexmap.get(url);
-     CrawlDatum pre_datum=origin_datums.get(preindex);
-     if(crawldatum.status==Page.UNFETCHED){                    
-     continue;
-     }else if(pre_datum.fetchtime>=crawldatum.fetchtime){
-     continue;
-     }else{
-     origin_datums.set(preindex, crawldatum);
-     indexmap.put(url, preindex);
-     }
-                
-     }else{
-     origin_datums.add(crawldatum);
-     indexmap.put(url, origin_datums.size()-1);
-     }
-            
-     }
-       
-     reader.close();
-     updateAll(origin_datums);
-
-     }
-     */
+   
 }

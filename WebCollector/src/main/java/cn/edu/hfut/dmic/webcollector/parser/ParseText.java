@@ -21,7 +21,7 @@ package cn.edu.hfut.dmic.webcollector.parser;
 import org.apache.avro.reflect.Nullable;
 
 /**
- *
+ * 网页解析后，存储网页解析文本的类
  * @author hu
  */
 public class ParseText {

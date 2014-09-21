@@ -12,7 +12,9 @@ import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import org.jsoup.nodes.Document;
 
 /**
- *
+ * Page是爬取过程中，内存中保存网页爬取信息的一个容器，与CrawlDatum不同，Page只在内存中存
+ * 放，用于保存一些网页信息，方便用户进行自定义网页解析之类的操作。在广度遍历器中，用户覆盖
+ * 的visit(Page page)方法，就是通过Page将网页爬取/解析信息传递给用户的
  * @author hu
  */
 public class Page{
@@ -37,13 +39,7 @@ public class Page{
     
     
     
-    /*
-    public static final int STATUS_UNDEFINED=-1;
-    public static final int UNFETCHED=1;
-    public static final int FETCHED=2;
-    */
-    
-    //public static final int FETCHTIME_UNDEFINED=1;
+   
 
     public byte[] getContent() {
         if(response==null)

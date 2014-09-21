@@ -9,16 +9,16 @@ package cn.edu.hfut.dmic.webcollector.parser;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import java.io.UnsupportedEncodingException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 /**
- *
+ * 解析辅助类
  * @author hu
  */
 public class ParseUtils {
+    
+    
     public static Document parseDocument(byte[] content,String url){
         String charset=CharsetDetector.guessEncoding(content);
         String html;
