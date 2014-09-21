@@ -8,7 +8,6 @@ package cn.edu.hfut.dmic.webcollector.parser;
 
 import cn.edu.hfut.dmic.webcollector.model.Link;
 import java.util.ArrayList;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -16,7 +15,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 
 
 /**
- *
+ * 链接解析辅助类
  * @author hu
  */
 public class LinkUtils {

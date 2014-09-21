@@ -3,31 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package cn.edu.hfut.dmic.webcollector.util;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
+import org.mozilla.universalchardet.UniversalDetector;
 
 /**
- *
+ * 字符集自动检测
  * @author hu
  */
-public class CharsetDetector
-{
+public class CharsetDetector {
 
-   public static String guessEncoding(byte[] bytes) {
-    String DEFAULT_ENCODING = "UTF-8";
-    org.mozilla.universalchardet.UniversalDetector detector =
-        new org.mozilla.universalchardet.UniversalDetector(null);
-    detector.handleData(bytes, 0, bytes.length);
-    detector.dataEnd();
-    String encoding = detector.getDetectedCharset();
-    detector.reset();
-    if (encoding == null) {
-        encoding = DEFAULT_ENCODING;
+    /**
+     * 根据字节数组，猜测可能的字符集，如果检测失败，默认返回utf-8
+     * @param bytes 待检测的字节数组
+     * @return
+     */
+    public static String guessEncoding(byte[] bytes) {
+        String DEFAULT_ENCODING = "UTF-8";
+        UniversalDetector detector = new UniversalDetector(null);
+        detector.handleData(bytes, 0, bytes.length);
+        detector.dataEnd();
+        String encoding = detector.getDetectedCharset();
+        detector.reset();
+        if (encoding == null) {
+            encoding = DEFAULT_ENCODING;
+        }
+        return encoding;
     }
-    return encoding;
-}
 }
