@@ -26,16 +26,25 @@ import org.apache.avro.io.DatumWriter;
 import org.apache.avro.reflect.ReflectDatumWriter;
 
 /**
- *
+ * 写Avro文件的Writer
  * @author hu
+ * @param <T> 待写入数据的数据类型
  */
 public class DbWriter<T> {
     
     
     
-    public DataFileWriter<T> dataFileWriter;
+    private DataFileWriter<T> dataFileWriter;
  
-    public Class<T> type;
+    private Class<T> type;
+
+    /**
+     * 构造一个向avro文件中写入指定类型数据的Writer
+     * @param type 指定的数据类型
+     * @param dbfile avro文件
+     * @param append 是否追加
+     * @throws IOException
+     */
     public DbWriter(Class<T> type,File dbfile,boolean append) throws IOException{
         this.type=type;
         DatumWriter<T> datumWriter = new ReflectDatumWriter<T>(type);
@@ -51,26 +60,58 @@ public class DbWriter<T> {
         }
     }
     
+    /**
+     * 构造一个向avro文件中写入指定类型数据的Writer
+     * @param type 指定的数据类型
+     * @param dbpath avro文件路径
+     * @param append 是否追加
+     * @throws IOException
+     */
     public DbWriter(Class<T> type,String dbpath,boolean append) throws IOException{
         this(type,new File(dbpath),append);
     }
     
+    /**
+     * 构造一个向avro文件中以新建方式写入指定类型数据的Writer
+     * @param type 指定的数据类型
+     * @param dbpath avro文件路径
+     * @throws IOException
+     */
     public DbWriter(Class<T> type,String dbpath) throws IOException{
         this(type,dbpath,false);
     }
     
+    /**
+     * 构造一个向avro文件中以新建方式写入指定类型数据的Writer
+     * @param type 指定的数据类型
+     * @param dbfile avro文件
+     * @throws IOException
+     */
     public DbWriter(Class<T> type,File dbfile) throws IOException{
         this(type,dbfile,false);
     }
     
+    /**
+     * 刷新该Writer的缓冲
+     * @throws IOException
+     */
     public void flush() throws IOException{
         dataFileWriter.flush();
     }
     
+    /**
+     * 写入数据
+     * @param data 要写入的数据
+     * @throws IOException
+     */
     public void write(T data) throws IOException{
         dataFileWriter.append(data);
     }
     
+    /**
+     * 关闭该Writer
+     * @throws IOException
+     */
     public void close() throws IOException{
         dataFileWriter.close();
     }

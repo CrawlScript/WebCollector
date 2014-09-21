@@ -29,14 +29,15 @@ import java.util.regex.Pattern;
 
 
 /**
- *
+ * 广度遍历使用的爬取任务生成器
  * @author hu
  */
 public class StandardGenerator extends Generator {
 
-    public String crawlPath;
+    private String crawlPath;
+    private DbReader<CrawlDatum> dbreader;
     
-    public String getSegmentPath(){
+    private String getSegmentPath(){
         String[] segment_list=new File(crawlPath,"segments").list();
         String segment_path=null;
         long max=0;
@@ -50,6 +51,10 @@ public class StandardGenerator extends Generator {
         return segment_path;
     }
     
+    /**
+     * 构造一个广度遍历爬取任务生成器，从制定路径的文件夹中获取任务
+     * @param crawlPath 存储爬取信息的文件夹
+     */
     public StandardGenerator(String crawlPath){
         this.crawlPath=crawlPath;
         try {
@@ -78,30 +83,11 @@ public class StandardGenerator extends Generator {
         }
     }
 
-    public void backup() throws IOException {
+    private void backup() throws IOException {
         DbUpdater.backup(crawlPath);
     }
 
-
-    public static void main(String[] args) throws IOException {
-        Injector inject=new Injector("/home/hu/data/crawl_avro");
-        inject.inject("http://www.xinhuanet.com/");
-        String crawl_path = "/home/hu/data/crawl_avro";
-        StandardGenerator bg = new StandardGenerator(null) {
-            @Override
-            public boolean shouldFilter(String url) {
-                if (Pattern.matches("http://news.xinhuanet.com/world/.*", url)) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-        };
-     
-       
-
-    }
+    
 
   
     
@@ -122,16 +108,44 @@ public class StandardGenerator extends Generator {
         return crawldatum;
     }
     
-    DbReader<CrawlDatum> dbreader;
+   
 
-    public void initReader() throws IOException{   
+    private void initReader() throws IOException{   
         File oldfile=new File(crawlPath, Config.old_info_path);
         dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
     }
 
-    public boolean shouldFilter(String url) {
+    /**
+     * 用户自定义的过滤规则，可以通过Override这个函数，来定义自己的StandardGenerator
+     * @param url
+     * @return
+     */
+    protected boolean shouldFilter(String url) {
         return false;
     }
+    
+    
+    /*
+    public static void main(String[] args) throws IOException {
+        Injector inject=new Injector("/home/hu/data/crawl_avro");
+        inject.inject("http://www.xinhuanet.com/");
+        String crawl_path = "/home/hu/data/crawl_avro";
+        StandardGenerator bg = new StandardGenerator(null) {
+            @Override
+            public boolean shouldFilter(String url) {
+                if (Pattern.matches("http://news.xinhuanet.com/world/.*", url)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+        };
+     
+       
+
+    }
+    */
 
 
 }

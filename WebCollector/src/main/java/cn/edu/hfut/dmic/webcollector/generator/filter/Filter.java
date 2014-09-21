@@ -21,11 +21,17 @@ package cn.edu.hfut.dmic.webcollector.generator.filter;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 
 /**
- *
+ * 爬取任务过滤器，是爬取任务生成器的一种，嵌套在一个已有的爬取任务生成器外部，从
+ * 已有的爬取任务生成器中获取符合规则的任务
  * @author hu
  */
 public abstract class Filter extends Generator{
     Generator generator;
+
+    /**
+     * 构造一个过滤器(也是爬取任务生成器),从一个已有的爬取任务生成器中获取下一个符合规则的任务
+     * @param generator 已有的爬取任务生成器
+     */
     public Filter(Generator generator){
         this.generator=generator;
     }

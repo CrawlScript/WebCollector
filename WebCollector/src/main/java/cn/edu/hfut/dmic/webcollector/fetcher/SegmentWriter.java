@@ -31,11 +31,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 爬取过程中，写入爬取历史、网页Content、解析信息的Writer
  * @author hu
  */
 public class SegmentWriter {
 
+    /**
+     * 根据时间，为segment文件夹生成唯一的名称
+     * @return
+     */
     public static synchronized String createSegmengName() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
@@ -50,6 +54,10 @@ public class SegmentWriter {
 
     private String segmentPath;
 
+    /**
+     * 构造一个在指定文件夹写爬取信息的Writer
+     * @param segmentPath 指定的文件夹路径
+     */
     public SegmentWriter(String segmentPath) {
         this.segmentPath = segmentPath;
         count_fetch = 0;
@@ -74,6 +82,11 @@ public class SegmentWriter {
     private int count_parse;
     private int count_fetch;
 
+    /**
+     * 写入一条爬取历史记录
+     * @param fetch 爬取历史记录（爬取任务)
+     * @throws IOException
+     */
     public synchronized void wrtieFetch(CrawlDatum fetch) throws IOException {
         fetchWriter.write(fetch);
         count_fetch = (count_fetch++) % Config.segmentwriter_buffer_size;
@@ -82,6 +95,11 @@ public class SegmentWriter {
         }
     }
 
+    /**
+     * 写入一条Content对象(存储网页/文件内容的对象)
+     * @param content
+     * @throws IOException
+     */
     public synchronized void wrtieContent(Content content) throws IOException {
         contentWriter.write(content);
         count_content = (count_content++) % Config.segmentwriter_buffer_size;
@@ -90,6 +108,11 @@ public class SegmentWriter {
         }
     }
 
+    /**
+     * 写入一条网页解析结果
+     * @param parseresult 网页解析结果
+     * @throws IOException
+     */
     public synchronized void wrtieParse(ParseResult parseresult) throws IOException {
         parseDataWriter.write(parseresult.getParsedata());
         parseTextWriter.write(parseresult.getParsetext());
@@ -100,6 +123,10 @@ public class SegmentWriter {
         }
     }
 
+    /**
+     * 关闭Writer
+     * @throws IOException
+     */
     public void close() throws IOException {
         fetchWriter.close();
         contentWriter.close();

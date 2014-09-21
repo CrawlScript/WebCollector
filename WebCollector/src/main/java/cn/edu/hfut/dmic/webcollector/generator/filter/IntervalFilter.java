@@ -20,19 +20,32 @@ package cn.edu.hfut.dmic.webcollector.generator.filter;
 
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 
 /**
- *
+ * 时间间隔过滤器
  * @author hu
  */
 public class IntervalFilter extends Filter{
 
+    /**
+     * 构造一个时间间隔过滤器
+     * @param generator 嵌套的任务生成器
+     */
     public IntervalFilter(Generator generator) {
         super(generator);
     }
 
+    /**
+     * 获取下一个爬取时间间隔超过Config.interval的任务
+     * 有下面几种情况可接受：
+     * 1.爬取任务状态为UNFETCHED(未抓取)
+     * 2.如果Config.interval为-1，表示时间间隔为无穷大，只能接受爬
+     *   取任务状态为UNFETCHED(未抓取)的任务
+     * 3.如果Config.interval>=0,且任务状态为已抓取，根据任务的抓取时间(fetchTime),加
+     *   上时间间隔(Config.interval)，判断是否超过当前时间，如果超过，则接受任务。
+     * @return 下一个达到时间间隔要求的爬取任务，如果没有符合规则的任务，返回null
+     */
     @Override
     public CrawlDatum next() {
         while(true){

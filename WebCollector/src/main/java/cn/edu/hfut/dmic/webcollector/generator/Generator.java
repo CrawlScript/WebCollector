@@ -30,7 +30,7 @@ public abstract class Generator{
    
     /**
      * 获取下一个抓取任务
-     * @return
+     * @return 下一个抓取任务，如果没有任务，返回null
      */
     public abstract CrawlDatum next();
  
