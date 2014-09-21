@@ -382,7 +382,7 @@ public class Fetcher{
     boolean running;
 
     /**
-     *
+     * 停止爬取
      */
     public void stop() {
         running = false;
@@ -408,7 +408,7 @@ public class Fetcher{
 
     /**
      * 设置http连接配置对象
-     * @param conconfig
+     * @param conconfig http连接配置对象
      */
     public void setConconfig(ConnectionConfig conconfig) {
         this.conconfig = conconfig;
@@ -416,7 +416,7 @@ public class Fetcher{
 
     /**
      * 返回爬虫的线程数
-     * @return
+     * @return 爬虫的线程数
      */
     public int getThreads() {
         return threads;
@@ -424,7 +424,7 @@ public class Fetcher{
 
     /**
      * 设置爬虫的线程数
-     * @param threads
+     * @param threads 爬虫的线程数
      */
     public void setThreads(int threads) {
         this.threads = threads;
@@ -432,7 +432,7 @@ public class Fetcher{
 
     /**
      * 返回处理抓取消息的Handler
-     * @return
+     * @return 处理抓取消息的Handler
      */
     public Handler getHandler() {
         return handler;
@@ -440,7 +440,7 @@ public class Fetcher{
 
     /**
      * 设置处理抓取消息的Handler
-     * @param handler
+     * @param handler 处理抓取消息的Handler
      */
     public void setHandler(Handler handler) {
         this.handler = handler;
@@ -448,7 +448,7 @@ public class Fetcher{
 
     /**
      * 返回是否存储爬取信息
-     * @return
+     * @return 是否存储爬取信息
      */
     public boolean getNeedUpdateDb() {
         return needUpdateDb;
@@ -456,7 +456,7 @@ public class Fetcher{
 
     /**
      * 设置是否存储爬取信息
-     * @param needUpdateDb
+     * @param needUpdateDb 是否存储爬取信息
      */
     public void setNeedUpdateDb(boolean needUpdateDb) {
         this.needUpdateDb = needUpdateDb;
@@ -464,7 +464,7 @@ public class Fetcher{
 
     /**
      * 返回http请求失败后重试的次数
-     * @return
+     * @return http请求失败后重试的次数
      */
     public int getRetry() {
         return retry;
@@ -472,7 +472,7 @@ public class Fetcher{
 
     /**
      * 设置http请求失败后重试的次数
-     * @param retry
+     * @param retry http请求失败后重试的次数
      */
     public void setRetry(int retry) {
         this.retry = retry;
@@ -480,7 +480,7 @@ public class Fetcher{
 
     /**
      * 返回是否存储网页/文件的内容
-     * @return
+     * @return 是否存储网页/文件的内容
      */
     public boolean isIsContentStored() {
         return isContentStored;
@@ -488,7 +488,7 @@ public class Fetcher{
 
     /**
      * 设置是否存储网页／文件的内容
-     * @param isContentStored
+     * @param isContentStored 是否存储网页/文件的内容
      */
     public void setIsContentStored(boolean isContentStored) {
         this.isContentStored = isContentStored;
@@ -496,7 +496,7 @@ public class Fetcher{
 
     /**
      * 返回是否解析网页（解析链接、文本）
-     * @return
+     * @return 是否解析网页（解析链接、文本）
      */
     public boolean isParsing() {
         return parsing;
@@ -504,7 +504,7 @@ public class Fetcher{
 
     /**
      * 设置是否解析网页（解析链接、文本）
-     * @param parsing
+     * @param parsing 是否解析网页（解析链接、文本）
      */
     public void setParsing(boolean parsing) {
         this.parsing = parsing;
@@ -512,7 +512,7 @@ public class Fetcher{
 
     /**
      * 返回代理
-     * @return
+     * @return 代理
      */
     public Proxy getProxy() {
         return proxy;
@@ -520,7 +520,7 @@ public class Fetcher{
 
     /**
      * 设置代理
-     * @param proxy
+     * @param proxy 代理
      */
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;

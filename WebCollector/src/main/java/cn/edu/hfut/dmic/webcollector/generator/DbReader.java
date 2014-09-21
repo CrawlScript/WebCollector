@@ -17,9 +17,6 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
-
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -30,8 +27,9 @@ import org.apache.avro.io.DatumReader;
 import org.apache.avro.reflect.ReflectDatumReader;
 
 /**
- *
+ * 读Avro文件的Reader
  * @author hu
+ * @param <T> 待读取数据的数据类型
  */
 public class DbReader<T> {
 
@@ -39,6 +37,12 @@ public class DbReader<T> {
     Iterator<T> iterator;
     DataFileReader<T> dataFileReader;
 
+    /**
+     * 构造一个从avro文件中读取指定类型数据的Reader
+     * @param type 指定的数据类型
+     * @param dbfile 待读取的avro文件
+     * @throws IOException
+     */
     public DbReader(Class<T> type,File dbfile) throws IOException {
         this.type=type;
         DatumReader<T> datumReader = new ReflectDatumReader<T>(type);
@@ -46,25 +50,42 @@ public class DbReader<T> {
         iterator = dataFileReader.iterator();
     }
 
+    /**
+     * 构造一个从avro文件中读取指定类型数据的Reader
+     * @param type 指定的数据类型
+     * @param dbpath 待读取的avro文件的路径
+     * @throws IOException
+     */
     public DbReader(Class<T> type,String dbpath) throws IOException {
         this(type,new File(dbpath));
     }
 
-   
-
+    /**
+     * 读取下一条数据，在文件结束时调用该方法会出错，所以在调用readNext方法前需要使
+     * 用hasNext方法来判断文件是否结束
+     * @return 下一条数据
+     */
     public T readNext() {
         return iterator.next();
     }
 
+    /**
+     * 判断是否已读取到avro文件结尾
+     * @return 是否已读取到avro文件结尾
+     */
     public boolean hasNext(){
         return iterator.hasNext();
     }
     
+    /**
+     * 关闭该Reader
+     * @throws IOException
+     */
     public void close() throws IOException {
         dataFileReader.close();
     }
 
-    
+    /*
     public static void main(String[] args) throws IOException{
         if(args.length==0){
             System.err.println("Usage dbpath");           
@@ -100,4 +121,5 @@ public class DbReader<T> {
        
         
     }
+    */
 }

@@ -84,8 +84,8 @@ public class HttpRequest implements Request{
 
         is.close();       
         
-        response.content=bos.toByteArray();
-        response.headers= con.getHeaderFields();
+        response.setContent(bos.toByteArray());
+        response.setHeaders(con.getHeaderFields());
         return response;
     }
     

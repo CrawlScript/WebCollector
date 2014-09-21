@@ -8,22 +8,15 @@ package cn.edu.hfut.dmic.webcollector.net;
 
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
-import java.net.Proxy;
 import java.net.URL;
 
 /**
- *
+ * Http请求的接口，如果用户需要自定义实现Http请求的类，需要实现这个接口
  * @author hu
  */
 public interface Request {
     public URL getURL();
-    public void setURL(URL url);
-    
-    //public void setProxy(Proxy proxy);
-    //public Proxy getProxy();
-    
-    //public void setConnectionConfig(ConnectionConfig config);
+    public void setURL(URL url); 
     
     public Response getResponse(CrawlDatum datum) throws Exception;
 

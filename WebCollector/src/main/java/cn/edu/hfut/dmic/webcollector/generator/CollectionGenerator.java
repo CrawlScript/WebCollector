@@ -24,11 +24,11 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
+ * 爬取指定集合中的url列表的爬取任务生成器
  * @author hu
  */
 public class CollectionGenerator extends Generator{
-    public ArrayList<CrawlDatum> data=new ArrayList<CrawlDatum>();
+    private ArrayList<CrawlDatum> data=new ArrayList<CrawlDatum>();
     public  CollectionGenerator(){  
         iterator=data.iterator();
     }
@@ -68,7 +68,7 @@ public class CollectionGenerator extends Generator{
     
     
 
-    Iterator<CrawlDatum> iterator;
+    private Iterator<CrawlDatum> iterator;
     @Override
     public CrawlDatum next() {
         if(iterator.hasNext()){
@@ -78,6 +78,7 @@ public class CollectionGenerator extends Generator{
         }
     }
     
+    /*
     public static void main(String[] args){
         CollectionGenerator generator=new CollectionGenerator();
         generator.addUrl("http://abc1.com");
@@ -87,5 +88,6 @@ public class CollectionGenerator extends Generator{
             System.out.println(crawldatum.getUrl());
         }
     }
+    */
     
 }

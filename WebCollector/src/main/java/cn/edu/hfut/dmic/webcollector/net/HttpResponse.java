@@ -17,10 +17,10 @@ import java.util.Map;
  */
 public class HttpResponse implements Response{
 
-    public URL url;
-    public int code;
-    public Map<String,List<String>> headers=null;
-    public byte[] content=null;
+    private URL url;
+    private int code;
+    private Map<String,List<String>> headers=null;
+    private byte[] content=null;
     
     public HttpResponse(URL url){
         this.url=url;

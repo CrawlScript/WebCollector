@@ -24,7 +24,6 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 
 
