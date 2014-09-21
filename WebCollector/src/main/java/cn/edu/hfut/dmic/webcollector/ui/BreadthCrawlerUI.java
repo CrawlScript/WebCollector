@@ -1,32 +1,34 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.ui;
 
-
-import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-
-import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
-import java.io.PipedReader;
-import java.io.PipedWriter;
-import java.util.Scanner;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-
-
-import org.apache.log4j.Appender;
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
-import org.apache.log4j.net.TelnetAppender;
 import org.apache.log4j.spi.LoggingEvent;
+
+import cn.edu.hfut.dmic.webcollector.util.LogUtils;
+import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
 
 /**
  *

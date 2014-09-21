@@ -1,20 +1,36 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (C) 2014 hu
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 package cn.edu.hfut.dmic.webcollector.output;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
+
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 
 /**
- *
+ * FileSystemOutput并不属于WebCollector内核，它只是实现一个
+ * 简单的输出，将网页根据url路径，保存到本地目录，按照网站目录
+ * 结构来存储网站内容。BreadthCrawler的visit函数中，默认使用
+ * FileSystemOutput来保存网页。不推荐使用FileSystemOutput来
+ * 存储网页
  * @author hu
  */
 public class FileSystemOutput {
@@ -59,18 +75,6 @@ public class FileSystemOutput {
         }
     }
 
-    public static void main(String[] args) throws MalformedURLException, IOException {
-
-        URL _URL = new URL("http://www.zhihu.com/");
-        System.out.println(_URL.getProtocol() + "://" + _URL.getHost());
-        //System.out.println(f.getAbsolutePath());
-        /*
-         System.out.println(_URL.getProtocol());
-         System.out.println(_URL.getPath());
-        
-         System.out.println(_URL.getHost());
-         System.out.println(_URL.getQuery());
-         */
-    }
+   
 
 }
