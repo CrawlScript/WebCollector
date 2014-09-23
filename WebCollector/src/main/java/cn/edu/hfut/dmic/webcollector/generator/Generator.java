@@ -26,13 +26,13 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
  * 抓取任务生成器
  * @author hu
  */
-public abstract class Generator{
+public interface Generator{
    
     /**
      * 获取下一个抓取任务
      * @return 下一个抓取任务，如果没有任务，返回null
      */
-    public abstract CrawlDatum next();
+    public  CrawlDatum next();
  
     
 }

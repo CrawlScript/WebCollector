@@ -44,7 +44,7 @@ public class FetcherTest {
                 fetcher.stop();
             }
             
-            Fetcher fetcher;
+            FSFetcher fetcher;
 
             @Override
             public void run() {

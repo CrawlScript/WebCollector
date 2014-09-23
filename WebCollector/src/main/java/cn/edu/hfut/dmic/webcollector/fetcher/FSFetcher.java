@@ -18,23 +18,19 @@
 
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.FSSegmentWriter;
-import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-import cn.edu.hfut.dmic.webcollector.fetcher.SegmentWriter;
+
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.FSDbUpdater;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.log4j.Priority;
+
 
 /**
  *
  * @author hu
  */
-public class FSFetcher extends Fetcher{
+public class FSFetcher extends BasicFetcher{
     private String crawlPath;
     
     protected String getLastSegmentName(){

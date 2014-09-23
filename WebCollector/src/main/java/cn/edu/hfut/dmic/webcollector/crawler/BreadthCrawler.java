@@ -18,12 +18,13 @@
 package cn.edu.hfut.dmic.webcollector.crawler;
 
 
+import cn.edu.hfut.dmic.webcollector.fetcher.BasicFetcher;
 import cn.edu.hfut.dmic.webcollector.fetcher.FSFetcher;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+import cn.edu.hfut.dmic.webcollector.generator.FSGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.FSInjector;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
-import cn.edu.hfut.dmic.webcollector.generator.FSGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.UniqueFilter;
@@ -179,11 +180,11 @@ public class BreadthCrawler{
             public void handleMessage(Message msg) {
                 Page page = (Page) msg.obj;
                 switch(msg.what){
-                    case Fetcher.FETCH_SUCCESS:
+                    case BasicFetcher.FETCH_SUCCESS:
                         
                         visit(page);
                         break;
-                    case Fetcher.FETCH_FAILED:
+                    case BasicFetcher.FETCH_FAILED:
                         failed(page);
                         break;
                     default:
@@ -201,12 +202,11 @@ public class BreadthCrawler{
      */
     protected Fetcher createFecther(){
   
-        Fetcher fetcher=new FSFetcher(crawlPath);
+        FSFetcher fetcher=new FSFetcher(crawlPath);
         fetcher.setProxy(proxy);
         fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(createFetcherHandler());
         conconfig = new CommonConnectionConfig();
-        
         fetcher.setThreads(threads);
         fetcher.setConconfig(conconfig);
         return fetcher;

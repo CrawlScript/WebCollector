@@ -32,7 +32,7 @@ import java.io.IOException;
  * 广度遍历使用的爬取任务生成器
  * @author hu
  */
-public class FSGenerator extends Generator {
+public class FSGenerator implements Generator {
 
     private String crawlPath;
     private DbReader<CrawlDatum> dbreader;

@@ -25,7 +25,7 @@ import cn.edu.hfut.dmic.webcollector.generator.Generator;
  * 已有的爬取任务生成器中获取符合规则的任务
  * @author hu
  */
-public abstract class Filter extends Generator{
+public abstract class Filter implements Generator{
     Generator generator;
 
     /**

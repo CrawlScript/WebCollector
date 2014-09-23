@@ -28,7 +28,7 @@ import java.util.Iterator;
  * 爬取指定集合中的url列表的爬取任务生成器
  * @author hu
  */
-public class CollectionGenerator extends Generator{
+public class CollectionGenerator implements Generator{
     private ArrayList<CrawlDatum> data=new ArrayList<CrawlDatum>();
     public  CollectionGenerator(){  
         iterator=data.iterator();
