@@ -398,9 +398,10 @@ public abstract class BasicFetcher implements Fetcher{
 
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
+            dbUpdater.getSegmentWriter().close();
             dbUpdater.merge();
             dbUpdater.unlock();
-            dbUpdater.getSegmentWriter().close();
+            
         }
     }
 
