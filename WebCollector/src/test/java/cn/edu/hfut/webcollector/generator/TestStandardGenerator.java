@@ -8,7 +8,7 @@ package cn.edu.hfut.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.generator.FSInjector;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
+import cn.edu.hfut.dmic.webcollector.generator.FSGenerator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class TestStandardGenerator {
         Injector injector=new FSInjector(crawl_path);
         injector.inject(seeds);
        
-        StandardGenerator generator=new StandardGenerator(crawl_path);
+        FSGenerator generator=new FSGenerator(crawl_path);
         CrawlDatum crawldatum=null;
         ArrayList<CrawlDatum> datums=new ArrayList<CrawlDatum>();
         while((crawldatum=generator.next())!=null){

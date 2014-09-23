@@ -23,7 +23,7 @@ import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.FSInjector;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
+import cn.edu.hfut.dmic.webcollector.generator.FSGenerator;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.UniqueFilter;
@@ -218,7 +218,7 @@ public class BreadthCrawler{
      */
     protected Generator createGenerator(){
 
-        Generator generator = new StandardGenerator(crawlPath);
+        Generator generator = new FSGenerator(crawlPath);
         generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
   
         return generator;

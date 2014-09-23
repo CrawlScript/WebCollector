@@ -32,7 +32,7 @@ import java.io.IOException;
  * 广度遍历使用的爬取任务生成器
  * @author hu
  */
-public class StandardGenerator extends Generator {
+public class FSGenerator extends Generator {
 
     private String crawlPath;
     private DbReader<CrawlDatum> dbreader;
@@ -45,7 +45,7 @@ public class StandardGenerator extends Generator {
      * 构造一个广度遍历爬取任务生成器，从制定路径的文件夹中获取任务
      * @param crawlPath 存储爬取信息的文件夹
      */
-    public StandardGenerator(String crawlPath){
+    public FSGenerator(String crawlPath){
         this.crawlPath=crawlPath;
   
         
