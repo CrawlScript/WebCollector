@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author hu
  */
-public class Fetcher{
+public abstract class Fetcher{
 
     private int retry = 3;
     private Proxy proxy = null;
@@ -65,13 +65,14 @@ public class Fetcher{
     private FetchQueue fetchQueue;
 
     private DbUpdater dbUpdater = null;
-    private SegmentWriter segmengwriter = null;
+    //private SegmentWriter segmengwriter = null;
 
     private ConnectionConfig conconfig = null;
 
     private Handler handler = null;
 
     private boolean needUpdateDb = true;
+    private String segmentName;
 
     public static class FetchItem {
 
@@ -266,7 +267,7 @@ public class Fetcher{
 
                     if (needUpdateDb) {
                         try {
-                            segmengwriter.wrtieFetch(crawldatum);                            
+                            dbUpdater.getSegmentWriter().wrtieFetch(crawldatum);                            
                             if (isContentStored) {
                                 Content content = new Content();
                                 content.setUrl(url);
@@ -276,10 +277,10 @@ public class Fetcher{
                                     content.setContent(new byte[0]);
                                 }
                                 content.setContentType(contentType);
-                                segmengwriter.wrtieContent(content);
+                                dbUpdater.getSegmentWriter().wrtieContent(content);
                             }
                             if (parsing&&page.getParseResult()!=null) {                                    
-                                    segmengwriter.wrtieParse(page.getParseResult());                                
+                                    dbUpdater.getSegmentWriter().wrtieParse(page.getParseResult());                                
                             }
 
                         } catch (Exception ex) {
@@ -307,20 +308,12 @@ public class Fetcher{
     public static final int FETCH_SUCCESS = 1;
     public static final int FETCH_FAILED = 2;
 
-    int threads = 10;
-    String crawlPath;
-    String segmentPath;
-    boolean isContentStored = true;
-    boolean parsing = true;
+    private int threads = 10;
+    
+    private boolean isContentStored = true;
+    private boolean parsing = true;
 
-    /**
-     * 构建一个Fetcher,抓取器会将爬取信息存储在crawlPath目录中
-     * @param crawlPath
-     */
-    public Fetcher(String crawlPath) {
-        this.crawlPath = crawlPath;
-        this.needUpdateDb=true;
-    }
+   
 
     /**
      * 构建一个Fetcher,抓取器不会存储爬取信息
@@ -328,19 +321,32 @@ public class Fetcher{
     public Fetcher() {
         needUpdateDb = false;
     }
+    
+    protected abstract DbUpdater createDbUpdater();
+    protected abstract DbUpdater createRecoverDbUpdater();
+   
 
-    private void before() throws IOException {
+    private void before() throws Exception {
+        DbUpdater recoverDbUpdater=createRecoverDbUpdater();
+        
         if (needUpdateDb) {
-            this.dbUpdater = new DbUpdater(crawlPath);            
-            dbUpdater.initUpdater();
-            dbUpdater.lock();
+            try {
+            if(recoverDbUpdater.isLocked()){         
+                recoverDbUpdater.merge();
+                recoverDbUpdater.unlock();
+            }
+            } catch (Exception ex) {
+            ex.printStackTrace();
+            }
+            
 
-            segmentPath = crawlPath + "/segments/" + SegmentWriter.createSegmengName();
-            segmengwriter = new SegmentWriter(segmentPath);
+            setSegmentName(SegmentUtils.createSegmengName());
+            this.dbUpdater = createDbUpdater();  
+            dbUpdater.initUpdater();
+            dbUpdater.lock();   
         }
 
         running = true;
-
     }
 
     /**
@@ -348,7 +354,7 @@ public class Fetcher{
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
      * @throws IOException
      */
-    public void fetchAll(Generator generator) throws IOException {
+    public void fetchAll(Generator generator) throws Exception {
         before();
 
         activeThreads=new AtomicInteger(0);
@@ -388,13 +394,13 @@ public class Fetcher{
         running = false;
     }
 
-    private void after() throws IOException {
+    private void after() throws Exception {
 
         if (needUpdateDb) {
             dbUpdater.closeUpdater();
-            dbUpdater.merge(segmentPath);
+            dbUpdater.merge();
             dbUpdater.unlock();
-            segmengwriter.close();
+            dbUpdater.getSegmentWriter().close();
         }
     }
 
@@ -524,6 +530,14 @@ public class Fetcher{
      */
     public void setProxy(Proxy proxy) {
         this.proxy = proxy;
+    }
+
+    public String getSegmentName() {
+        return segmentName;
+    }
+
+    public void setSegmentName(String segmentName) {
+        this.segmentName = segmentName;
     }
 
     

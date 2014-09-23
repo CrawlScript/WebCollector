@@ -18,6 +18,7 @@
 
 package cn.edu.hfut.dmic.webcollector.net;
 
+import cn.edu.hfut.dmic.webcollector.net.Response;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;

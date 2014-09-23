@@ -18,6 +18,7 @@
 
 package cn.edu.hfut.webcollector.fetcher;
 
+import cn.edu.hfut.dmic.webcollector.fetcher.FSFetcher;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.CollectionGenerator;
 import java.io.IOException;
@@ -57,11 +58,11 @@ public class FetcherTest {
                     }
                     generator.addUrl("http://news.hfut.edu.cn/" + r);
                 }
-                fetcher = new Fetcher();
+                fetcher = new FSFetcher();
                 fetcher.setThreads(2);
                 try {
                     fetcher.fetchAll(generator);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(Fetcher.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

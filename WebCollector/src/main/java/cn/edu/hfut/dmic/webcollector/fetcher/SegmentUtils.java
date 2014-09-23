@@ -15,30 +15,30 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package cn.edu.hfut.dmic.webcollector.generator;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.SegmentWriter;
-import java.io.IOException;
+package cn.edu.hfut.dmic.webcollector.fetcher;
 
-
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * 用于更新爬取任务列表的类
  *
  * @author hu
  */
-public interface DbUpdater {
-
-    public void lock() throws Exception;
-    public boolean isLocked() throws Exception;
-    public void unlock() throws IOException;
-    public void initUpdater() throws Exception;
-    public void closeUpdater() throws Exception;
-    public void merge() throws Exception;
-    
-    public SegmentWriter getSegmentWriter();
-    public void setSegmentWriter(SegmentWriter segmentWriter);
-    
-   
+public class SegmentUtils {
+     /**
+     * 根据时间，为segment文件夹生成唯一的名称
+     * @return 根据时间，为segment文件夹生成的唯一的名称
+     */
+    public static synchronized String createSegmengName() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date date = new Date();
+        String datestr = sdf.format(date);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        return datestr;
+    }
 }

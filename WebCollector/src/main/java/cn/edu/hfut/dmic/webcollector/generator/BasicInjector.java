@@ -18,36 +18,33 @@
 
 package cn.edu.hfut.dmic.webcollector.generator;
 
-
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.LogUtils;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-
-
 /**
- * 广度遍历的种子注入器
+ *
  * @author hu
  */
-public interface Injector{
-    
-    /**
+public abstract class BasicInjector implements Injector{
+ /**
      * 以新建的方式，注入一个种子url
      * @param url 种子url
      * @throws IOException
      */
-    public void inject(String url) throws Exception;
+    @Override
+    public void inject(String url) throws Exception{
+        inject(url,false);
+    }
     
     /**
      * 以新建的方式，注入种子url列表
      * @param urls 种子url列表
      * @throws IOException
      */
-    public void inject(ArrayList<String> urls) throws Exception;
+    @Override
+    public void inject(ArrayList<String> urls) throws Exception{
+        inject(urls,false);
+    }
     
     /**
      * 以新建/追加的方式，注入一个种子url
@@ -55,22 +52,15 @@ public interface Injector{
      * @param append 是否追加
      * @throws IOException
      */
-    public void inject(String url,boolean append) throws Exception;
-    
-        
-    /**
-     * 以新建/追加方式注入种子url列表
-     * @param urls 种子url列表
-     * @param append 是否追加
-     * @throws UnsupportedEncodingException
-     * @throws IOException
-     */
-    public void inject(ArrayList<String> urls,boolean append) throws Exception;
-    
-    /*
-    public static void main(String[] args) throws IOException{
-        Injector inject=new Injector("/home/hu/data/crawl_avro");
-        inject.inject("http://www.xinhuanet.com/");
+    @Override
+    public void inject(String url,boolean append) throws Exception{
+        ArrayList<String> urls=new ArrayList<>();
+        urls.add(url);
+        inject(urls,append);
     }
-    */
+    
+
+    @Override
+    public abstract void inject(ArrayList<String> urls, boolean append) throws Exception; 
+    
 }

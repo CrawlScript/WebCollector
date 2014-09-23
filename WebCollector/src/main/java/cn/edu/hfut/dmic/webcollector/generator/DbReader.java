@@ -17,11 +17,10 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.io.File;
 import java.io.IOException;
-
 import java.util.Iterator;
-
 import org.apache.avro.file.DataFileReader;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.reflect.ReflectDatumReader;
@@ -85,7 +84,7 @@ public class DbReader<T> {
         dataFileReader.close();
     }
 
-    /*
+    
     public static void main(String[] args) throws IOException{
         if(args.length==0){
             System.err.println("Usage dbpath");           
@@ -104,6 +103,7 @@ public class DbReader<T> {
         System.out.println("start read:");
         while(reader.hasNext()){
             crawldatum=reader.readNext();
+            System.out.println(crawldatum.getUrl());
             sum++;
             switch(crawldatum.getStatus()){
                 case CrawlDatum.STATUS_DB_FETCHED:
@@ -121,5 +121,5 @@ public class DbReader<T> {
        
         
     }
-    */
+    
 }

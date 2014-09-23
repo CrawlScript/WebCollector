@@ -6,6 +6,7 @@
 
 package cn.edu.hfut.webcollector.generator;
 
+import cn.edu.hfut.dmic.webcollector.generator.FSInjector;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
@@ -21,13 +22,13 @@ import org.junit.Test;
 
 public class TestStandardGenerator {
     @Test
-    public void testGenerator() throws IOException{
+    public void testGenerator() throws Exception{
         String crawl_path="/home/hu/data/webcollector_test";
         ArrayList<String> seeds=new ArrayList<String>();
         seeds.add("http://www.sina.com.cn/");
         seeds.add("http://www.xinhuanet.com/");
         
-        Injector injector=new Injector(crawl_path);
+        Injector injector=new FSInjector(crawl_path);
         injector.inject(seeds);
        
         StandardGenerator generator=new StandardGenerator(crawl_path);

@@ -18,14 +18,16 @@
 
 package cn.edu.hfut.dmic.webcollector.model;
 
+
 import org.apache.avro.reflect.Nullable;
+
 
 /**
  * 存储爬取任务的类，是WebCollector的核心类，记录了一个url的爬取信息，同样也
  * 可以作为一个爬取任务
  * @author hu
  */
-public class CrawlDatum {
+public class CrawlDatum{
     /**
      * 爬取状态常量-未定义
      */
@@ -43,7 +45,7 @@ public class CrawlDatum {
     /**
      * 爬取时间常量-未定义
      */
-    public static final int FETCHTIME_UNDEFINED=1;
+    public static final long FETCHTIME_UNDEFINED=1;
     
     
     
@@ -99,6 +101,7 @@ public class CrawlDatum {
         this.fetchTime = fetchTime;
     }
 
+   
     
     
     

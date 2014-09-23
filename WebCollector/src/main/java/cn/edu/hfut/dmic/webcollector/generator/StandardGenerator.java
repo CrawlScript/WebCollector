@@ -20,6 +20,7 @@ package cn.edu.hfut.dmic.webcollector.generator;
 
 
 
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.io.File;
@@ -36,19 +37,9 @@ public class StandardGenerator extends Generator {
     private String crawlPath;
     private DbReader<CrawlDatum> dbreader;
     
-    private String getSegmentPath(){
-        String[] segment_list=new File(crawlPath,"segments").list();
-        String segment_path=null;
-        long max=0;
-        for(String segment:segment_list){
-            long timestamp=Long.valueOf(segment);
-            if(timestamp>max){
-                max=timestamp;
-                segment_path=segment;
-            }
-        }
-        return segment_path;
-    }
+    
+    
+   
     
     /**
      * 构造一个广度遍历爬取任务生成器，从制定路径的文件夹中获取任务
@@ -56,38 +47,19 @@ public class StandardGenerator extends Generator {
      */
     public StandardGenerator(String crawlPath){
         this.crawlPath=crawlPath;
-        try {
-            backup();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        
-        DbUpdater dbupdater=new DbUpdater(crawlPath);
+  
         
         try {
-            if(dbupdater.isLocked()){
-                String segment_path=getSegmentPath();
-                if(segment_path!=null){
-                    dbupdater.merge(segment_path);
-                }
-                dbupdater.unlock();
-            }
+             File oldfile=new File(crawlPath, Config.current_info_path);
+        DbReader<CrawlDatum> r=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
+       
+        dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        try {
-            initReader();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void backup() throws IOException {
-        DbUpdater.backup(crawlPath);
     }
 
     
-
   
     
     @Override
@@ -109,10 +81,7 @@ public class StandardGenerator extends Generator {
     
    
 
-    private void initReader() throws IOException{   
-        File oldfile=new File(crawlPath, Config.old_info_path);
-        dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
-    }
+   
 
     /**
      * 用户自定义的过滤规则，可以通过Override这个函数，来定义自己的StandardGenerator

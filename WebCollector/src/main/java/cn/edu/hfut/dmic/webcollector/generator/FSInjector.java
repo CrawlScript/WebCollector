@@ -33,31 +33,26 @@ import java.util.ArrayList;
  * 广度遍历的种子注入器
  * @author hu
  */
-public interface Injector{
+public class FSInjector extends BasicInjector{
     
+    private String crawlPath;
+
     /**
-     * 以新建的方式，注入一个种子url
-     * @param url 种子url
-     * @throws IOException
+     * 构造一个向指定爬取信息文件夹中注入种子的注入器
+     * @param crawlPath 爬取信息文件夹
      */
-    public void inject(String url) throws Exception;
+    public FSInjector(String crawlPath){
+        this.crawlPath=crawlPath;
+    }
     
-    /**
-     * 以新建的方式，注入种子url列表
-     * @param urls 种子url列表
-     * @throws IOException
-     */
-    public void inject(ArrayList<String> urls) throws Exception;
     
-    /**
-     * 以新建/追加的方式，注入一个种子url
-     * @param url 种子url
-     * @param append 是否追加
-     * @throws IOException
-     */
-    public void inject(String url,boolean append) throws Exception;
     
-        
+    private boolean hasInjected(){
+        String infoPath=Config.current_info_path;
+        File inject_file=new File(crawlPath,infoPath);
+        return inject_file.exists();
+    }
+    
     /**
      * 以新建/追加方式注入种子url列表
      * @param urls 种子url列表
@@ -65,7 +60,30 @@ public interface Injector{
      * @throws UnsupportedEncodingException
      * @throws IOException
      */
-    public void inject(ArrayList<String> urls,boolean append) throws Exception;
+    public void inject(ArrayList<String> urls,boolean append) throws IOException{
+         
+        
+        String info_path=Config.current_info_path;
+        File inject_file=new File(crawlPath,info_path);
+        if(!inject_file.getParentFile().exists()){
+            inject_file.getParentFile().mkdirs();
+        }
+        DbWriter<CrawlDatum> writer;
+        if(inject_file.exists())
+            writer=new DbWriter<CrawlDatum>(CrawlDatum.class,inject_file,append);
+        else
+            writer=new DbWriter<CrawlDatum>(CrawlDatum.class,inject_file,false);
+        for(String url:urls){
+            CrawlDatum crawldatum=new CrawlDatum();
+            crawldatum.setUrl(url);
+            crawldatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
+            writer.write(crawldatum);  
+            LogUtils.getLogger().info("inject "+url);
+        }
+        writer.close();
+        
+   
+    }
     
     /*
     public static void main(String[] args) throws IOException{

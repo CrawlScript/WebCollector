@@ -44,7 +44,19 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 ###DEMO2：
 利用WebCollector进行二次开发，定义自己的爬虫
 
-    import java.io.IOException;
+
+    import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
+    import cn.edu.hfut.dmic.webcollector.fetcher.FSFetcher;
+    import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+    import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+    import cn.edu.hfut.dmic.webcollector.model.Page;
+    import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
+    import cn.edu.hfut.dmic.webcollector.net.Request;
+    import cn.edu.hfut.dmic.webcollector.net.Response;
+    import cn.edu.hfut.dmic.webcollector.parser.ParseData;
+    import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
+    import cn.edu.hfut.dmic.webcollector.parser.Parser;
+
     import java.net.URL;
     import java.util.ArrayList;
     import java.util.HashMap;
@@ -59,24 +71,12 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
     import org.apache.http.util.EntityUtils;
     import org.jsoup.nodes.Document;
 
-    import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-    import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-    import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-    import cn.edu.hfut.dmic.webcollector.model.Page;
-    import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
-    import cn.edu.hfut.dmic.webcollector.net.Request;
-    import cn.edu.hfut.dmic.webcollector.net.Response;
-    import cn.edu.hfut.dmic.webcollector.parser.ParseData;
-    import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
-    import cn.edu.hfut.dmic.webcollector.parser.Parser;
-
-
-
     /**
      * 利用WebCollector进行二次开发，定义自己的爬虫
+     *
      * @author hu
      */
-    public class Demo {
+    public class Test {
 
         /**
          * 自定义Http请求
@@ -140,14 +140,14 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         }
 
         /**
-         * 自定义抓取器
+         * 自定义抓取器,抓取器需要实现Fetcher接口，FSFetcher是Fetcher的
+         * 一种实现，它基于文件系统中的url列表来完成抓取工作。
+         * 我们可以继承FSFetcher，来完成一个自定义的抓取器。
          *
          */
-        public static class MyFetcher extends Fetcher {
+        public static class MyFetcher extends FSFetcher {
 
-            /**
-             * 如果没有这个构造函数，Fetcher默认不会存储爬取记录 这里爬取记录会存储到crawlPath文件夹中
-             */
+           
             public MyFetcher(String crawlPath) {
                 super(crawlPath);
             }
@@ -181,31 +181,30 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 
             /**
              * 定义爬取成功时对页面的操作
-             * @param page 
+             *
+             * @param page
              */
             @Override
             protected void visit(Page page) {
-                
+
                 System.out.println("---------------------------");
-                
+
                 /*Document是Jsoup的DOM树对象，做网页信息抽取需要依赖Document对象*/
-                Document doc=page.getDoc();
-                String title=doc.title();
-                System.out.println("网页URL:"+page.getUrl());
-                System.out.println("网页标题:"+title);
-                
+                Document doc = page.getDoc();
+                String title = doc.title();
+                System.out.println("网页URL:" + page.getUrl());
+                System.out.println("网页标题:" + title);
+
                 /*parseResult是在爬取过程中解析的一些简单网页信息*/
-                ParseResult parseResult=page.getParseResult();
-                
+                ParseResult parseResult = page.getParseResult();
+
                 /*parseData包括网页的标题、链接以及一些其他信息*/
-                ParseData parseData=parseResult.getParsedata();
-                
-                if(parseData.getLinks()!=null){
-                    System.out.println("网页链接数:"+parseData.getLinks().size());
+                ParseData parseData = parseResult.getParsedata();
+
+                if (parseData.getLinks() != null) {
+                    System.out.println("网页链接数:" + parseData.getLinks().size());
                 }
-                
-                
-                
+
             }
 
             /**
@@ -231,32 +230,31 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 
         }
 
-        public static void main(String[] args) throws IOException {
+        public static void main(String[] args) throws Exception {
             /*crawlPath是爬取信息存储的文件夹*/
             String crawlPath = "/home/hu/data/crawl_hfut1";
             MyCrawler crawler = new MyCrawler();
             crawler.setCrawlPath(crawlPath);
-            
+
             crawler.addSeed("http://news.hfut.edu.cn/");
             crawler.addRegex("http://news.hfut.edu.cn/.*");
-            
+
             /*禁止爬取带井号的url*/
             crawler.addRegex("-.*#.*");
-            
+
             /*禁止爬取图片*/
             crawler.addRegex("-.*png.*");
             crawler.addRegex("-.*jpg.*");
             crawler.addRegex("-.*gif.*");
             crawler.addRegex("-.*js.*");
             crawler.addRegex("-.*css.*");
-            
+
             /*设置线程数*/
             crawler.setThreads(30);
-            
-            
+
             /*设置为可断点爬取模式*/
             crawler.setResumable(true);
-            
+
             /*进行深度为3的广度遍历*/
             crawler.start(3);
         }

@@ -369,7 +369,7 @@ public class BreadthCrawlerUI extends javax.swing.JFrame {
                 }
                 try {
                     crawler.start(depth);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

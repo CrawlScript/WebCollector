@@ -18,13 +18,9 @@
 package cn.edu.hfut.dmic.webcollector.crawler;
 
 
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
-import java.util.ArrayList;
-
+import cn.edu.hfut.dmic.webcollector.fetcher.FSFetcher;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+import cn.edu.hfut.dmic.webcollector.generator.FSInjector;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
@@ -38,6 +34,11 @@ import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
+import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.Proxy;
+import java.util.ArrayList;
 
 
 
@@ -109,7 +110,7 @@ public class BreadthCrawler{
      * @param depth 广度遍历的深度
      * @throws IOException
      */
-    public void start(int depth) throws IOException {
+    public void start(int depth) throws Exception {
         if (!resumable) {
             File crawlDir=new File(crawlPath);
             if(crawlDir.exists()){
@@ -150,9 +151,9 @@ public class BreadthCrawler{
        status=STOPED;
     }
     
-    private void inject() throws IOException {
+    private void inject() throws Exception {
         
-        Injector injector = new Injector(crawlPath);     
+        Injector injector = createInjector();
         injector.inject(seeds,resumable);
         
     }
@@ -200,7 +201,7 @@ public class BreadthCrawler{
      */
     protected Fetcher createFecther(){
   
-        Fetcher fetcher=new Fetcher(crawlPath);
+        Fetcher fetcher=new FSFetcher(crawlPath);
         fetcher.setProxy(proxy);
         fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(createFetcherHandler());
@@ -215,12 +216,16 @@ public class BreadthCrawler{
      * 生成Generator(抓取任务生成器）的方法，可以通过Override这个方法来完成自定义Generator
      * @return 生成的抓取任务生成器
      */
-    private Generator createGenerator(){
+    protected Generator createGenerator(){
 
         Generator generator = new StandardGenerator(crawlPath);
         generator=new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, regexs)));
   
         return generator;
+    }
+    
+    protected Injector createInjector(){
+        return new FSInjector(crawlPath);
     }
    
    
@@ -403,11 +408,13 @@ public class BreadthCrawler{
         this.seeds = seeds;
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
+    
+    public static void main(String[] args) throws Exception {
+        
+        
         String crawl_path = "/home/hu/data/crawl_hfut1";
         String root = "/home/hu/data/hfut1";       
-        LogUtils.setLogger(LogUtils.createCommonLogger("hfut"));
+        //LogUtils.setLogger(LogUtils.createCommonLogger("hfut"));
         //Config.topN=100;
         BreadthCrawler crawler=new BreadthCrawler(){
             @Override
@@ -437,7 +444,7 @@ public class BreadthCrawler{
         
         
     }
-    */
+    
     
     
     
