@@ -20,6 +20,7 @@ package cn.edu.hfut.dmic.webcollector.fetcher;
 
 
 
+import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import java.io.IOException;
 
@@ -30,13 +31,16 @@ import java.io.IOException;
  */
 public interface Fetcher{
 
-
+    public DbUpdater getDbUpdater();
+    public void setDbUpdater(DbUpdater dbUpdater);
+    
+    
+    
     /**
      * 启动抓取
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
      * @throws IOException
      */
     public void fetchAll(Generator generator) throws Exception ;
-    
     public void stop();
 }

@@ -19,6 +19,7 @@
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.fetcher.FSSegmentWriter;
+import cn.edu.hfut.dmic.webcollector.fetcher.SegmentUtils;
 import cn.edu.hfut.dmic.webcollector.fetcher.SegmentWriter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Link;
@@ -28,7 +29,6 @@ import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -40,22 +40,36 @@ import java.util.HashMap;
  */
 public class FSDbUpdater implements DbUpdater{
 
-    private SegmentWriter segmentWriter;
+    private SegmentWriter segmentWriter=null;
     private String crawlPath;
-    private String segmentPath;
+
     private String segmentName;
-    private DbWriter<CrawlDatum> updaterWriter;
+   
     /**
      * 构建一个对指定爬取信息文件夹进行更新操作的更新器
      *
      * @param crawlPath
      */
-    public FSDbUpdater(String crawlPath,String segmentName) {
+    public FSDbUpdater(String crawlPath) {
         this.crawlPath = crawlPath;
-        this.segmentName=segmentName;
-        if(segmentName!=null){
-            this.segmentPath=crawlPath + "/segments/" + segmentName;
+        
+    }
+    
+    protected String getLastSegmentName(){
+        String[] segment_list=new File(crawlPath,"segments").list();
+        if(segment_list==null){
+            return null;
         }
+        String segment_path=null;
+        long max=0;
+        for(String segment:segment_list){
+            long timestamp=Long.valueOf(segment);
+            if(timestamp>max){
+                max=timestamp;
+                segment_path=segment;
+            }
+        }
+        return segment_path;
     }
 
     /**
@@ -115,32 +129,17 @@ public class FSDbUpdater implements DbUpdater{
         writer.close();
     }
 
-    /**
-     * 初始化该更新器
-     *
-     * @throws UnsupportedEncodingException
-     * @throws IOException
-     */
-    public void initUpdater() throws UnsupportedEncodingException, IOException {
-        File currentfile = new File(crawlPath, Config.current_info_path);
-        if (!currentfile.getParentFile().exists()) {
-            currentfile.getParentFile().mkdirs();
-        }
-        if (currentfile.exists()) {
-            updaterWriter = new DbWriter<CrawlDatum>(CrawlDatum.class, currentfile, true);
-        } else {
-            updaterWriter = new DbWriter<CrawlDatum>(CrawlDatum.class, currentfile, false);
-        }
-
-    }
+    
 
     /**
      * 关闭该更新器
      *
      * @throws IOException
      */
-    public void closeUpdater() throws IOException {
-        updaterWriter.close();
+    public void close() throws Exception {
+        if(segmentWriter!=null){
+            segmentWriter.close();
+        }
     }
 
     /**
@@ -152,6 +151,9 @@ public class FSDbUpdater implements DbUpdater{
     @Override
     public void merge() throws IOException {
         if(segmentName==null){
+            segmentName=getLastSegmentName(); 
+        }
+        if(segmentName==null){
             return;
         }
         
@@ -162,9 +164,9 @@ public class FSDbUpdater implements DbUpdater{
             LogUtils.getLogger().info("Exception",ex);
         }
         
-        LogUtils.getLogger().info("merge " + segmentPath);
+        LogUtils.getLogger().info("merge " + getSegmentPath());
         
-        File file_fetch = new File(segmentPath, "fetch/info.avro");
+        File file_fetch = new File(getSegmentPath(), "fetch/info.avro");
         if (!file_fetch.exists()) {
             return;
         }
@@ -202,7 +204,7 @@ public class FSDbUpdater implements DbUpdater{
         }
         reader_fetch.close();
 
-        File file_parse = new File(segmentPath, "parse_data/info.avro");
+        File file_parse = new File(getSegmentPath(), "parse_data/info.avro");
         if (file_parse.exists()) {
             DbReader<ParseData> reader_parse = new DbReader<ParseData>(ParseData.class, file_parse);
             ParseData parseresult = null;
@@ -236,13 +238,10 @@ public class FSDbUpdater implements DbUpdater{
         return segmentWriter;
     }
 
-    @Override
-    public void setSegmentWriter(SegmentWriter segmentWriter) {
-        this.segmentWriter=segmentWriter;
-    }
+   
 
     public String getSegmentPath() {
-        return segmentPath;
+        return crawlPath+"/segments/"+segmentName;
     }
 
     
@@ -253,11 +252,7 @@ public class FSDbUpdater implements DbUpdater{
     
     
 
-    public static void main(String[] args) throws IOException {
-        String crawl_path = "/home/hu/data/crawl_hfut1";
-        //DbUpdater updater=new DbUpdater(crawl_path);
-        //updater.merge2();
-    }
+   
 
     public String getCrawlPath() {
         return crawlPath;
@@ -273,6 +268,23 @@ public class FSDbUpdater implements DbUpdater{
 
     public void setSegmentName(String segmentName) {
         this.segmentName = segmentName;
+    }
+
+    @Override
+    public void clearHistory() {
+        
+        File file=new File(crawlPath);
+        LogUtils.getLogger().info("clear "+file.getAbsolutePath());
+        if(file.exists()){
+            FileUtils.deleteDir(file);
+        }
+        
+    }
+
+    @Override
+    public void initSegmentWriter() throws Exception {
+        segmentName=SegmentUtils.createSegmengName();
+        segmentWriter=new FSSegmentWriter(crawlPath, getSegmentPath());
     }
 
 

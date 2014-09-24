@@ -29,16 +29,19 @@ import java.io.IOException;
  * @author hu
  */
 public interface DbUpdater {
-
+    
+    
+  
     public void lock() throws Exception;
     public boolean isLocked() throws Exception;
-    public void unlock() throws IOException;
-    public void initUpdater() throws Exception;
-    public void closeUpdater() throws Exception;
+    public void unlock() throws Exception;
+
+    public void initSegmentWriter() throws Exception;
+    public void close() throws Exception;
     public void merge() throws Exception;
     
     public SegmentWriter getSegmentWriter();
-    public void setSegmentWriter(SegmentWriter segmentWriter);
-    
+    //public void setSegmentWriter(SegmentWriter segmentWriter);
+    public void clearHistory();
    
 }

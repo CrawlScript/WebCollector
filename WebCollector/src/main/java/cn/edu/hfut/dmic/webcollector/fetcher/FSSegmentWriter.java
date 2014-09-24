@@ -42,8 +42,8 @@ public class FSSegmentWriter implements SegmentWriter{
      * 构造一个在指定文件夹写爬取信息的Writer
      * @param segmentPath 指定的文件夹路径
      */
-    public FSSegmentWriter(String crawlPath,String segmentName) {
-        this.segmentPath =  crawlPath + "/segments/" + segmentName;
+    public FSSegmentWriter(String crawlPath,String segmentPath) {
+        this.segmentPath =  segmentPath;
         count_fetch = 0;
         count_content = 0;
         count_parse = 0;

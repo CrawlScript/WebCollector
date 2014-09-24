@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @author hu
  */
-public abstract class BasicFetcher implements Fetcher {
+public class BasicFetcher implements Fetcher {
     
     private int retry = 3;
     private Proxy proxy = null;
@@ -67,6 +67,15 @@ public abstract class BasicFetcher implements Fetcher {
     
     private boolean needUpdateDb = true;
     private String segmentName;
+    
+    public static final int FETCH_SUCCESS = 1;
+    public static final int FETCH_FAILED = 2;
+    
+    private int threads = 10;
+    
+    private boolean isContentStored = true;
+    private boolean parsing = true;
+    
     
     public static class FetchItem {
         
@@ -313,14 +322,7 @@ public abstract class BasicFetcher implements Fetcher {
         
     }
     
-    public static final int FETCH_SUCCESS = 1;
-    public static final int FETCH_FAILED = 2;
     
-    private int threads = 10;
-    
-    private boolean isContentStored = true;
-    private boolean parsing = true;
-
     /**
      * 构建一个Fetcher,抓取器不会存储爬取信息
      */
@@ -328,26 +330,29 @@ public abstract class BasicFetcher implements Fetcher {
         needUpdateDb = false;
     }
     
-    protected abstract DbUpdater createDbUpdater();
     
-    protected abstract DbUpdater createRecoverDbUpdater();
+    
+    //protected abstract DbUpdater createDbUpdater();
+    
+    //protected abstract DbUpdater createRecoverDbUpdater();
     
     private void before() throws Exception {
-        DbUpdater recoverDbUpdater = createRecoverDbUpdater();
+        //DbUpdater recoverDbUpdater = createRecoverDbUpdater();
         
         if (needUpdateDb) {
             try {
-                if (recoverDbUpdater.isLocked()) {
-                    recoverDbUpdater.merge();
-                    recoverDbUpdater.unlock();
-                }
+                
+                    if (dbUpdater.isLocked()) {
+                        dbUpdater.merge();
+                        dbUpdater.unlock();
+                    }
+                
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
             
-            setSegmentName(SegmentUtils.createSegmengName());
-            this.dbUpdater = createDbUpdater();
-            dbUpdater.initUpdater();
+
+            dbUpdater.initSegmentWriter();
             dbUpdater.lock();
         }
         
@@ -417,8 +422,7 @@ public abstract class BasicFetcher implements Fetcher {
     private void after() throws Exception {
         
         if (needUpdateDb) {
-            dbUpdater.closeUpdater();
-            dbUpdater.getSegmentWriter().close();
+            dbUpdater.close();
             dbUpdater.merge();
             dbUpdater.unlock();
             
@@ -576,5 +580,21 @@ public abstract class BasicFetcher implements Fetcher {
     public void setSegmentName(String segmentName) {
         this.segmentName = segmentName;
     }
+
+    
+
+    
+
+    @Override
+    public void setDbUpdater(DbUpdater dbUpdater){
+        this.dbUpdater=dbUpdater;
+    }
+
+    @Override
+    public  DbUpdater getDbUpdater(){
+        return dbUpdater;
+    }
+    
+    
     
 }
