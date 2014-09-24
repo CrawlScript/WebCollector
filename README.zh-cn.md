@@ -45,8 +45,9 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 利用WebCollector进行二次开发，定义自己的爬虫
 
 
+
     import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-    import cn.edu.hfut.dmic.webcollector.fetcher.FSFetcher;
+    import cn.edu.hfut.dmic.webcollector.fetcher.BasicFetcher;
     import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
     import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
     import cn.edu.hfut.dmic.webcollector.model.Page;
@@ -76,7 +77,7 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
      *
      * @author hu
      */
-    public class Test {
+    public class Demo {
 
         /**
          * 自定义Http请求
@@ -140,16 +141,16 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         }
 
         /**
-         * 自定义抓取器,抓取器需要实现Fetcher接口，FSFetcher是Fetcher的
-         * 一种实现，它基于文件系统中的url列表来完成抓取工作。
-         * 我们可以继承FSFetcher，来完成一个自定义的抓取器。
+         * 自定义抓取器,抓取器需要实现Fetcher接口，BasicFetcher是Fetcher的 一种实现。
+         * 我们可以继承BasicFetcher，来完成一个自定义的抓取器。
          *
          */
-        public static class MyFetcher extends FSFetcher {
+        public static class MyFetcher extends BasicFetcher {
 
-           
+            private String crawlPath;
+
             public MyFetcher(String crawlPath) {
-                super(crawlPath);
+                this.crawlPath = crawlPath;
             }
 
             /**
@@ -185,7 +186,7 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
              * @param page
              */
             @Override
-            protected void visit(Page page) {
+            public void visit(Page page) {
 
                 System.out.println("---------------------------");
 
@@ -213,9 +214,9 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
              * @return 自定义的爬取器
              */
             @Override
-            protected Fetcher createFecther() {
+            public Fetcher createFetcher() {
                 MyFetcher fetcher = new MyFetcher(getCrawlPath());
-                fetcher.setIsContentStored(this.isIsContentStored());
+                fetcher.setIsContentStored(getIsContentStored());
 
                 /*
                  createFetcherHandler方法默认生成的Handler，会在网页爬取成功
@@ -260,3 +261,5 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         }
 
     }
+
+    

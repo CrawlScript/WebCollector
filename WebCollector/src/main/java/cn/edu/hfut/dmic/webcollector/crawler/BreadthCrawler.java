@@ -28,19 +28,16 @@ import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.UniqueFilter;
-import cn.edu.hfut.dmic.webcollector.handler.Handler;
-import cn.edu.hfut.dmic.webcollector.handler.Message;
+
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.CommonConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
-import cn.edu.hfut.dmic.webcollector.util.FileUtils;
+
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
-import java.io.File;
-import java.io.IOException;
-import java.net.HttpURLConnection;
+
 import java.net.Proxy;
-import java.util.ArrayList;
+
 
 /**
  * 广度遍历爬虫
