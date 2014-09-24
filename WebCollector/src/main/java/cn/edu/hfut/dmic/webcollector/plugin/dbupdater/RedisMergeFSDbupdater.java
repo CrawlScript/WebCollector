@@ -35,7 +35,6 @@ import redis.clients.jedis.Jedis;
 
 /**
  * 使用redis来进行海量URL去重的插件
- * 会清空指定redis数据库，请不要和其他项目使用同一redis数据库
  * 
  * 如果使用该插件，请安装redis数据库并开启
  * @author hu
@@ -81,7 +80,7 @@ public class RedisMergeFSDbupdater  extends FSDbUpdater {
                     LogUtils.getLogger().info(updateCount.get()+" crawlDatum add to redis");
                 }
 
-                String value = jedis.get(key);
+                String value = jedis.hget(getCrawlPath(),key);
                 if (value == null) {
                     update(datum);
                     return;
@@ -106,7 +105,7 @@ public class RedisMergeFSDbupdater  extends FSDbUpdater {
         AtomicInteger updateCount;
         AtomicInteger writeCount;
         protected void update(CrawlDatum datum) {
-            jedis.set(datum.getUrl(), datum.getStatus() + "" + datum.getFetchTime());
+            jedis.hset(getCrawlPath(),datum.getUrl(), datum.getStatus() + "" + datum.getFetchTime());
            
         }
 
@@ -114,7 +113,7 @@ public class RedisMergeFSDbupdater  extends FSDbUpdater {
         public void merge() throws IOException {      
             backup();
             LogUtils.getLogger().info("merge "+getSegmentPath());
-            jedis.flushDB();
+            jedis.del(getCrawlPath());
             LogUtils.getLogger().info("Delete all data in redis");
             File crawldbFile = new File(getCrawlPath(), Config.old_info_path);
             File fetchFile = new File(getSegmentPath(), "fetch/info.avro");
@@ -156,13 +155,13 @@ public class RedisMergeFSDbupdater  extends FSDbUpdater {
 
             DbWriter<CrawlDatum> writer = new DbWriter<CrawlDatum>(CrawlDatum.class, new File(getCrawlPath(), Config.current_info_path));
 
-            Set set = jedis.keys("*");
+            Set set = jedis.hkeys(getCrawlPath());
             
 
             Iterator ite = set.iterator();
             while (ite.hasNext()) {
                 String key = ite.next().toString();
-                String value = jedis.get(key);
+                String value = jedis.hget(getCrawlPath(),key);
                 int status = Integer.valueOf(value.charAt(0) + "");
                 long fetchTime = Long.valueOf(value.substring(1));
 
@@ -178,6 +177,10 @@ public class RedisMergeFSDbupdater  extends FSDbUpdater {
 
             }
             writer.close();
+        }
+        
+        public static void main(String[] args){
+
         }
 
 }
