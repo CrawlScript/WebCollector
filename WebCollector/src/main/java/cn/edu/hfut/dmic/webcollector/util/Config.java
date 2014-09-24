@@ -26,6 +26,8 @@ public class Config {
     public static final String old_info_path="crawldb/old/info.avro";
     public static final String current_info_path="crawldb/current/info.avro";
     public static final String lock_path="crawldb/lock";
+    
+    public static long requestMaxInterval=1000*60;
 
     /**
      * 网页/文件爬取时大小上限(字节)

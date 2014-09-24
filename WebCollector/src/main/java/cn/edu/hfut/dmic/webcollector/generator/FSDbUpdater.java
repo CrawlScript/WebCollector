@@ -63,6 +63,7 @@ public class FSDbUpdater implements DbUpdater{
      * @throws IOException
      */
     public void backup() throws IOException {
+        LogUtils.getLogger().info("backup "+getCrawlPath());
         File oldfile = new File(crawlPath, Config.old_info_path);
         File currentfile = new File(crawlPath, Config.current_info_path);
         FileUtils.copy(currentfile, oldfile);
@@ -153,7 +154,16 @@ public class FSDbUpdater implements DbUpdater{
         if(segmentName==null){
             return;
         }
+        
+        
+        try {
+            backup();     
+        } catch (IOException ex) {
+            LogUtils.getLogger().info("Exception",ex);
+        }
+        
         LogUtils.getLogger().info("merge " + segmentPath);
+        
         File file_fetch = new File(segmentPath, "fetch/info.avro");
         if (!file_fetch.exists()) {
             return;

@@ -21,9 +21,8 @@ package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.FSDbUpdater;
-import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
-import java.io.IOException;
+
 
 
 /**
@@ -67,20 +66,25 @@ public class FSFetcher extends BasicFetcher{
     protected DbUpdater createDbUpdater(){
         FSDbUpdater fsDbUpdater=new FSDbUpdater(crawlPath, getSegmentName());
         fsDbUpdater.setSegmentWriter(new FSSegmentWriter(crawlPath,getSegmentName()));
-        try {
-            fsDbUpdater.backup();
-        } catch (IOException ex) {
-            LogUtils.getLogger().info("Exception",ex);
-        }
         return fsDbUpdater;
     }
 
     @Override
     protected DbUpdater createRecoverDbUpdater() {
         DbUpdater recoverDbUpdater=new FSDbUpdater(crawlPath, getLastSegmentName());
-        
         return recoverDbUpdater;
     }
+
+    public String getCrawlPath() {
+        return crawlPath;
+    }
+
+    public void setCrawlPath(String crawlPath) {
+        this.crawlPath = crawlPath;
+    }
+    
+    
+    
      
      
 }

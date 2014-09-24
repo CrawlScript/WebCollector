@@ -32,6 +32,7 @@ import cn.edu.hfut.dmic.webcollector.handler.Handler;
 import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
+import cn.edu.hfut.dmic.webcollector.util.CommonConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
@@ -159,15 +160,7 @@ public class BreadthCrawler{
         
     }
 
-    class CommonConnectionConfig implements ConnectionConfig{
-        @Override
-            public void config(HttpURLConnection con) {               
-                con.setRequestProperty("User-Agent", useragent);
-                if (cookie != null) {
-                    con.setRequestProperty("Cookie", cookie);
-                }
-            }
-    }
+    
     
     /**
      * 生成处理抓取消息的Handler，默认通过BreadthCrawler的visit方法来处理成功抓取的页面，
@@ -206,7 +199,7 @@ public class BreadthCrawler{
         fetcher.setProxy(proxy);
         fetcher.setIsContentStored(isContentStored);
         fetcher.setHandler(createFetcherHandler());
-        conconfig = new CommonConnectionConfig();
+        conconfig = new CommonConnectionConfig(useragent, cookie);
         fetcher.setThreads(threads);
         fetcher.setConconfig(conconfig);
         return fetcher;
@@ -348,7 +341,7 @@ public class BreadthCrawler{
      * 返回是否存储网页/文件的内容
      * @return 是否存储网页/文件的内容
      */
-    public boolean isIsContentStored() {
+    public boolean getIsContentStored() {
         return isContentStored;
     }
 
@@ -440,7 +433,7 @@ public class BreadthCrawler{
         crawler.setCrawlPath(crawl_path);
        
         crawler.setResumable(false);      
-        crawler.start(3);
+        crawler.start(4);
         
         
     }
