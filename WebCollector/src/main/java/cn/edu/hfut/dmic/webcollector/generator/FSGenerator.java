@@ -17,103 +17,92 @@
  */
 package cn.edu.hfut.dmic.webcollector.generator;
 
-
-
-
-
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.io.File;
 import java.io.IOException;
 
-
-
 /**
  * 广度遍历使用的爬取任务生成器
+ *
  * @author hu
  */
 public class FSGenerator implements Generator {
 
     private String crawlPath;
     private DbReader<CrawlDatum> dbreader;
-    
-    
-    
-   
-    
+    private boolean isStarted = false;
+
     /**
      * 构造一个广度遍历爬取任务生成器，从制定路径的文件夹中获取任务
+     *
      * @param crawlPath 存储爬取信息的文件夹
      */
-    public FSGenerator(String crawlPath){
-        this.crawlPath=crawlPath;
-  
-        
-        try {
-             File oldfile=new File(crawlPath, Config.current_info_path);
-        DbReader<CrawlDatum> r=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
-       
-        dbreader=new DbReader<CrawlDatum>(CrawlDatum.class,oldfile);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+    public FSGenerator(String crawlPath) {
+        this.crawlPath = crawlPath;
+
     }
 
-    
-  
-    
     @Override
-    public CrawlDatum next(){
-        if(!dbreader.hasNext())
-            return null;
-       
-        CrawlDatum crawldatum=dbreader.readNext();   
+    public CrawlDatum next() {
+        if (!isStarted) {
+            try {
+                File oldfile = new File(crawlPath, Config.current_info_path);
+                DbReader<CrawlDatum> r = new DbReader<CrawlDatum>(CrawlDatum.class, oldfile);
 
-        if(crawldatum==null){
+                dbreader = new DbReader<CrawlDatum>(CrawlDatum.class, oldfile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            isStarted = true;
+
+        }
+
+        if (!dbreader.hasNext()) {
             return null;
         }
 
-        if(shouldFilter(crawldatum.getUrl())){
+        CrawlDatum crawldatum = dbreader.readNext();
+
+        if (crawldatum == null) {
+            return null;
+        }
+
+        if (shouldFilter(crawldatum.getUrl())) {
             return next();
         }
         return crawldatum;
     }
-    
-   
-
-   
 
     /**
      * 用户自定义的过滤规则，可以通过Override这个函数，来定义自己的StandardGenerator
+     *
      * @param url
      * @return 是否需要过滤这个url
      */
     protected boolean shouldFilter(String url) {
         return false;
     }
-    
-    
-    /*
-    public static void main(String[] args) throws IOException {
-        Injector inject=new Injector("/home/hu/data/crawl_avro");
-        inject.inject("http://www.xinhuanet.com/");
-        String crawl_path = "/home/hu/data/crawl_avro";
-        StandardGenerator bg = new StandardGenerator(null) {
-            @Override
-            public boolean shouldFilter(String url) {
-                if (Pattern.matches("http://news.xinhuanet.com/world/.*", url)) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
 
-        };
+    /*
+     public static void main(String[] args) throws IOException {
+     Injector inject=new Injector("/home/hu/data/crawl_avro");
+     inject.inject("http://www.xinhuanet.com/");
+     String crawl_path = "/home/hu/data/crawl_avro";
+     StandardGenerator bg = new StandardGenerator(null) {
+     @Override
+     public boolean shouldFilter(String url) {
+     if (Pattern.matches("http://news.xinhuanet.com/world/.*", url)) {
+     return false;
+     } else {
+     return true;
+     }
+     }
+
+     };
      
        
 
-    }
-    */
-
-
+     }
+     */
 }

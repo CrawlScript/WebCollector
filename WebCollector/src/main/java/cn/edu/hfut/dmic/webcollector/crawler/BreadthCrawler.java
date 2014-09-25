@@ -268,7 +268,7 @@ public class BreadthCrawler extends BasicCrawler {
         crawler.setRoot(root);
         crawler.setCrawlPath(crawl_path);
 
-        crawler.setResumable(false);
+        crawler.setResumable(true);
         crawler.start(4);
 
     }
