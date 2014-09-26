@@ -56,7 +56,9 @@ As can be seen in the above code,there are one function that should be overridde
 
 
  ###The architecture of WebCollector
+
  ![](https://github.com/CrawlScript/WebCollector/raw/master/webcollector_design.png)
+ 
 
 
 __中文教程:__ [https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md](https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md)
