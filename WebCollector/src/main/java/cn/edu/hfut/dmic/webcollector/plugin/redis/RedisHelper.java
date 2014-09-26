@@ -30,6 +30,7 @@ import redis.clients.jedis.Jedis;
 public class RedisHelper {
 
     public Jedis jedis;
+    public static int REDIS_TIME_OUT=1000*60*3;
 
     public Jedis getJedis() {
         return jedis;
@@ -51,7 +52,7 @@ public class RedisHelper {
         this.tableName=tableName;
         this.ip = ip;
         this.port = port;
-        jedis=new Jedis(ip, port);
+        jedis=new Jedis(ip, port,RedisHelper.REDIS_TIME_OUT);
     }
     
     

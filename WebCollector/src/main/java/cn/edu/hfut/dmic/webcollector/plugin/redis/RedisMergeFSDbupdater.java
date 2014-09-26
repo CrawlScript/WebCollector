@@ -43,6 +43,8 @@ public class RedisMergeFSDbupdater extends FSDbUpdater {
 
     private String ip = "127.0.0.1";
     private int port = 6379;
+    public static int REDIS_TIME_OUT=1000*60*3;
+    
 
     public String getIp() {
         return ip;
@@ -64,7 +66,7 @@ public class RedisMergeFSDbupdater extends FSDbUpdater {
 
     public RedisMergeFSDbupdater(String crawlPath) {
         super(crawlPath);
-        jedis = new Jedis("127.0.0.1", 6379);
+        jedis = new Jedis("127.0.0.1", 6379,REDIS_TIME_OUT);
         updateCount = new AtomicInteger(0);
         writeCount = new AtomicInteger(0);
     }

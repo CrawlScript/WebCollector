@@ -20,7 +20,7 @@ package cn.edu.hfut.dmic.webcollector.plugin.redis;
 
 import cn.edu.hfut.dmic.webcollector.generator.BasicInjector;
 import java.util.ArrayList;
-import redis.clients.jedis.Jedis;
+
 
 /**
  *

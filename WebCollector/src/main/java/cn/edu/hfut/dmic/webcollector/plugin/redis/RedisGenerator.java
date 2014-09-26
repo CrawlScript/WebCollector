@@ -33,14 +33,25 @@ public class RedisGenerator implements Generator{
 
     private RedisHelper redisHelper;
     private Iterator ite;
+    private boolean isStarted = false;
+    String tableName;
+    private String redisIP;
+    private int redisPort;
     public RedisGenerator(String tableName, String redisIP, int redisPort) {
-       redisHelper=new RedisHelper(tableName, redisIP, redisPort);
-       Set crawldbSet=redisHelper.getCrawlDb();
-       ite=crawldbSet.iterator();
+       this.tableName=tableName;
+       this.redisIP=redisIP;
+       this.redisPort=redisPort;
     }
 
     @Override
     public CrawlDatum next() {
+        if(!isStarted){
+            redisHelper=new RedisHelper(tableName, redisIP, redisPort);
+            Set crawldbSet=redisHelper.getCrawlDb();
+            ite=crawldbSet.iterator();
+            isStarted=true;
+        }
+        
         if(ite.hasNext()){
             String key=ite.next().toString();
             return redisHelper.getCrawlDatumByKey(key);
