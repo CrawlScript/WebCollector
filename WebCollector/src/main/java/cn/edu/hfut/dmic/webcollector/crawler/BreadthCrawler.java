@@ -17,8 +17,8 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.BasicFetcher;
-import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
+
+
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.FSDbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.FSGenerator;
@@ -28,15 +28,9 @@ import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.UniqueFilter;
-
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.output.FileSystemOutput;
-import cn.edu.hfut.dmic.webcollector.util.CommonConnectionConfig;
-import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
-
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
-
-import java.net.Proxy;
 
 
 /**
@@ -44,16 +38,11 @@ import java.net.Proxy;
  *
  * @author hu
  */
-public class BreadthCrawler extends BasicCrawler {
-
+public class BreadthCrawler extends CommonCrawler{
+    
     private String crawlPath = "crawl";
     private String root = "data";
-    private String cookie = null;
-    private String useragent = "Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:26.0) Gecko/20100101 Firefox/26.0";
-
-    private boolean isContentStored = true;
-    private Proxy proxy = null;
-    private ConnectionConfig conconfig = null;
+ 
 
     /**
      * 对每个成功爬取的页面（文件）进行的操作，可以通过Override这个方法来完成用户对这些页面的自定义处理
@@ -71,27 +60,10 @@ public class BreadthCrawler extends BasicCrawler {
     public DbUpdater createDbUpdater() {
         return new FSDbUpdater(crawlPath);
     }
-    
-    /**
-     * 生成Fetcher(抓取器)的方法，可以通过Override这个方法来完成自定义Fetcher
-     *
-     * @return 生成的抓取器
-     */
-    @Override
-    public Fetcher createFetcher() {
 
-        BasicFetcher fetcher = new BasicFetcher();
-        fetcher.setNeedUpdateDb(true);
-        fetcher.setProxy(proxy);
-        fetcher.setIsContentStored(isContentStored);
-        fetcher.setHandler(createFetcherHandler());
-        conconfig = new CommonConnectionConfig(useragent, cookie);
-        fetcher.setThreads(getThreads());
-        fetcher.setConconfig(conconfig);
-        return fetcher;
-    }
     
-     @Override
+
+    @Override
     public Injector createInjector() {
         return new FSInjector(crawlPath);
     }
@@ -106,29 +78,10 @@ public class BreadthCrawler extends BasicCrawler {
 
         Generator generator = new FSGenerator(crawlPath);
         generator = new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, getRegexs())));
-
         return generator;
     }
 
-   
-
-    /**
-     * 返回User-Agent
-     *
-     * @return User-Agent
-     */
-    public String getUseragent() {
-        return useragent;
-    }
-
-    /**
-     * 设置User-Agent
-     *
-     * @param useragent
-     */
-    public void setUseragent(String useragent) {
-        this.useragent = useragent;
-    }
+    
 
     /**
      * 返回存储爬虫爬取信息的文件夹路径
@@ -148,23 +101,7 @@ public class BreadthCrawler extends BasicCrawler {
         this.crawlPath = crawlPath;
     }
 
-    /**
-     * 返回Cookie
-     *
-     * @return Cookie
-     */
-    public String getCookie() {
-        return cookie;
-    }
-
-    /**
-     * 设置http请求的cookie
-     *
-     * @param cookie Cookie
-     */
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
+    
 
     /**
      * 如果使用默认的visit，返回存储网页文件的路径
@@ -186,59 +123,11 @@ public class BreadthCrawler extends BasicCrawler {
         this.root = root;
     }
 
-    /**
-     * 返回http连接配置对象
-     *
-     * @return http连接配置对象
-     */
-    public ConnectionConfig getConconfig() {
-        return conconfig;
-    }
+    
 
-    /**
-     * 设置http连接配置对象
-     *
-     * @param conconfig http连接配置对象
-     */
-    public void setConconfig(ConnectionConfig conconfig) {
-        this.conconfig = conconfig;
-    }
+    
 
-    /**
-     * 返回是否存储网页/文件的内容
-     *
-     * @return 是否存储网页/文件的内容
-     */
-    public boolean getIsContentStored() {
-        return isContentStored;
-    }
-
-    /**
-     * 设置是否存储网页／文件的内容
-     *
-     * @param isContentStored 是否存储网页/文件的内容
-     */
-    public void setIsContentStored(boolean isContentStored) {
-        this.isContentStored = isContentStored;
-    }
-
-    /**
-     * 返回代理
-     *
-     * @return 代理
-     */
-    public Proxy getProxy() {
-        return proxy;
-    }
-
-    /**
-     * 设置代理
-     *
-     * @param proxy 代理
-     */
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
-    }
+   
 
     public static void main(String[] args) throws Exception {
 
@@ -272,9 +161,5 @@ public class BreadthCrawler extends BasicCrawler {
         crawler.start(4);
 
     }
-
-    
-
-    
 
 }

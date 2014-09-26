@@ -18,8 +18,8 @@
 
 package cn.edu.hfut.dmic.webcollector.plugin.redis;
 
-import cn.edu.hfut.dmic.webcollector.crawler.BasicCrawler;
-import cn.edu.hfut.dmic.webcollector.fetcher.BasicFetcher;
+import cn.edu.hfut.dmic.webcollector.crawler.Crawler;
+import cn.edu.hfut.dmic.webcollector.crawler.CommonCrawler;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
@@ -27,16 +27,20 @@ import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.model.Page;
+import java.net.Proxy;
 
 /**
  *
  * @author hu
  */
-public class RedisCrawler extends BasicCrawler{
+public class RedisCrawler extends CommonCrawler{
 
     private String tableName;
     private String ip;
+
     private int port;
+    
+
 
     public RedisCrawler(String tableName, String ip, int port) {
         this.tableName = tableName;
@@ -52,14 +56,7 @@ public class RedisCrawler extends BasicCrawler{
         return new URLRegexFilter(new IntervalFilter(generator),getRegexs());
     }
 
-    @Override
-    public Fetcher createFetcher() {
-        BasicFetcher fetcher=new BasicFetcher();
-        fetcher.setThreads(getThreads());
-        fetcher.setHandler(createFetcherHandler());
-        fetcher.setNeedUpdateDb(true);
-        return fetcher;
-    }
+    
 
     @Override
     public Injector createInjector() {
@@ -118,6 +115,8 @@ public class RedisCrawler extends BasicCrawler{
         crawler.setResumable(false);
         crawler.start(5);
     }
+    
+   
     
     
 }

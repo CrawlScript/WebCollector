@@ -47,7 +47,6 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 
 
     import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-    import cn.edu.hfut.dmic.webcollector.fetcher.BasicFetcher;
     import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
     import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
     import cn.edu.hfut.dmic.webcollector.model.Page;
@@ -141,24 +140,16 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         }
 
         /**
-         * 自定义抓取器,抓取器需要实现Fetcher接口，BasicFetcher是Fetcher的 一种实现。
-         * 我们可以继承BasicFetcher，来完成一个自定义的抓取器。
-         *
+         * 自定义一个广度遍历器
          */
-        public static class MyFetcher extends BasicFetcher {
-
-            private String crawlPath;
-
-            public MyFetcher(String crawlPath) {
-                this.crawlPath = crawlPath;
-            }
+        public static class MyCrawler extends BreadthCrawler {
 
             /**
              * 覆盖Fetcher类的createRequest方法，可以自定义http请求
              * 一般需要自定义一个实现Request接口的类（这里是MyRequest)
              */
             @Override
-            protected Request createRequest(String url) throws Exception {
+            public Request createRequest(String url) throws Exception {
                 MyRequest request = new MyRequest();
                 request.setURL(new URL(url));
                 return request;
@@ -169,16 +160,9 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
              * 这里直接用父类的方法，可以参照父类的方法，来自己生成需要的网页解析器
              */
             @Override
-            protected Parser createParser(String url, String contentType) throws Exception {
+            public Parser createParser(String url, String contentType) throws Exception {
                 return super.createParser(url, contentType);
             }
-
-        }
-
-        /**
-         * 自定义一个广度遍历器
-         */
-        public static class MyCrawler extends BreadthCrawler {
 
             /**
              * 定义爬取成功时对页面的操作
@@ -206,27 +190,6 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
                     System.out.println("网页链接数:" + parseData.getLinks().size());
                 }
 
-            }
-
-            /**
-             * 覆盖createFetcher方法，才可以让遍历器使用自定义的爬取器
-             *
-             * @return 自定义的爬取器
-             */
-            @Override
-            public Fetcher createFetcher() {
-                MyFetcher fetcher = new MyFetcher(getCrawlPath());
-                fetcher.setIsContentStored(getIsContentStored());
-
-                /*
-                 createFetcherHandler方法默认生成的Handler，会在网页爬取成功
-                 时，执行BreadthCrawler的visit(Page page)方法，在网页爬取失败
-                 时，执行BreadthCrawler的failed(Page page)方法
-                 */
-                fetcher.setHandler(createFetcherHandler());
-                fetcher.setThreads(this.getThreads());
-
-                return fetcher;
             }
 
         }
@@ -261,5 +224,6 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
         }
 
     }
+
 
     
