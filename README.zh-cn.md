@@ -227,8 +227,8 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
 
 
 
- ###WebCollector构架图
+###WebCollector构架图
 
- ![](https://github.com/CrawlScript/WebCollector/raw/master/webcollector_design.png)
+![](https://github.com/CrawlScript/WebCollector/raw/master/webcollector_design.png)
 
     
