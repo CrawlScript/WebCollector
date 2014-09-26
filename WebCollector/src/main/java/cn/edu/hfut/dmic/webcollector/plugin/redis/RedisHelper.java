@@ -105,6 +105,7 @@ public class RedisHelper {
         jedis.del(tableName+suffix_crawldb);
         jedis.del(tableName+suffix_fetch);
         jedis.del(tableName+suffix_parse);
+        jedis.del(tableName+suffix_lock);
     }
 
     public synchronized void inject(String url, boolean append) {
