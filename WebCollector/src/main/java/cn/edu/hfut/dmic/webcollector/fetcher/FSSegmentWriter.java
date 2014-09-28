@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * 基于文件系统的SegmentWriter
  * @author hu
  */
 public class FSSegmentWriter implements SegmentWriter{

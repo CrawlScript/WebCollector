@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 
 /**
- * 广度遍历的种子注入器
+ * 基于文件系统的广度遍历的种子注入器
  * @author hu
  */
 public class FSInjector extends BasicInjector{
@@ -45,21 +45,9 @@ public class FSInjector extends BasicInjector{
         this.crawlPath=crawlPath;
     }
     
+ 
     
     
-    private boolean hasInjected(){
-        String infoPath=Config.current_info_path;
-        File inject_file=new File(crawlPath,infoPath);
-        return inject_file.exists();
-    }
-    
-    /**
-     * 以新建/追加方式注入种子url列表
-     * @param urls 种子url列表
-     * @param append 是否追加
-     * @throws UnsupportedEncodingException
-     * @throws IOException
-     */
     public void inject(ArrayList<String> urls,boolean append) throws IOException{
          
         

@@ -24,21 +24,18 @@ import cn.edu.hfut.dmic.webcollector.handler.Message;
 import cn.edu.hfut.dmic.webcollector.model.Content;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.Request;
 import cn.edu.hfut.dmic.webcollector.net.RequestFactory;
 import cn.edu.hfut.dmic.webcollector.net.Response;
-import cn.edu.hfut.dmic.webcollector.parser.HtmlParser;
 import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 import cn.edu.hfut.dmic.webcollector.parser.Parser;
 import cn.edu.hfut.dmic.webcollector.parser.ParserFactory;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
+
 import cn.edu.hfut.dmic.webcollector.util.HandlerUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.URL;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,58 +43,104 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- *
+ * 抓取器
  * @author hu
  */
 public class Fetcher {
 
+    /**
+     *
+     */
     public DbUpdater dbUpdater = null;
+
+    /**
+     *
+     */
     public Handler handler = null;
+
+    /**
+     *
+     */
     public RequestFactory requestFactory = null;
+
+    /**
+     *
+     */
     public ParserFactory parserFactory = null;
-
     private int retry = 3;
-
     private AtomicInteger activeThreads;
     private AtomicInteger spinWaiting;
     private AtomicLong lastRequestStart;
-
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
-
     private boolean needUpdateDb = true;
 
+    /**
+     *
+     */
     public static final int FETCH_SUCCESS = 1;
+
+    /**
+     *
+     */
     public static final int FETCH_FAILED = 2;
-
     private int threads = 10;
-
     private boolean isContentStored = true;
     private boolean parsing = true;
 
+    /**
+     *
+     */
     public static class FetchItem {
-
+        
+        /**
+         *
+         */
         public CrawlDatum datum;
-
+        
+        /**
+         *
+         * @param datum
+         */
         public FetchItem(CrawlDatum datum) {
             this.datum = datum;
         }
-
     }
 
+    /**
+     *
+     */
     public static class FetchQueue {
 
+        /**
+         *
+         */
         public AtomicInteger totalSize = new AtomicInteger(0);
-        public List<FetchItem> queue = Collections.synchronizedList(new LinkedList<FetchItem>());
 
+        /**
+         *
+         */
+        public List<FetchItem> queue = Collections.synchronizedList(new LinkedList<FetchItem>());
+        
+        /**
+         *
+         */
         public synchronized void clear() {
             queue.clear();
         }
-
+        
+        /**
+         *
+         * @return
+         */
         public int getSize() {
             return queue.size();
         }
-
+        
+        /**
+         *
+         * @param item
+         */
         public void addFetchItem(FetchItem item) {
             if (item == null) {
                 return;
@@ -105,7 +148,11 @@ public class Fetcher {
             queue.add(item);
             totalSize.incrementAndGet();
         }
-
+        
+        /**
+         *
+         * @return
+         */
         public synchronized FetchItem getFetchItem() {
             if (queue.size() == 0) {
                 return null;
@@ -113,8 +160,10 @@ public class Fetcher {
             return queue.remove(0);
         }
 
+        /**
+         *
+         */
         public synchronized void dump() {
-
             for (int i = 0; i < queue.size(); i++) {
                 FetchItem it = queue.get(i);
                 LogUtils.getLogger().info("  " + i + ". " + it.datum.getUrl());
@@ -123,12 +172,32 @@ public class Fetcher {
 
     }
 
+    /**
+     *
+     */
     public static class QueueFeeder extends Thread {
 
+        /**
+         *
+         */
         public FetchQueue queue;
+
+        /**
+         *
+         */
         public Generator generator;
+
+        /**
+         *
+         */
         public int size;
 
+        /**
+         *
+         * @param queue
+         * @param generator
+         * @param size
+         */
         public QueueFeeder(FetchQueue queue, Generator generator, int size) {
             this.queue = queue;
             this.generator = generator;
@@ -310,8 +379,7 @@ public class Fetcher {
     }
 
     /**
-     * 启动抓取
-     *
+     * 抓取当前所有任务，会阻塞到爬取完成
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
      * @throws IOException
      */
@@ -468,7 +536,6 @@ public class Fetcher {
 
     /**
      * 返回是否解析网页（解析链接、文本）
-     *
      * @return 是否解析网页（解析链接、文本）
      */
     public boolean isParsing() {
@@ -477,33 +544,56 @@ public class Fetcher {
 
     /**
      * 设置是否解析网页（解析链接、文本）
-     *
      * @param parsing 是否解析网页（解析链接、文本）
      */
     public void setParsing(boolean parsing) {
         this.parsing = parsing;
     }
 
+    /**
+     * 返回CrawlDB更新器
+     * @return CrawlDB更新器
+     */
     public DbUpdater getDbUpdater() {
         return dbUpdater;
     }
 
+    /**
+     * 设置CrawlDB更新器
+     * @param dbUpdater CrawlDB更新器
+     */
     public void setDbUpdater(DbUpdater dbUpdater) {
         this.dbUpdater = dbUpdater;
     }
 
+    /**
+     * 返回请求生成器
+     * @return 请求生成器
+     */
     public RequestFactory getRequestFactory() {
         return requestFactory;
     }
 
+    /**
+     * 设置请求生成器
+     * @param requestFactory 请求生成器
+     */
     public void setRequestFactory(RequestFactory requestFactory) {
         this.requestFactory = requestFactory;
     }
 
+    /**
+     * 返回解析器生成器
+     * @return 解析器生成器
+     */
     public ParserFactory getParserFactory() {
         return parserFactory;
     }
 
+    /**
+     * 设置解析器生成器
+     * @param parserFactory 解析器生成器
+     */
     public void setParserFactory(ParserFactory parserFactory) {
         this.parserFactory = parserFactory;
     }

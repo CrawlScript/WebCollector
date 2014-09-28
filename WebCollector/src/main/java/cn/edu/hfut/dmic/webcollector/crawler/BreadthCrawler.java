@@ -34,8 +34,7 @@ import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 
 
 /**
- * 广度遍历爬虫
- *
+ * 基于文件系统的广度遍历爬虫
  * @author hu
  */
 public class BreadthCrawler extends CommonCrawler{
@@ -44,11 +43,7 @@ public class BreadthCrawler extends CommonCrawler{
     private String root = "data";
  
 
-    /**
-     * 对每个成功爬取的页面（文件）进行的操作，可以通过Override这个方法来完成用户对这些页面的自定义处理
-     *
-     * @param page 爬取的页面（文件）
-     */
+    
     @Override
     public void visit(Page page) {
         FileSystemOutput fsoutput = new FileSystemOutput(root);
@@ -68,11 +63,7 @@ public class BreadthCrawler extends CommonCrawler{
         return new FSInjector(crawlPath);
     }
 
-    /**
-     * 生成Generator(抓取任务生成器）的方法，可以通过Override这个方法来完成自定义Generator
-     *
-     * @return 生成的抓取任务生成器
-     */
+    
     @Override
     public Generator createGenerator() {
 
@@ -85,7 +76,6 @@ public class BreadthCrawler extends CommonCrawler{
 
     /**
      * 返回存储爬虫爬取信息的文件夹路径
-     *
      * @return 存储爬虫爬取信息的文件夹路径
      */
     public String getCrawlPath() {
@@ -94,7 +84,6 @@ public class BreadthCrawler extends CommonCrawler{
 
     /**
      * 设置存储爬虫爬取信息的文件夹路径
-     *
      * @param crawlPath 存储爬虫爬取信息的文件夹路径
      */
     public void setCrawlPath(String crawlPath) {
@@ -105,7 +94,6 @@ public class BreadthCrawler extends CommonCrawler{
 
     /**
      * 如果使用默认的visit，返回存储网页文件的路径
-     *
      * @return 如果使用默认的visit，存储网页文件的路径
      */
     @Deprecated
@@ -115,7 +103,6 @@ public class BreadthCrawler extends CommonCrawler{
 
     /**
      * 如果使用默认的visit,设置存储网页文件的路径
-     *
      * @param root 如果使用默认的visit,存储网页文件的路径
      */
     @Deprecated
@@ -128,7 +115,7 @@ public class BreadthCrawler extends CommonCrawler{
     
 
    
-
+/*
     public static void main(String[] args) throws Exception {
 
         String crawl_path = "/home/hu/data/crawl_hfut1";
@@ -161,5 +148,6 @@ public class BreadthCrawler extends CommonCrawler{
         crawler.start(4);
 
     }
+    */
 
 }

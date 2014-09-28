@@ -34,7 +34,7 @@ import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.util.ArrayList;
 
 /**
- *
+ * 广度遍历爬虫的基类
  * @author hu
  */
 public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdaterFactory {
@@ -42,20 +42,29 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
     private int status;
     public final static int RUNNING = 1;
     public final static int STOPED = 2;
-
     private boolean resumable = false;
     private int threads = 10;
-
     private ArrayList<String> regexs = new ArrayList<String>();
     private ArrayList<String> seeds = new ArrayList<String>();
-
     private Fetcher fetcher;
-    
+        
     public abstract Injector createInjector();
+
+    
     public abstract Generator createGenerator();
+
+   
+    /**
+     * 生成Fetcher(抓取器)的方法，可以通过Override这个方法来完成自定义Fetcher
+     * @return 生成的抓取器
+     */
     public abstract Fetcher createFetcher();
 
-    
+    /**
+     * 开始深度为depth的爬取
+     * @param depth 深度
+     * @throws Exception
+     */
     public void start(int depth) throws Exception {
 
         if (!resumable) {
@@ -92,6 +101,7 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
         }
     }
 
+  
     protected Fetcher updateFetcher(Fetcher fetcher) {
         try {
             DbUpdater dbUpdater = createDbUpdater();
@@ -109,27 +119,42 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
         }
     }
 
-    
+    /**
+     * 停止爬取
+     * @throws Exception
+     */
     public void stop() throws Exception {
         fetcher.stop();
         status = STOPED;
     }
 
+    /**
+     * 注入
+     * @throws Exception
+     */
     public void inject() throws Exception {
         Injector injector = createInjector();
         injector.inject(seeds, resumable);
     }
 
+    /**
+     * 爬取成功时执行的方法
+     * @param page 成功爬取的网页/文件
+     */
     public void visit(Page page) {
 
     }
 
+    /**
+     * 爬取失败时执行的方法
+     * @param page 爬取失败的网页/文件
+     */
     public void failed(Page page) {
 
     }
 
     /**
-     * 生成处理抓取消息的Handler，默认通过BreadthCrawler的visit方法来处理成功抓取的页面，
+     * 生成处理抓取消息的Handler，默认通过Crawler的visit方法来处理成功抓取的页面，
      * 通过failed方法来处理失败抓取的页面
      *
      * @return 处理抓取消息的Handler
@@ -174,34 +199,66 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
         regexs.add(regex);
     }
 
+    /**
+     * 返回是否为断点爬取模式
+     * @return 是否为断点爬取模式
+     */
     public boolean isResumable() {
         return resumable;
     }
 
+    /**
+     * 设置是否为断点爬取模式
+     * @param resumable 是否为断点爬取模式
+     */
     public void setResumable(boolean resumable) {
         this.resumable = resumable;
     }
 
+    /**
+     * 返回线程数
+     * @return 线程数
+     */
     public int getThreads() {
         return threads;
     }
 
+    /**
+     * 设置线程数
+     * @param threads 线程数
+     */
     public void setThreads(int threads) {
         this.threads = threads;
     }
 
+    /**
+     * 返回正则规则列表
+     * @return 正则规则列表
+     */
     public ArrayList<String> getRegexs() {
         return regexs;
     }
 
+    /**
+     * 设置正则规则列表
+     * @param regexs 正则规则列表
+     */
     public void setRegexs(ArrayList<String> regexs) {
         this.regexs = regexs;
     }
 
+    /**
+     * 返回种子URL列表
+     * @return 种子URL列表
+     */
     public ArrayList<String> getSeeds() {
         return seeds;
     }
 
+    /**
+     * 设置种子URL列表
+     * @param seeds 种子URL列表
+     */
     public void setSeeds(ArrayList<String> seeds) {
         this.seeds = seeds;
     }

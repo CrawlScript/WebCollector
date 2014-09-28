@@ -31,7 +31,7 @@ import java.net.Proxy;
 import java.net.URL;
 
 /**
- *
+ * 一种常用的广度遍历爬虫
  * @author hu
  */
 public abstract class CommonCrawler extends Crawler{
@@ -44,7 +44,6 @@ public abstract class CommonCrawler extends Crawler{
     
     /**
      * 根据url生成Request(http请求)的方法，可以通过Override这个方法来自定义Request
-     *
      * @param url
      * @return 实现Request接口的对象
      * @throws Exception
@@ -61,7 +60,6 @@ public abstract class CommonCrawler extends Crawler{
 
     /**
      * 根据网页的url和contentType，来创建Parser(解析器)，可以通过Override这个方法来自定义Parser
-     *
      * @param url
      * @param contentType
      * @return 实现Parser接口的对象
@@ -78,14 +76,9 @@ public abstract class CommonCrawler extends Crawler{
         return null;
     }
     
-    /**
-     * 生成Fetcher(抓取器)的方法，可以通过Override这个方法来完成自定义Fetcher
-     *
-     * @return 生成的抓取器
-     */
+    
     @Override
     public Fetcher createFetcher() {
-
         Fetcher fetcher = new Fetcher();
         fetcher.setNeedUpdateDb(true);
         fetcher.setIsContentStored(isContentStored);
@@ -96,7 +89,6 @@ public abstract class CommonCrawler extends Crawler{
     
     /**
      * 返回User-Agent
-     *
      * @return User-Agent
      */
     public String getUseragent() {
@@ -105,7 +97,6 @@ public abstract class CommonCrawler extends Crawler{
 
     /**
      * 设置User-Agent
-     *
      * @param useragent
      */
     public void setUseragent(String useragent) {
@@ -132,7 +123,6 @@ public abstract class CommonCrawler extends Crawler{
     
     /**
      * 返回是否存储网页/文件的内容
-     *
      * @return 是否存储网页/文件的内容
      */
     public boolean getIsContentStored() {
@@ -141,7 +131,6 @@ public abstract class CommonCrawler extends Crawler{
 
     /**
      * 设置是否存储网页／文件的内容
-     *
      * @param isContentStored 是否存储网页/文件的内容
      */
     public void setIsContentStored(boolean isContentStored) {
@@ -150,7 +139,6 @@ public abstract class CommonCrawler extends Crawler{
     
      /**
      * 返回代理
-     *
      * @return 代理
      */
     public Proxy getProxy() {
@@ -159,7 +147,6 @@ public abstract class CommonCrawler extends Crawler{
 
     /**
      * 设置代理
-     *
      * @param proxy 代理
      */
     public void setProxy(Proxy proxy) {
@@ -168,7 +155,6 @@ public abstract class CommonCrawler extends Crawler{
     
     /**
      * 返回Cookie
-     *
      * @return Cookie
      */
     public String getCookie() {
@@ -177,7 +163,6 @@ public abstract class CommonCrawler extends Crawler{
 
     /**
      * 设置http请求的cookie
-     *
      * @param cookie Cookie
      */
     public void setCookie(String cookie) {

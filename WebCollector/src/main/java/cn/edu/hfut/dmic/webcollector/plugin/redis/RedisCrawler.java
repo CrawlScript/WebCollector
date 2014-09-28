@@ -18,30 +18,32 @@
 
 package cn.edu.hfut.dmic.webcollector.plugin.redis;
 
-import cn.edu.hfut.dmic.webcollector.crawler.Crawler;
+
 import cn.edu.hfut.dmic.webcollector.crawler.CommonCrawler;
-import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.generator.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.filter.IntervalFilter;
 import cn.edu.hfut.dmic.webcollector.generator.filter.URLRegexFilter;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import java.net.Proxy;
+
 
 /**
- *
+ * 基于Redis的广度遍历器
  * @author hu
  */
 public class RedisCrawler extends CommonCrawler{
 
     private String tableName;
     private String ip;
-
     private int port;
     
-
-
+    /**
+     * 构建一个基于redis的广度遍历器
+     * @param tableName 任务名
+     * @param ip redis的ip
+     * @param port redis的端口
+     */
     public RedisCrawler(String tableName, String ip, int port) {
         this.tableName = tableName;
         this.ip = ip;
@@ -49,14 +51,11 @@ public class RedisCrawler extends CommonCrawler{
     }
     
     
-    
     @Override
     public Generator createGenerator() {
         Generator generator=new RedisGenerator(tableName, ip, port);
         return new URLRegexFilter(new IntervalFilter(generator),getRegexs());
     }
-
-    
 
     @Override
     public Injector createInjector() {
@@ -68,33 +67,55 @@ public class RedisCrawler extends CommonCrawler{
         return new RedisDbUpdater(tableName, ip, port);
     }
     
-    
-
+    /**
+     * 返回redis的IP
+     * @return redis的IP
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * 设置redis的IP
+     * @param ip redis的IP
+     */
     public void setIp(String ip) {
         this.ip = ip;
     }
 
+    /**
+     * 返回redis的端口
+     * @return redis的端口
+     */
     public int getPort() {
         return port;
     }
 
+    /**
+     * 设置redis的端口
+     * @param port redis的端口
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
-
+    /**
+     * 返回任务名
+     * @return 任务名
+     */
     public String getTableName() {
         return tableName;
     }
 
+    /**
+     * 设置任务名
+     * @param tableName 任务名
+     */
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
     
+    /*
     public static void main(String[] args) throws Exception{
         RedisCrawler crawler=new RedisCrawler("mytest", "127.0.0.1", 6379){
             @Override
@@ -116,7 +137,7 @@ public class RedisCrawler extends CommonCrawler{
         crawler.start(5);
     }
     
-   
+   */
     
     
 }

@@ -19,10 +19,7 @@
 package cn.edu.hfut.dmic.webcollector.generator;
 
 
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.LogUtils;
-import java.io.File;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
