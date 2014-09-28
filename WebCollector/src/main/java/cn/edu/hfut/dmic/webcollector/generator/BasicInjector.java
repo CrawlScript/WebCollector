@@ -54,7 +54,7 @@ public abstract class BasicInjector implements Injector{
      */
     @Override
     public void inject(String url,boolean append) throws Exception{
-        ArrayList<String> urls=new ArrayList<>();
+        ArrayList<String> urls=new ArrayList<String>();
         urls.add(url);
         inject(urls,append);
     }
