@@ -3,6 +3,14 @@ WebCollector
 
 WebCollector is an open source Java crawler which provides some simple interfaces for crawling the Web。You can setup a multi-threaded web crawler in 5 minutes!
 
+###INSTALL
+Add dependency to your pom.xml
+    <dependency>
+        <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+        <artifactId>WebCollector</artifactId>
+        <version>1.30</version>
+    </dependency>
+
 ###DEMO
 This DEMO extracts all the questions asked  at [http://www.zhihu.com/](http://www.zhihu.com/) .
 You need to create a crawler class that extends BreadthCrawler.

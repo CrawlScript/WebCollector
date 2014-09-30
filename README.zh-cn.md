@@ -7,6 +7,13 @@ WebCollector是一个无须配置、便于二次开发的JAVA爬虫框架（内�
 ###爬虫内核：
 WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发者进行灵活的二次开发。内核具有很强的扩展性，用户可以在内核基础上开发自己想要的爬虫。源码中集成了Jsoup，可进行精准的网页解析。 
 
+###MAVEN:
+    <dependency>
+        <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+        <artifactId>WebCollector</artifactId>
+        <version>1.30</version>
+    </dependency>
+
 ###DEMO1：
 用WebCollector制作一个爬取《知乎》并进行问题精准抽取的爬虫（JAVA）  
 
