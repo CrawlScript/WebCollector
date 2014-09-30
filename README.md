@@ -5,6 +5,7 @@ WebCollector is an open source Java crawler which provides some simple interface
 
 ###INSTALL
 Add dependency to your pom.xml
+
     <dependency>
         <groupId>cn.edu.hfut.dmic.webcollector</groupId>
         <artifactId>WebCollector</artifactId>
