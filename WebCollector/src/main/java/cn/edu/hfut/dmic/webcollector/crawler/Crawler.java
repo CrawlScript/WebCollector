@@ -106,7 +106,7 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
         try {
             DbUpdater dbUpdater = createDbUpdater();
             if (dbUpdater != null) {
-                fetcher.setDbUpdater(createDbUpdater());
+                fetcher.setDbUpdater(dbUpdater);
             }
             fetcher.setRequestFactory(this);
             fetcher.setParserFactory(this);
@@ -134,7 +134,7 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
      */
     public void inject() throws Exception {
         Injector injector = createInjector();
-        injector.inject(seeds, resumable);
+        injector.inject(seeds, true);
     }
 
     /**
