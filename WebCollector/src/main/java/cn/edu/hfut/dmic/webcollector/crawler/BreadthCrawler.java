@@ -68,7 +68,7 @@ public class BreadthCrawler extends CommonCrawler{
     public Generator createGenerator() {
 
         Generator generator = new FSGenerator(crawlPath);
-        generator = new UniqueFilter(new IntervalFilter(new URLRegexFilter(generator, getRegexRule())));
+        generator=new URLRegexFilter(new IntervalFilter(generator), getRegexRule());
         return generator;
     }
 
