@@ -141,6 +141,24 @@ public class FSDbUpdater implements DbUpdater {
 
         }
     }
+    
+    private void install(){
+        File file_old = new File(crawlPath, Config.old_info_path);
+        File file_new = new File(crawlPath, Config.new_info_path);
+        File file_current = new File(crawlPath, Config.current_info_path);
+        
+        if(file_old.exists()){
+            file_old.delete();
+        }
+        
+        if(!file_old.getParentFile().exists()){
+            file_old.getParentFile().mkdirs();
+        }
+        
+        file_current.renameTo(file_old);
+        
+        file_new.renameTo(file_current);
+    }
 
     /**
      * 将爬取记录和爬取任务列表合并，更新爬取任务列表
@@ -155,12 +173,13 @@ public class FSDbUpdater implements DbUpdater {
             return;
         }
 
+        /*
         try {
             backup();
         } catch (IOException ex) {
             LogUtils.getLogger().info("Exception", ex);
         }
-
+*/
         LogUtils.getLogger().info("merge " + getSegmentPath());
         mergeCount = 0;
         File file_fetch = new File(getSegmentPath(), "fetch/info.avro");
@@ -168,15 +187,15 @@ public class FSDbUpdater implements DbUpdater {
             return;
         }
 
-        File file_old = new File(crawlPath, Config.current_info_path);
-        DbReader<CrawlDatum> reader_old = new DbReader<CrawlDatum>(CrawlDatum.class, file_old);
+        File file_current = new File(crawlPath, Config.current_info_path);
+        DbReader<CrawlDatum> reader_current = new DbReader<CrawlDatum>(CrawlDatum.class, file_current);
         DbReader<CrawlDatum> reader_fetch = new DbReader<CrawlDatum>(CrawlDatum.class, file_fetch);
 
-        File file_current = new File(crawlPath, Config.current_info_path);
-        if (!file_current.getParentFile().exists()) {
-            file_current.getParentFile().mkdirs();
+        File file_new = new File(crawlPath, Config.new_info_path);
+        if (!file_new.getParentFile().exists()) {
+            file_new.getParentFile().mkdirs();
         }
-        DbWriter<CrawlDatum> writer = new DbWriter<CrawlDatum>(CrawlDatum.class, file_current);
+        DbWriter<CrawlDatum> writer = new DbWriter<CrawlDatum>(CrawlDatum.class, file_new);
 
         BloomFilter bloomFilter = new BloomFilter();
         CrawlDatum datum = null;
@@ -190,8 +209,8 @@ public class FSDbUpdater implements DbUpdater {
 
         reader_fetch.close();
 
-        while (reader_old.hasNext()) {
-            datum = reader_old.readNext();
+        while (reader_current.hasNext()) {
+            datum = reader_current.readNext();
             if (bloomFilter.contains(datum.getUrl())) {
                 continue;
             }
@@ -200,7 +219,7 @@ public class FSDbUpdater implements DbUpdater {
             reportMergeCount();
         }
 
-        reader_old.close();
+        reader_current.close();
 
         File file_parse = new File(getSegmentPath(), "parse_data/info.avro");
         if (file_parse.exists()) {
@@ -224,6 +243,8 @@ public class FSDbUpdater implements DbUpdater {
         }
         
         writer.close();
+        
+        install();
 
     }
 
