@@ -29,8 +29,7 @@ import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 
 /**
  *
@@ -88,6 +87,7 @@ public class FSDbUpdater implements DbUpdater {
      * @return 是否上锁
      * @throws IOException
      */
+    @Override
     public boolean isLocked() throws IOException {
         File lockfile = new File(crawlPath + "/" + Config.lock_path);
         if (!lockfile.exists()) {
@@ -102,6 +102,7 @@ public class FSDbUpdater implements DbUpdater {
      *
      * @throws IOException
      */
+    @Override
     public void lock() throws IOException {
         FileUtils.writeFile(crawlPath + "/" + Config.lock_path, "1".getBytes("utf-8"));
     }
@@ -111,28 +112,20 @@ public class FSDbUpdater implements DbUpdater {
      *
      * @throws IOException
      */
+    @Override
     public void unlock() throws IOException {
         FileUtils.writeFile(crawlPath + "/" + Config.lock_path, "0".getBytes("utf-8"));
     }
     // DataFileWriter<CrawlDatum> dataFileWriter;
 
-    private void updateAll(ArrayList<CrawlDatum> datums) throws IOException {
-        File currentfile = new File(crawlPath, Config.current_info_path);
-        if (!currentfile.getParentFile().exists()) {
-            currentfile.getParentFile().mkdirs();
-        }
-        DbWriter<CrawlDatum> writer = new DbWriter<CrawlDatum>(CrawlDatum.class, currentfile);
-        for (CrawlDatum crawldatum : datums) {
-            writer.write(crawldatum);
-        }
-        writer.close();
-    }
+    
 
     /**
      * 关闭该更新器
      *
      * @throws IOException
      */
+    @Override
     public void close() throws Exception {
         if (segmentWriter != null) {
             segmentWriter.close();
@@ -151,8 +144,6 @@ public class FSDbUpdater implements DbUpdater {
 
     /**
      * 将爬取记录和爬取任务列表合并，更新爬取任务列表
-     *
-     * @param segment_path
      * @throws IOException
      */
     @Override
