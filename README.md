@@ -9,7 +9,7 @@ Add dependency to your pom.xml
     <dependency>
         <groupId>cn.edu.hfut.dmic.webcollector</groupId>
         <artifactId>WebCollector</artifactId>
-        <version>1.31</version>
+        <version>1.35</version>
     </dependency>
 
 ###DEMO
