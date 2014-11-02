@@ -27,6 +27,7 @@ import cn.edu.hfut.dmic.webcollector.parser.Parser;
 import cn.edu.hfut.dmic.webcollector.util.CommonConnectionConfig;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.ConnectionConfig;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import java.net.Proxy;
 import java.net.URL;
 
@@ -71,7 +72,9 @@ public abstract class CommonCrawler extends Crawler{
             return null;
         }
         if (contentType.contains("text/html")) {
-            return new HtmlParser(Config.topN);
+            HtmlParser parser=new HtmlParser(Config.topN);
+            parser.setRegexRule(getRegexRule());
+            return parser;
         }
         return null;
     }

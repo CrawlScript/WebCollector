@@ -394,9 +394,10 @@ public class Fetcher {
         feeder = new QueueFeeder(fetchQueue, generator, 1000);
         feeder.start();
 
+        FetcherThread[] fetcherThreads=new FetcherThread[threads];
         for (int i = 0; i < threads; i++) {
-            FetcherThread fetcherThread = new FetcherThread();
-            fetcherThread.start();
+            fetcherThreads[i]=new FetcherThread();
+            fetcherThreads[i].start();
         }
 
         do {
@@ -414,11 +415,16 @@ public class Fetcher {
 
             if ((System.currentTimeMillis() - lastRequestStart.get()) > Config.requestMaxInterval) {
                 LogUtils.getLogger().info("Aborting with " + activeThreads + " hung threads.");
-                return;
+                break;
             }
 
         } while (activeThreads.get() > 0 && running);
 
+        for(int i=0;i<threads;i++){
+            if(fetcherThreads[i].isAlive()){
+                fetcherThreads[i].stop();
+            }
+        }
         feeder.stop();
         fetchQueue.clear();
         after();

@@ -54,7 +54,7 @@ public class RedisCrawler extends CommonCrawler{
     @Override
     public Generator createGenerator() {
         Generator generator=new RedisGenerator(tableName, ip, port);
-        return new URLRegexFilter(new IntervalFilter(generator),getRegexs());
+        return new URLRegexFilter(new IntervalFilter(generator),getRegexRule());
     }
 
     @Override

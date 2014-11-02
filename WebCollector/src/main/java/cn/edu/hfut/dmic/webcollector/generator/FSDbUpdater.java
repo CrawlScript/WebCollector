@@ -15,7 +15,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.fetcher.FSSegmentWriter;
@@ -24,6 +23,7 @@ import cn.edu.hfut.dmic.webcollector.fetcher.SegmentWriter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Link;
 import cn.edu.hfut.dmic.webcollector.parser.ParseData;
+import cn.edu.hfut.dmic.webcollector.util.BloomFilter;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
@@ -32,19 +32,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
 /**
  *
  * @author hu
  */
-public class FSDbUpdater implements DbUpdater{
+public class FSDbUpdater implements DbUpdater {
 
-    private SegmentWriter segmentWriter=null;
+    private SegmentWriter segmentWriter = null;
     private String crawlPath;
 
     private String segmentName;
-   
+
     /**
      * 构建一个对指定爬取信息文件夹进行更新操作的更新器
      *
@@ -52,21 +50,21 @@ public class FSDbUpdater implements DbUpdater{
      */
     public FSDbUpdater(String crawlPath) {
         this.crawlPath = crawlPath;
-        
+
     }
-    
-    protected String getLastSegmentName(){
-        String[] segment_list=new File(crawlPath,"segments").list();
-        if(segment_list==null){
+
+    protected String getLastSegmentName() {
+        String[] segment_list = new File(crawlPath, "segments").list();
+        if (segment_list == null) {
             return null;
         }
-        String segment_path=null;
-        long max=0;
-        for(String segment:segment_list){
-            long timestamp=Long.valueOf(segment);
-            if(timestamp>max){
-                max=timestamp;
-                segment_path=segment;
+        String segment_path = null;
+        long max = 0;
+        for (String segment : segment_list) {
+            long timestamp = Long.valueOf(segment);
+            if (timestamp > max) {
+                max = timestamp;
+                segment_path = segment;
             }
         }
         return segment_path;
@@ -74,10 +72,11 @@ public class FSDbUpdater implements DbUpdater{
 
     /**
      * 备份爬取任务列表
+     *
      * @throws IOException
      */
     public void backup() throws IOException {
-        LogUtils.getLogger().info("backup "+getCrawlPath());
+        LogUtils.getLogger().info("backup " + getCrawlPath());
         File oldfile = new File(crawlPath, Config.old_info_path);
         File currentfile = new File(crawlPath, Config.current_info_path);
         FileUtils.copy(currentfile, oldfile);
@@ -113,7 +112,7 @@ public class FSDbUpdater implements DbUpdater{
      * @throws IOException
      */
     public void unlock() throws IOException {
-        FileUtils.writeFile(crawlPath+ "/" + Config.lock_path, "0".getBytes("utf-8"));
+        FileUtils.writeFile(crawlPath + "/" + Config.lock_path, "0".getBytes("utf-8"));
     }
     // DataFileWriter<CrawlDatum> dataFileWriter;
 
@@ -129,16 +128,24 @@ public class FSDbUpdater implements DbUpdater{
         writer.close();
     }
 
-    
-
     /**
      * 关闭该更新器
      *
      * @throws IOException
      */
     public void close() throws Exception {
-        if(segmentWriter!=null){
+        if (segmentWriter != null) {
             segmentWriter.close();
+        }
+    }
+
+    int mergeCount = 0;
+
+    public void reportMergeCount() {
+        mergeCount++;
+        if (mergeCount % 10000 == 0) {
+            LogUtils.getLogger().info(mergeCount + " crawldatums merged");
+
         }
     }
 
@@ -150,59 +157,59 @@ public class FSDbUpdater implements DbUpdater{
      */
     @Override
     public void merge() throws IOException {
-        if(segmentName==null){
-            segmentName=getLastSegmentName(); 
+        if (segmentName == null) {
+            segmentName = getLastSegmentName();
         }
-        if(segmentName==null){
+        if (segmentName == null) {
             return;
         }
-        
-        
+
         try {
-            backup();     
+            backup();
         } catch (IOException ex) {
-            LogUtils.getLogger().info("Exception",ex);
+            LogUtils.getLogger().info("Exception", ex);
         }
-        
+
         LogUtils.getLogger().info("merge " + getSegmentPath());
-        
+        mergeCount = 0;
         File file_fetch = new File(getSegmentPath(), "fetch/info.avro");
         if (!file_fetch.exists()) {
             return;
         }
 
-        File file_current = new File(crawlPath, Config.current_info_path);
-        DbReader<CrawlDatum> reader_current = new DbReader<CrawlDatum>(CrawlDatum.class, file_current);
+        File file_old = new File(crawlPath, Config.current_info_path);
+        DbReader<CrawlDatum> reader_old = new DbReader<CrawlDatum>(CrawlDatum.class, file_old);
         DbReader<CrawlDatum> reader_fetch = new DbReader<CrawlDatum>(CrawlDatum.class, file_fetch);
 
-        HashMap<String, Integer> indexmap = new HashMap<String, Integer>();
-
-        ArrayList<CrawlDatum> datums_origin = new ArrayList<CrawlDatum>();
-        CrawlDatum datum = null;
-        while (reader_current.hasNext()) {
-            datum = reader_current.readNext();
-            datums_origin.add(datum);
-            indexmap.put(datum.getUrl(), datums_origin.size() - 1);
+        File file_current = new File(crawlPath, Config.current_info_path);
+        if (!file_current.getParentFile().exists()) {
+            file_current.getParentFile().mkdirs();
         }
+        DbWriter<CrawlDatum> writer = new DbWriter<CrawlDatum>(CrawlDatum.class, file_current);
 
+        BloomFilter bloomFilter = new BloomFilter();
+        CrawlDatum datum = null;
         while (reader_fetch.hasNext()) {
             datum = reader_fetch.readNext();
-            if (indexmap.containsKey(datum.getUrl())) {
-                if (datum.getStatus() == CrawlDatum.STATUS_DB_UNFETCHED) {
-                    continue;
-                } else {
-                    int preindex = indexmap.get(datum.getUrl());
-                    datums_origin.set(preindex, datum);
-                    indexmap.put(datum.getUrl(), preindex);
-                }
 
-            } else {
-                datums_origin.add(datum);
-                indexmap.put(datum.getUrl(), datums_origin.size() - 1);
-            }
-
+            bloomFilter.add(datum.getUrl());
+            writer.write(datum);
+            reportMergeCount();
         }
+
         reader_fetch.close();
+
+        while (reader_old.hasNext()) {
+            datum = reader_old.readNext();
+            if (bloomFilter.contains(datum.getUrl())) {
+                continue;
+            }
+            bloomFilter.add(datum.getUrl());
+            writer.write(datum);
+            reportMergeCount();
+        }
+
+        reader_old.close();
 
         File file_parse = new File(getSegmentPath(), "parse_data/info.avro");
         if (file_parse.exists()) {
@@ -211,48 +218,32 @@ public class FSDbUpdater implements DbUpdater{
             while (reader_parse.hasNext()) {
                 parseresult = reader_parse.readNext();
                 for (Link link : parseresult.getLinks()) {
+                    if (bloomFilter.contains(link.getUrl())) {
+                        continue;
+                    }
                     datum = new CrawlDatum();
                     datum.setUrl(link.getUrl());
                     datum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
-                    if (indexmap.containsKey(datum.getUrl())) {
-                        continue;
-                    } else {
-                        datums_origin.add(datum);
-                        indexmap.put(datum.getUrl(), datums_origin.size() - 1);
-                    }
+                    bloomFilter.add(datum.getUrl());
+                    writer.write(datum);
+                    reportMergeCount();
                 }
             }
             reader_parse.close();
         }
-
-        reader_current.close();
-
-        updateAll(datums_origin);
+        
+        writer.close();
 
     }
-
-    
 
     @Override
     public SegmentWriter getSegmentWriter() {
         return segmentWriter;
     }
 
-   
-
     public String getSegmentPath() {
-        return crawlPath+"/segments/"+segmentName;
+        return crawlPath + "/segments/" + segmentName;
     }
-
-    
-   
-    
-    
-  
-    
-    
-
-   
 
     public String getCrawlPath() {
         return crawlPath;
@@ -272,23 +263,19 @@ public class FSDbUpdater implements DbUpdater{
 
     @Override
     public void clearHistory() {
-        
-        File file=new File(crawlPath);
-        LogUtils.getLogger().info("clear "+file.getAbsolutePath());
-        if(file.exists()){
+
+        File file = new File(crawlPath);
+        LogUtils.getLogger().info("clear " + file.getAbsolutePath());
+        if (file.exists()) {
             FileUtils.deleteDir(file);
         }
-        
+
     }
 
     @Override
     public void initSegmentWriter() throws Exception {
-        segmentName=SegmentUtils.createSegmengName();
-        segmentWriter=new FSSegmentWriter(crawlPath, getSegmentPath());
+        segmentName = SegmentUtils.createSegmengName();
+        segmentWriter = new FSSegmentWriter(crawlPath, getSegmentPath());
     }
 
-
-    
-    
-    
 }

@@ -76,7 +76,7 @@ public class RedisDbUpdater implements DbUpdater{
             String value=redisHelper.jedis.hget(fetch,url);
             redisHelper.jedis.hset(crawldb, url, value);
             if(mergeCount.incrementAndGet()%10000==0){
-                LogUtils.getLogger().info(mergeCount.get()+"crawldatums merged from fetch");
+                LogUtils.getLogger().info(mergeCount.get()+" crawldatums merged from fetch");
             }
         }
         
@@ -91,7 +91,7 @@ public class RedisDbUpdater implements DbUpdater{
                 redisHelper.jedis.hset(crawldb, url, value);
             }
             if(mergeCount.incrementAndGet()%10000==0){
-                LogUtils.getLogger().info(mergeCount.get()+"crawldatums merged from parse");
+                LogUtils.getLogger().info(mergeCount.get()+" crawldatums merged from parse");
             }        
         }
         redisHelper.jedis.del(parse);

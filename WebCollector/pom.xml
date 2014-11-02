@@ -5,7 +5,7 @@
     
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>1.31</version>
+    <version>1.35</version>
     <description>A java crawler for infomation collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
@@ -136,7 +136,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -151,7 +151,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            -->
             
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>

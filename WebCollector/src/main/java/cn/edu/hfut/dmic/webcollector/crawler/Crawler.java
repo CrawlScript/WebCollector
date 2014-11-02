@@ -30,6 +30,7 @@ import cn.edu.hfut.dmic.webcollector.net.RequestFactory;
 import cn.edu.hfut.dmic.webcollector.parser.ParserFactory;
 
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 
 import java.util.ArrayList;
 
@@ -39,14 +40,15 @@ import java.util.ArrayList;
  */
 public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdaterFactory {
 
-    private int status;
+    protected int status;
     public final static int RUNNING = 1;
     public final static int STOPED = 2;
-    private boolean resumable = false;
-    private int threads = 10;
-    private ArrayList<String> regexs = new ArrayList<String>();
-    private ArrayList<String> seeds = new ArrayList<String>();
-    private Fetcher fetcher;
+    protected boolean resumable = false;
+    protected int threads = 10;
+    //protected ArrayList<String> regexs = new ArrayList<String>();
+    protected RegexRule regexRule=new RegexRule();
+    protected ArrayList<String> seeds = new ArrayList<String>();
+    protected Fetcher fetcher;
         
     public abstract Injector createInjector();
 
@@ -79,8 +81,8 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
             }
 
         }
-        if (regexs.isEmpty()) {
-            LogUtils.getLogger().info("error:Please add at least one regex rule");
+        if (regexRule.isEmpty()) {
+            LogUtils.getLogger().info("error:Please add at least one positive regex rule");
             return;
         }
         inject();
@@ -196,7 +198,7 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
      * @param regex 正则过滤规则
      */
     public void addRegex(String regex) {
-        regexs.add(regex);
+        regexRule.addRule(regex);
     }
 
     /**
@@ -231,21 +233,17 @@ public abstract class Crawler implements  RequestFactory, ParserFactory, DbUpdat
         this.threads = threads;
     }
 
-    /**
-     * 返回正则规则列表
-     * @return 正则规则列表
-     */
-    public ArrayList<String> getRegexs() {
-        return regexs;
+    public RegexRule getRegexRule() {
+        return regexRule;
     }
 
-    /**
-     * 设置正则规则列表
-     * @param regexs 正则规则列表
-     */
-    public void setRegexs(ArrayList<String> regexs) {
-        this.regexs = regexs;
+    public void setRegexRule(RegexRule regexRule) {
+        this.regexRule = regexRule;
     }
+
+   
+
+    
 
     /**
      * 返回种子URL列表
