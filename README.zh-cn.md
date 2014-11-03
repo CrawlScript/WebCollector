@@ -11,7 +11,7 @@ WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发�
     <dependency>
         <groupId>cn.edu.hfut.dmic.webcollector</groupId>
         <artifactId>WebCollector</artifactId>
-        <version>1.35</version>
+        <version>1.36</version>
     </dependency>
 
 ###DEMO1：
