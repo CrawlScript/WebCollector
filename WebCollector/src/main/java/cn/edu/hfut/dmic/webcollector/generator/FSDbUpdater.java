@@ -29,6 +29,11 @@ import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.LogUtils;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 
 /**
@@ -142,7 +147,7 @@ public class FSDbUpdater implements DbUpdater {
         }
     }
     
-    private void install(){
+    private void install() throws IOException{
         File file_old = new File(crawlPath, Config.old_info_path);
         File file_new = new File(crawlPath, Config.new_info_path);
         File file_current = new File(crawlPath, Config.current_info_path);
@@ -154,10 +159,12 @@ public class FSDbUpdater implements DbUpdater {
         if(!file_old.getParentFile().exists()){
             file_old.getParentFile().mkdirs();
         }
+
         
-        file_current.renameTo(file_old);
-        
-        file_new.renameTo(file_current);
+        FileUtils.copy(file_current, file_old);
+        file_current.delete();
+        FileUtils.copy(file_new, file_current);
+        file_new.delete();
     }
 
     /**
