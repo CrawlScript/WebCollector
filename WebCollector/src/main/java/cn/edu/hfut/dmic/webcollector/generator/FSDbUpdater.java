@@ -235,6 +235,9 @@ public class FSDbUpdater implements DbUpdater {
             while (reader_parse.hasNext()) {
                 parseresult = reader_parse.readNext();
                 for (Link link : parseresult.getLinks()) {
+                    if(link.getUrl()==null){
+                        continue;
+                    }
                     if (bloomFilter.contains(link.getUrl())) {
                         continue;
                     }

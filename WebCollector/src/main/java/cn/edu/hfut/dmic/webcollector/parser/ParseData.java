@@ -32,8 +32,8 @@ import cn.edu.hfut.dmic.webcollector.model.Link;
 public class ParseData {
     @Nullable 
     private String url;
-    @Nullable
-    private String title;
+   // @Nullable
+   //private String title;
     @Nullable
     private ArrayList<Link> links;
     @Nullable
@@ -42,11 +42,19 @@ public class ParseData {
     public ParseData(){
         
     }
+    
+    public ParseData(String url,ArrayList<Link> links){
+        this.url=url;
+        this.links=links;
+    }
+
+    /*
     public ParseData(String url,String title,ArrayList<Link> links){
         this.url=url;
         this.title=title;
         this.links=links;
     }
+    */
 
     public String getUrl() {
         return url;
@@ -56,6 +64,7 @@ public class ParseData {
         this.url = url;
     }
 
+    /*
     public String getTitle() {
         return title;
     }
@@ -63,6 +72,7 @@ public class ParseData {
     public void setTitle(String title) {
         this.title = title;
     }
+    */
 
     public ArrayList<Link> getLinks() {
         return links;

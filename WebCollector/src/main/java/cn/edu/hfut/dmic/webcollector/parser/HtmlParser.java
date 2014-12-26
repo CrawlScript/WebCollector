@@ -87,10 +87,13 @@ public class HtmlParser implements Parser {
         }else{
             links=topNFilter(LinkUtils.getAll(page));
         }
-        ParseData parsedata = new ParseData(url,title, links);
-        ParseText parsetext=new ParseText(url,text);
         
-        return new ParseResult(parsedata,parsetext);
+        ParseData parsedata = new ParseData(url,links);
+        //ParseData parsedata = new ParseData(url,title, links);
+        //ParseText parsetext=new ParseText(url,text);
+        
+        return new ParseResult(parsedata);
+        //return new ParseResult(parsedata,parsetext);
     }
 
     private ArrayList<Link> topNFilter(ArrayList<Link> origin_links) {

@@ -52,7 +52,7 @@ public class FSSegmentWriter implements SegmentWriter{
             fetchWriter = new DbWriter<CrawlDatum>(CrawlDatum.class, segmentPath + "/fetch/info.avro");
             contentWriter = new DbWriter<Content>(Content.class, segmentPath + "/content/info.avro");
             parseDataWriter = new DbWriter<ParseData>(ParseData.class, segmentPath + "/parse_data/info.avro");
-            parseTextWriter = new DbWriter<ParseText>(ParseText.class, segmentPath + "/parse_text/info.avro");
+            //parseTextWriter = new DbWriter<ParseText>(ParseText.class, segmentPath + "/parse_text/info.avro");
         } catch (IOException ex) {
             Logger.getLogger(SegmentWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -61,7 +61,7 @@ public class FSSegmentWriter implements SegmentWriter{
     private DbWriter<CrawlDatum> fetchWriter;
     private DbWriter<Content> contentWriter;
     private DbWriter<ParseData> parseDataWriter;
-    private DbWriter<ParseText> parseTextWriter;
+    //private DbWriter<ParseText> parseTextWriter;
     private int count_content;
     private int count_parse;
     private int count_fetch;
@@ -99,11 +99,11 @@ public class FSSegmentWriter implements SegmentWriter{
      */
     public synchronized void wrtieParse(ParseResult parseresult) throws IOException {
         parseDataWriter.write(parseresult.getParsedata());
-        parseTextWriter.write(parseresult.getParsetext());
+        //parseTextWriter.write(parseresult.getParsetext());
         count_parse = (count_parse++) % Config.segmentwriter_buffer_size;
         if (count_parse == 0) {
             parseDataWriter.flush();
-            parseTextWriter.flush();
+            //parseTextWriter.flush();
         }
     }
 
@@ -115,6 +115,6 @@ public class FSSegmentWriter implements SegmentWriter{
         fetchWriter.close();
         contentWriter.close();
         parseDataWriter.close();
-        parseTextWriter.close();
+        //parseTextWriter.close();
     }
 }

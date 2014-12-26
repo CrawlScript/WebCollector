@@ -25,18 +25,24 @@ package cn.edu.hfut.dmic.webcollector.parser;
 public class ParseResult {
     
     private ParseData parsedata;
-    private ParseText parsetext;
+    //private ParseText parsetext;
     
     private Object parseObj;
     
     public ParseResult(){
         
     }
+    
+    public ParseResult(ParseData parsedata) {
+        this.parsedata = parsedata;
+    }
 
+    /*
     public ParseResult(ParseData parsedata, ParseText parsetext) {
         this.parsedata = parsedata;
         this.parsetext = parsetext;
     }
+    */
 
     public ParseData getParsedata() {
         return parsedata;
@@ -46,13 +52,16 @@ public class ParseResult {
         this.parsedata = parsedata;
     }
 
+    /*
     public ParseText getParsetext() {
         return parsetext;
     }
 
+    
     public void setParsetext(ParseText parsetext) {
         this.parsetext = parsetext;
     }
+    */
 
     public Object getParseObj() {
         return parseObj;
