@@ -19,6 +19,7 @@
 package cn.edu.hfut.dmic.webcollector.deepcrawler.example;
 
 import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepCrawler;
+import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepLinks;
 import cn.edu.hfut.dmic.webcollector.deepcrawler.Visitor;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
@@ -83,7 +84,7 @@ public class DemoJsonCrawler extends DeepCrawler{
           往往爬取
         */
         @Override
-        public ArrayList<String> visitAndGetNextLinks(Page page) {
+        public DeepLinks visitAndGetNextLinks(Page page) {
             String url=page.getUrl();
             if(Pattern.matches("http://shejiao.com/api.jsp\\?user.*", url)){
                 
@@ -95,7 +96,7 @@ public class DemoJsonCrawler extends DeepCrawler{
                     JSONObject friendsJson=new JSONObject(jsonResult);
                     JSONArray friends=friendsJson.getJSONArray("friends");
                     
-                    ArrayList<String> nextLinks=new ArrayList<String>();
+                    DeepLinks nextLinks=new DeepLinks();
                     for(int i=0;i<friends.length();i++){
                         String friendName=friends.getString(i);
                         String nextLink="http://shejiao.com/api.jsp?user="+friendName;
@@ -112,7 +113,7 @@ public class DemoJsonCrawler extends DeepCrawler{
             }else if(Pattern.matches("http://shejiao.com/hot.jsp", url)){
                 /*如果当前访问的页面，用户列表页面，抽取页面中的用户名，返回*/
                 page=ParseUtils.parseDocument(page);
-                ArrayList<String> nextLinks=new ArrayList<String>();
+                DeepLinks nextLinks=new DeepLinks();
                 Elements links=page.getDoc().select("CSS选择器");
                 for(Element link:links){
                     String friendName=link.text();

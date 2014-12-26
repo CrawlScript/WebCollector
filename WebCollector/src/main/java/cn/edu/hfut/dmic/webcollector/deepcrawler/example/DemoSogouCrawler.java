@@ -19,6 +19,7 @@
 package cn.edu.hfut.dmic.webcollector.deepcrawler.example;
 
 import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepCrawler;
+import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepLinks;
 import cn.edu.hfut.dmic.webcollector.deepcrawler.Visitor;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.ParseUtils;
@@ -60,14 +61,14 @@ public class DemoSogouCrawler extends DeepCrawler{
           否则将没有意义。
         */
         @Override
-        public ArrayList<String> visitAndGetNextLinks(Page page) {
+        public DeepLinks visitAndGetNextLinks(Page page) {
             String url=page.getUrl();
             if(Pattern.matches("http://www.sogou.com/web\\?query.*", url)){
                 
                 /*如果当前访问的页面，是搜狗的页面，抽取页面中的搜索结果链接，返回*/
                 page=ParseUtils.parseDocument(page);
                 
-                ArrayList<String> nextLinks=new ArrayList<String>();
+                DeepLinks nextLinks=new DeepLinks();
                 Elements links=page.getDoc().select("h3>a[id^=uigs]");
                 for(Element link:links){
                     nextLinks.add(link.attr("abs:href"));

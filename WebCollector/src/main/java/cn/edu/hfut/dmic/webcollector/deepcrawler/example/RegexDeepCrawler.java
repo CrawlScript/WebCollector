@@ -37,7 +37,7 @@ public class RegexDeepCrawler extends DeepCrawler implements Visitor {
     protected RegexRule regexRule = new RegexRule();
 
     @Override
-    public ArrayList<String> visitAndGetNextLinks(Page page) {
+    public DeepLinks visitAndGetNextLinks(Page page) {
 
 
         /*
@@ -57,7 +57,7 @@ public class RegexDeepCrawler extends DeepCrawler implements Visitor {
 
         /*抽取所有的链接，放入后续任务*/
         Elements links = page.getDoc().select("a[href]");
-        ArrayList<String> nextUrls = new ArrayList<String>();
+        DeepLinks nextUrls = new DeepLinks();
         for (Element link : links) {
             /*abs:href表示抽取超链接，并转换为绝对地址，否则无法
              处理类似<a href='/help.html'>help</a>的链接*/

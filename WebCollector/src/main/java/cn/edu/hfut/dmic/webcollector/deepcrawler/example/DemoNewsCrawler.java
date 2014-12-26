@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.deepcrawler.example;
 
 import cn.edu.hfut.dmic.htmlbot.contentextractor.ContentExtractor;
 import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepCrawler;
+import cn.edu.hfut.dmic.webcollector.deepcrawler.DeepLinks;
 import cn.edu.hfut.dmic.webcollector.deepcrawler.Visitor;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.parser.ParseUtils;
@@ -42,14 +43,14 @@ public class DemoNewsCrawler extends DeepCrawler implements Visitor {
     AtomicInteger id = new AtomicInteger(0);
 
     @Override
-    public ArrayList<String> visitAndGetNextLinks(Page page) {
+    public DeepLinks visitAndGetNextLinks(Page page) {
         String url = page.getUrl();
         if (Pattern.matches("http://news.hfut.edu.cn/list-1-[0-9]+.html", url)) {
 
             /*如果当前访问的页面，是目录页,抽取新闻链接*/
             page = ParseUtils.parseDocument(page);
 
-            ArrayList<String> nextLinks = new ArrayList<String>();
+            DeepLinks nextLinks = new DeepLinks();
             Elements links = page.getDoc().select("div>div>ul").first()
                     .select("li>a");
             for (Element link : links) {

@@ -311,7 +311,7 @@ public class DeepFetcher {
                                 dbUpdater.getSegmentWriter().wrtieContent(content);
                             }
                             if (visitor != null) {
-                                ArrayList<String> nextLinks = null;
+                                DeepLinks nextLinks = null;
                                 try {
                                     /*用户自定义visitor处理页面,并获取链接*/
                                     nextLinks = visitor.visitAndGetNextLinks(page);
