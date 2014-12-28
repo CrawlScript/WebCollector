@@ -5,237 +5,156 @@ WebCollector
 WebCollector是一个无须配置、便于二次开发的JAVA爬虫框架（内核），它提供精简的的API，只需少量代码即可实现一个功能强大的爬虫。
 
 ###爬虫内核：
-WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发者进行灵活的二次开发。内核具有很强的扩展性，用户可以在内核基础上开发自己想要的爬虫。源码中集成了Jsoup，可进行精准的网页解析。 
+WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发者进行灵活的二次开发。内核具有很强的扩展性，用户可以在内核基础上开发自己想要的爬虫。源码中集成了Jsoup，可进行精准的网页解析。
 
-###MAVEN:
-    <dependency>
-        <groupId>cn.edu.hfut.dmic.webcollector</groupId>
-        <artifactId>WebCollector</artifactId>
-        <version>1.42</version>
-    </dependency>
+###1.x：
+WebCollector 1.x版本现已转移到[http://git.oschina.net/webcollector/WebCollector](http://git.oschina.net/webcollector/WebCollector)维护，建议使用2.x版本。
+###2.x：
+WebCollector 2.x版本特性：
+* 1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
+* 2）内置Berkeley DB管理URL，可以处理更大量级的网页
+* 3）集成selenium，可以对javascript生成信息进行抽取
+* 4）直接支持多代理随机切换
+* 5）集成spring jdbc和mysql connection，方便数据持久化
+* 6）集成json解析器
+* 7）使用slf4j作为日志门面
+* 8）修改http请求接口，用户自定义http请求更加方便
 
-###DEMO1：
-用WebCollector制作一个爬取《知乎》并进行问题精准抽取的爬虫（JAVA）  
+    package cn.edu.hfut.dmic.webcollector.example;
 
-    public class ZhihuCrawler extends BreadthCrawler{
- 
-        /*visit函数定制访问每个页面时所需进行的操作*/
-        @Override
-        public void visit(Page page) {
-            String question_regex="^http://www.zhihu.com/question/[0-9]+";
-            if(Pattern.matches(question_regex, page.getUrl())){
-                System.out.println("正在抽取"+page.getUrl());
-                /*抽取标题*/
-                String title=page.getDoc().title();
-                System.out.println(title);
-                /*抽取提问内容*/
-                String question=page.getDoc().select("div[id=zh-question-detail]").text();
-                System.out.println(question);
-             
-            }
-        }
- 
-        /*启动爬虫*/
-        public static void main(String[] args) throws IOException{  
-            ZhihuCrawler crawler=new ZhihuCrawler();
-            crawler.addSeed("http://www.zhihu.com/question/21003086");
-            crawler.addRegex("http://www.zhihu.com/.*");
-            crawler.start(5);  
-        }
- 
-   
-    }
-
-
-
-###DEMO2：
-利用WebCollector进行二次开发，定义自己的爬虫
-
-
-
-    import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-    import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-    import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+    import cn.edu.hfut.dmic.webcollector.crawler.DeepCrawler;
+    import cn.edu.hfut.dmic.webcollector.model.Links;
     import cn.edu.hfut.dmic.webcollector.model.Page;
-    import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
-    import cn.edu.hfut.dmic.webcollector.net.Request;
-    import cn.edu.hfut.dmic.webcollector.net.Response;
-    import cn.edu.hfut.dmic.webcollector.parser.ParseData;
-    import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
-    import cn.edu.hfut.dmic.webcollector.parser.Parser;
-
-    import java.net.URL;
-    import java.util.ArrayList;
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
-
-    import org.apache.http.Header;
-    import org.apache.http.HttpEntity;
-    import org.apache.http.client.HttpClient;
-    import org.apache.http.client.methods.HttpGet;
-    import org.apache.http.impl.client.DefaultHttpClient;
-    import org.apache.http.util.EntityUtils;
+    import cn.edu.hfut.dmic.webcollector.net.Proxys;
+    import cn.edu.hfut.dmic.webcollector.util.JDBCHelper;
+    import cn.edu.hfut.dmic.webcollector.util.RegexRule;
     import org.jsoup.nodes.Document;
+    import org.springframework.jdbc.core.JdbcTemplate;
 
     /**
-     * 利用WebCollector进行二次开发，定义自己的爬虫
-     *
+     * WebCollector 2.x版本的tutorial
+     * 2.x版本特性：
+     *   1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
+     *   2）内置Berkeley DB管理URL，可以处理更大量级的网页
+     *   3）集成selenium，可以对javascript生成信息进行抽取
+     *   4）直接支持多代理随机切换
+     *   5）集成spring jdbc和mysql connection，方便数据持久化
+     *   6）集成json解析器
+     *   7）使用slf4j作为日志门面
+     *   8）修改http请求接口，用户自定义http请求更加方便
+     * 
+     * 可在cn.edu.hfut.dmic.webcollector.example包中找到例子(Demo)
+     * 
      * @author hu
      */
-    public class Demo {
+    public class TutorialCrawler extends DeepCrawler {
 
-        /**
-         * 自定义Http请求
-         *
-         */
-        public static class MyRequest implements Request {
+        /*2.x版本中，爬虫的遍历由用户自定义(本质还是广度遍历，但是每个页面
+         生成的URL，也就是遍历树中每个节点的孩子节点，是由用户自定义的)。
+          
+         1.x版本中，默认将每个页面中，所有满足正则约束的链接，都当作待爬取URL，通过
+         这种方法可以完成在一定范围内(例如整站)的爬取(根据正则约束)。
+        
+         所以在2.x版本中，我们只要抽取页面中满足正则的URL，作为Links返回，就可以
+         完成1.x版本中BreadthCrawler的功能。*/
 
-            URL _URL;
+        RegexRule regexRule = new RegexRule();
 
-            @Override
-            public URL getURL() {
-                return _URL;
+        JdbcTemplate jdbcTemplate = null;
+
+        public TutorialCrawler(String crawlPath) {
+            super(crawlPath);
+
+            regexRule.addRule("http://.*zhihu.com/.*");
+            regexRule.addRule("-.*jpg.*");
+
+            /*创建一个JdbcTemplate对象,"mysql1"是用户自定义的名称，以后可以通过
+             JDBCHelper.getJdbcTemplate("mysql1")来获取这个对象。
+             参数分别是：名称、连接URL、用户名、密码、初始化连接数、最大连接数
+            
+             这里的JdbcTemplate对象自己可以处理连接池，所以爬虫在多线程中，可以共用
+             一个JdbcTemplate对象(每个线程中通过JDBCHelper.getJdbcTemplate("名称")
+             获取同一个JdbcTemplate对象)*/
+
+            try {
+                jdbcTemplate = JDBCHelper.createMysqlTemplate("mysql1",
+                        "jdbc:mysql://localhost/testdb?useUnicode=true&characterEncoding=utf8",
+                        "root", "password", 5, 30);
+
+                /*创建数据表*/
+                jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS tb_content ("
+                        + "id int(11) NOT NULL AUTO_INCREMENT,"
+                        + "title varchar(50),url varchar(200),html longtext,"
+                        + "PRIMARY KEY (id)"
+                        + ") ENGINE=MyISAM AUTO_INCREMENT=10124512 DEFAULT CHARSET=utf8;");
+                System.out.println("成功创建数据表 tb_content");
+            } catch (Exception ex) {
+                jdbcTemplate = null;
+                System.out.println("mysql未开启或JDBCHelper.createMysqlTemplate中参数配置不正确!");
             }
-
-            @Override
-            public void setURL(URL url) {
-                this._URL = url;
-            }
-
-            /**
-             * 这里采用httpclient来取代原来的方法，获取http相应，需要导入httpclient4.x的相关jar包
-             */
-            @Override
-            public Response getResponse(CrawlDatum datum) throws Exception {
-                /*HttpResponse是一个实现Response的类*/
-                HttpResponse response = new HttpResponse(_URL);
-
-                /*通过httpclient来获取http请求的响应信息*/
-                HttpClient client = new DefaultHttpClient();
-                HttpGet httpGet = new HttpGet(getURL().toString());
-                /*这里用的是httpclient的HttpResponse，与WebCollector中的HttpResponse无关*/
-                org.apache.http.HttpResponse httpClientResponse = client.execute(httpGet);
-                HttpEntity entity = httpClientResponse.getEntity();
-
-                /*
-                 将httpclient获取的http响应头信息放入Response
-                 Response接口中要求http头是Map<String,List<String>>类型，所以需要做个转换
-                 */
-                Map<String, List<String>> headers = new HashMap<String, List<String>>();
-                for (Header header : httpClientResponse.getAllHeaders()) {
-                    List<String> values = new ArrayList<String>();
-                    values.add(header.getValue());
-                    headers.put(header.getName(), values);
-                }
-                response.setHeaders(headers);
-
-                /*设置http响应码，必须设置http响应码，否则会影响抓取器对抓取状态的判断*/
-                response.setCode(httpClientResponse.getStatusLine().getStatusCode());
-
-                /*设置http响应内容，为网页(文件)的byte数组*/
-                response.setContent(EntityUtils.toByteArray(entity));
-
-                /*
-                 这里返回的是HttpResponse类型，它的getContentType()方法会自动从getHeader()方法中
-                 获取网页响应的content-type,如果自定义Response，一定要实现getContentType()方法，因
-                 为网页解析器的生成需要依赖content-type
-                 */
-                return response;
-            }
-
         }
 
-        /**
-         * 自定义一个广度遍历器
-         */
-        public static class MyCrawler extends BreadthCrawler {
+        @Override
+        public Links visitAndGetNextLinks(Page page) {
+            Document doc = page.getDoc();
+            String title = doc.title();
+            System.out.println("URL:" + page.getUrl() + "  标题:" + title);
 
-            /**
-             * 覆盖Fetcher类的createRequest方法，可以自定义http请求
-             * 一般需要自定义一个实现Request接口的类（这里是MyRequest)
-             */
-            @Override
-            public Request createRequest(String url) throws Exception {
-                MyRequest request = new MyRequest();
-                request.setURL(new URL(url));
-                return request;
-            }
-
-            /**
-             * 这里可以根据http响应的url和contentType来生成网页解析器 contentType可以用来区分相应是网页、图片还是文件
-             * 这里直接用父类的方法，可以参照父类的方法，来自己生成需要的网页解析器
-             */
-            @Override
-            public Parser createParser(String url, String contentType) throws Exception {
-                return super.createParser(url, contentType);
-            }
-
-            /**
-             * 定义爬取成功时对页面的操作
-             *
-             * @param page
-             */
-            @Override
-            public void visit(Page page) {
-
-                System.out.println("---------------------------");
-
-                /*Document是Jsoup的DOM树对象，做网页信息抽取需要依赖Document对象*/
-                Document doc = page.getDoc();
-                String title = doc.title();
-                System.out.println("网页URL:" + page.getUrl());
-                System.out.println("网页标题:" + title);
-
-                /*parseResult是在爬取过程中解析的一些简单网页信息*/
-                ParseResult parseResult = page.getParseResult();
-
-                /*parseData包括网页的标题、链接以及一些其他信息*/
-                ParseData parseData = parseResult.getParsedata();
-
-                if (parseData.getLinks() != null) {
-                    System.out.println("网页链接数:" + parseData.getLinks().size());
+            /*将数据插入mysql*/
+            if (jdbcTemplate != null) {
+                int updates=jdbcTemplate.update("insert into tb_content (title,url,html) value(?,?,?)",
+                        title, page.getUrl(), page.getHtml());
+                if(updates==1){
+                    System.out.println("mysql插入成功");
                 }
-
             }
 
+            /*下面是2.0版本新加入的内容*/
+            /*抽取page中的链接返回，这些链接会在下一轮爬取时被爬取。
+             不用担心URL去重，爬虫会自动过滤重复URL。*/
+            Links nextLinks = new Links();
+
+            /*我们只希望抽取满足正则约束的URL，
+             Links.addAllFromDocument为我们提供了相应的功能*/
+            nextLinks.addAllFromDocument(doc, regexRule);
+
+            /*Links类继承ArrayList<String>,可以使用add、addAll等方法自己添加URL
+             如果当前页面的链接中，没有需要爬取的，可以return null
+             例如如果你的爬取任务只是爬取seed列表中的所有链接，这种情况应该return null
+             */
+            return nextLinks;
         }
 
         public static void main(String[] args) throws Exception {
-            /*crawlPath是爬取信息存储的文件夹*/
-            String crawlPath = "/home/hu/data/crawl_hfut1";
-            MyCrawler crawler = new MyCrawler();
-            crawler.setCrawlPath(crawlPath);
+            /*构造函数中的string,是爬虫的crawlPath，爬虫的爬取信息都存在crawlPath文件夹中,
+              不同的爬虫请使用不同的crawlPath
+            */
+            TutorialCrawler crawler = new TutorialCrawler("/home/hu/data/wb");
+            crawler.setThreads(50);
+            crawler.addSeed("http://www.zhihu.com/");
+            crawler.setResumable(false);
 
-            crawler.addSeed("http://news.hfut.edu.cn/");
-            crawler.addRegex("http://news.hfut.edu.cn/.*");
+            /*2.x版本直接支持多代理随机切换*/
+            Proxys proxys = new Proxys();
+            /*
+             可用代理可以到 http://www.brieftools.info/proxy/ 获取
+             添加代理的方式:
+             1)ip和端口
+             proxys.add("123.123.123.123",8080);
+             2)文件
+             proxys.addAllFromFile(new File("xxx.txt"));
+             文件内容类似:
+             123.123.123.123:90
+             234.234.324.234:8080
+             一个代理占一行
+             */
 
-            /*禁止爬取带井号的url*/
-            crawler.addRegex("-.*#.*");
+            crawler.setProxys(proxys);
 
-            /*禁止爬取图片*/
-            crawler.addRegex("-.*png.*");
-            crawler.addRegex("-.*jpg.*");
-            crawler.addRegex("-.*gif.*");
-            crawler.addRegex("-.*js.*");
-            crawler.addRegex("-.*css.*");
+            /*设置是否断点爬取*/
+            crawler.setResumable(false);
 
-            /*设置线程数*/
-            crawler.setThreads(30);
-
-            /*设置为可断点爬取模式*/
-            crawler.setResumable(true);
-
-            /*进行深度为3的广度遍历*/
-            crawler.start(3);
+            crawler.start(5);
         }
 
     }
-
-
-
-###WebCollector构架图
-
-![](https://github.com/CrawlScript/WebCollector/raw/master/webcollector_design.png)
-
-    

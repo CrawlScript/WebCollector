@@ -17,8 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.util;
 
-import cn.edu.hfut.dmic.webcollector.generator.Generator;
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 

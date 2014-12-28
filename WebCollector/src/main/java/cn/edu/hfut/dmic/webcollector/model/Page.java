@@ -18,10 +18,16 @@
 
 package cn.edu.hfut.dmic.webcollector.model;
 
+import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
+import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import java.io.UnsupportedEncodingException;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import cn.edu.hfut.dmic.webcollector.net.Response;
-import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
 
 
 
@@ -33,28 +39,13 @@ import cn.edu.hfut.dmic.webcollector.parser.ParseResult;
  * @author hu
  */
 public class Page{
-    private Response response=null;
+    
+    public static final Logger LOG=LoggerFactory.getLogger(Page.class);
+    
+    private HttpResponse response=null;
     private String url=null;  
     private String html=null;
     private Document doc=null;  
-    private long fetchTime;
-    private ParseResult parseResult=null;
-    
-    /**
-     * 设置http响应
-     * @param response
-     */
-    public void setResponse(Response response){
-        this.response=response;
-    }
-    
-    /**
-     * 返回存储的http响应
-     * @return http响应
-     */
-    public Response getResponse(){
-        return response;
-    }
     
     /**
      * 返回网页/文件的内容
@@ -87,7 +78,20 @@ public class Page{
      * @return 网页的源码字符串
      */
     public String getHtml() {
-        return html;
+        if(html!=null){
+            return html;
+        }
+        if(getContent()==null){
+            return null;
+        }
+        String charset=CharsetDetector.guessEncoding(getContent());
+        try {
+            this.html = new String(getContent(),charset);
+            return html;
+        } catch (UnsupportedEncodingException ex) {
+            LOG.info("Exception",ex);
+            return null;
+        }       
     }
 
     /**
@@ -103,7 +107,31 @@ public class Page{
      * @return 网页解析后的DOM树
      */
     public Document getDoc() {
-        return doc;
+        if(doc!=null){
+            return doc;
+        }
+        try{
+            this.doc=Jsoup.parse(getHtml());
+            return doc;
+        }catch(Exception ex){
+            LOG.info("Exception",ex);
+            return null;
+        }
+        
+    }
+    
+    public HtmlUnitDriver getDriver(){
+        HtmlUnitDriver driver=new HtmlUnitDriver();
+        driver.setJavascriptEnabled(true);
+        driver.get(url);
+        return driver;
+    }
+    
+    public HtmlUnitDriver getDriver(BrowserVersion browserVersion){
+        HtmlUnitDriver driver=new HtmlUnitDriver(browserVersion);
+        driver.setJavascriptEnabled(true);
+        driver.get(url);
+        return driver;
     }
 
     /**
@@ -114,39 +142,16 @@ public class Page{
         this.doc = doc;
     }
 
-    /**
-     * 返回爬取时间
-     * @return 爬取时间
-     */
-    public long getFetchTime() {
-        return fetchTime;
+    public HttpResponse getResponse() {
+        return response;
     }
 
-    /**
-     * 设置爬取时间
-     * @param fetchTime 爬取时间
-     */
-    public void setFetchTime(long fetchTime) {
-        this.fetchTime = fetchTime;
+    public void setResponse(HttpResponse response) {
+        this.response = response;
     }
 
-    /**
-     * 返回网页解析结果
-     * @return 网页解析结果
-     */
-    public ParseResult getParseResult() {
-        return parseResult;
-    }
+    
 
-    /**
-     * 设置网页解析结果
-     * @param parseResult 网页解析结果
-     */
-    public void setParseResult(ParseResult parseResult) {
-        this.parseResult = parseResult;
-    }
-    
-    
-    
+   
     
 }

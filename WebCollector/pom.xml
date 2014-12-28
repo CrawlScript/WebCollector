@@ -5,7 +5,7 @@
     
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>1.50-beta</version>
+    <version>2.0-beta</version>
     <description>A java crawler for infomation collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
@@ -138,22 +138,22 @@
             </plugin>
            
            
-           <!--
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-         -->
+            <!--
+               <plugin>
+                   <groupId>org.apache.maven.plugins</groupId>
+                   <artifactId>maven-gpg-plugin</artifactId>
+                   <version>1.5</version>
+                   <executions>
+                       <execution>
+                           <id>sign-artifacts</id>
+                           <phase>verify</phase>
+                           <goals>
+                               <goal>sign</goal>
+                           </goals>
+                       </execution>
+                   </executions>
+               </plugin>
+            -->
             
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -162,9 +162,10 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                               
+                               <!--
                                 <copy todir="${project.build.directory}" file="start.bat"/> 
                                 <copy todir="${project.build.directory}" file="start.sh"/> 
+                                -->
                                 <copy todir="${project.build.directory}/bin">
                                     <fileset dir="${project.build.directory}">
                                         <include name="*.jar" />
@@ -172,6 +173,7 @@
                                         <include name="*.bat" />
                                     </fileset>
                                 </copy>
+                                
                                 <zip basedir="${project.build.directory}/bin" destfile="../webcollector-${project.version}-bin.zip" />
                            
                                 
@@ -190,7 +192,7 @@
     </build>
 
     <dependencies>
-        <dependency><!-- jsoup HTML parser library @ http://jsoup.org/ -->
+        <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.7.3</version>
@@ -199,11 +201,6 @@
             <groupId>com.googlecode.juniversalchardet</groupId>
             <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.7.6</version>
         </dependency>
         
         <dependency>
@@ -219,15 +216,46 @@
         </dependency>
         
         <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-            <version>2.4.2</version>
-        </dependency>
-        
-        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20140107</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.sleepycat</groupId>
+            <artifactId>je</artifactId>
+            <version>5.0.73</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.9</version>
+        </dependency>
+        <dependency>
+          <groupId>org.seleniumhq.selenium</groupId>
+          <artifactId>selenium-java</artifactId>
+          <version>2.44.0</version>
+      </dependency>
+      <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.0.5.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
         </dependency>
         
   

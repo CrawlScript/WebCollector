@@ -59,8 +59,53 @@ public class FileUtils {
         fos.close();
     }
     
+    public static void writeFile(String filename,String contentStr,String charset) throws FileNotFoundException, IOException{
+        byte[] content=contentStr.getBytes(charset);
+        FileOutputStream fos=new FileOutputStream(filename);
+        fos.write(content);
+        fos.close();
+    }
+    
+    public static void writeFile(File file,String contentStr,String charset) throws FileNotFoundException, IOException{
+        byte[] content=contentStr.getBytes(charset);
+        FileOutputStream fos=new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+    
+    public static void writeFileWithParent(String filename,String contentStr,String charset) throws FileNotFoundException, IOException{
+        File file=new File(filename);
+        File parent=file.getParentFile();
+        if(!parent.exists()){
+            parent.mkdirs();
+        }
+        byte[] content=contentStr.getBytes(charset);
+        FileOutputStream fos=new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+    
+    public static void writeFileWithParent(File file,String contentStr,String charset) throws FileNotFoundException, IOException{
+        File parent=file.getParentFile();
+        if(!parent.exists()){
+            parent.mkdirs();
+        }
+        byte[] content=contentStr.getBytes(charset);
+        FileOutputStream fos=new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+    
     public static void writeFile(String filename,byte[] content) throws FileNotFoundException, IOException{
         FileOutputStream fos=new FileOutputStream(filename);
+        fos.write(content);
+        fos.close();
+    }
+    
+    
+    
+    public static void writeFile(File file,byte[] content) throws FileNotFoundException, IOException{
+        FileOutputStream fos=new FileOutputStream(file);
         fos.write(content);
         fos.close();
     }

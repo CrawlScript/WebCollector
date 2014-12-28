@@ -18,8 +18,9 @@
 
 package cn.edu.hfut.dmic.webcollector.model;
 
+import com.sleepycat.je.DatabaseEntry;
+import java.io.UnsupportedEncodingException;
 
-import org.apache.avro.reflect.Nullable;
 
 
 /**
@@ -29,29 +30,51 @@ import org.apache.avro.reflect.Nullable;
  */
 public class CrawlDatum{
     /**
-     * 爬取状态常量-未定义
+     * 爬取状态常量-注入
      */
-    public static final int STATUS_DB_UNDEFINED=-1;
+    public static final byte STATUS_DB_INJECTED=0x01;
     /**
      * 爬取状态常量-未爬取
      */
-    public static final int STATUS_DB_UNFETCHED=1;
+    public static final byte STATUS_DB_UNFETCHED=0x04;
     /**
      * 爬取状态常量-已爬取
      */
-    public static final int STATUS_DB_FETCHED=2;
+    public static final byte STATUS_DB_FETCHED=0x05;
     
     
-    /**
-     * 爬取时间常量-未定义
-     */
-    public static final long FETCHTIME_UNDEFINED=1;
+    private String url;
+    private byte status=CrawlDatum.STATUS_DB_INJECTED;
+    private int retry=0;
+  
+    public DatabaseEntry getKey() throws UnsupportedEncodingException{
+        return new DatabaseEntry(url.getBytes("utf-8"));
+    }
+    public DatabaseEntry getValue(){
+        byte[] value=new byte[2];
+        value[0]=status;
+        value[1]=(byte) retry;
+        return new DatabaseEntry(value);
+    }
     
+    public CrawlDatum(String url,byte status){
+        this.url=url;
+        this.status=status;
+        this.retry=0;
+    }
     
+    public CrawlDatum(String url,byte status,int retry){
+        this.url=url;
+        this.status=status;
+        this.retry=retry;
+    }
     
-    @Nullable private String url;
-    @Nullable private int status=CrawlDatum.STATUS_DB_UNDEFINED;
-    @Nullable private long fetchTime=CrawlDatum.FETCHTIME_UNDEFINED;
+    public CrawlDatum(DatabaseEntry key,DatabaseEntry value) throws UnsupportedEncodingException{
+        this.url=new String(key.getData(),"utf-8");
+        byte[] valueData=value.getData();
+        this.status=valueData[0];
+        this.retry=valueData[1];
+    }
 
     /**
      *  获取爬取任务的url
@@ -73,7 +96,7 @@ public class CrawlDatum{
      * 获取爬取任务的状态
      * @return 爬取任务的状态
      */
-    public int getStatus() {
+    public byte getStatus() {
         return status;
     }
 
@@ -81,29 +104,17 @@ public class CrawlDatum{
      * 设置爬取任务的状态
      * @param status 爬取任务的状态
      */
-    public void setStatus(int status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
-    /**
-     * 获取爬取时间
-     * @return 爬取时间
-     */
-    public long getFetchTime() {
-        return fetchTime;
+    public int getRetry() {
+        return retry;
     }
 
-    /**
-     * 设置爬取时间
-     * @param fetchTime 爬取时间
-     */
-    public void setFetchTime(long fetchTime) {
-        this.fetchTime = fetchTime;
+    public void setRetry(int retry) {
+        this.retry = retry;
     }
 
-   
-    
-    
-    
     
 }

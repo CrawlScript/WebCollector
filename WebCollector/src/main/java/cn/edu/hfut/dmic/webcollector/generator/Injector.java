@@ -15,59 +15,46 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 package cn.edu.hfut.dmic.webcollector.generator;
 
-
-
-import java.io.IOException;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.util.BerkeleyDBUtils;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.Environment;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
-
-
 /**
- * 广度遍历的种子注入器
+ *
  * @author hu
  */
-public interface Injector{
-    
-    /**
-     * 以新建的方式，注入一个种子url
-     * @param url 种子url
-     * @throws IOException
-     */
-    public void inject(String url) throws Exception;
-    
-    /**
-     * 以新建的方式，注入种子url列表
-     * @param urls 种子url列表
-     * @throws IOException
-     */
-    public void inject(ArrayList<String> urls) throws Exception;
-    
-    /**
-     * 以新建/追加的方式，注入一个种子url
-     * @param url 种子url
-     * @param append 是否追加
-     * @throws IOException
-     */
-    public void inject(String url,boolean append) throws Exception;
-    
-        
-    /**
-     * 以新建/追加方式注入种子url列表
-     * @param urls 种子url列表
-     * @param append 是否追加
-     * @throws UnsupportedEncodingException
-     * @throws IOException
-     */
-    public void inject(ArrayList<String> urls,boolean append) throws Exception;
-    
-    /*
-    public static void main(String[] args) throws IOException{
-        Injector inject=new Injector("/home/hu/data/crawl_avro");
-        inject.inject("http://www.xinhuanet.com/");
+public class Injector {
+
+    Environment env;
+
+    public Injector(Environment env) {
+        this.env=env;
     }
-    */
+
+    public void inject(String seed) throws UnsupportedEncodingException {
+        Database database=env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+        CrawlDatum datum = new CrawlDatum(seed, CrawlDatum.STATUS_DB_INJECTED);
+        database.put(null, datum.getKey(), datum.getValue());
+        database.sync();
+        database.close();
+    }
+
+    public void inject(ArrayList<String> seeds) throws UnsupportedEncodingException {
+        DatabaseConfig databaseConfig=new DatabaseConfig();
+        databaseConfig.setAllowCreate(true);
+        databaseConfig.setDeferredWrite(true);
+        Database database=env.openDatabase(null, "crawldb", databaseConfig);
+        for (String seed : seeds) {
+            CrawlDatum datum = new CrawlDatum(seed, CrawlDatum.STATUS_DB_INJECTED);
+            database.put(null, datum.getKey(), datum.getValue());
+        }
+        database.sync();
+        database.close();
+    }
 }

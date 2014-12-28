@@ -18,7 +18,7 @@
 
 package cn.edu.hfut.dmic.webcollector.net;
 
-import cn.edu.hfut.dmic.webcollector.net.Response;
+
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -27,37 +27,37 @@ import java.util.Map;
  * Response的一种实现，WebCollector默认使用HttpResponse作为http响应
  * @author hu
  */
-public class HttpResponse implements Response{
+public class HttpResponse{
 
-    private URL url;
+    private String url;
     private int code;
     private Map<String,List<String>> headers=null;
     private byte[] content=null;
     
-    public HttpResponse(URL url){
+    public HttpResponse(String url){
         this.url=url;
     }
     
-    @Override
-    public URL getUrl() {
+    
+    public String getUrl() {
         return url;
     }
     
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    @Override
+   
     public int getCode() {
         return code;
     }
 
-    @Override
+    
     public List<String> getHeader(String name) {
         return headers.get(name);
     }
 
-    @Override
+    
     public byte[] getContent() {
         return content;
     }
@@ -70,17 +70,17 @@ public class HttpResponse implements Response{
         this.code = code;
     }
 
-    @Override
+    
     public Map<String, List<String>> getHeaders() {
         return headers;
     }
 
-    @Override
+    
     public void setHeaders(Map<String, List<String>> headers) {
         this.headers=headers;
     }
 
-    @Override
+    
     public String getContentType() {
         try{
         String contentType;
