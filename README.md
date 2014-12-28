@@ -31,22 +31,10 @@ WebCollector 2.x版本特性：
     import org.jsoup.nodes.Document;
     import org.springframework.jdbc.core.JdbcTemplate;
 
-    /**
-     * WebCollector 2.x版本的tutorial
-     * 2.x版本特性：
-     *   1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
-     *   2）内置Berkeley DB管理URL，可以处理更大量级的网页
-     *   3）集成selenium，可以对javascript生成信息进行抽取
-     *   4）直接支持多代理随机切换
-     *   5）集成spring jdbc和mysql connection，方便数据持久化
-     *   6）集成json解析器
-     *   7）使用slf4j作为日志门面
-     *   8）修改http请求接口，用户自定义http请求更加方便
-     * 
-     * 可在cn.edu.hfut.dmic.webcollector.example包中找到例子(Demo)
-     * 
-     * @author hu
-     */
+    
+    
+    //可在cn.edu.hfut.dmic.webcollector.example包中找到例子(Demo) 
+    
     public class TutorialCrawler extends DeepCrawler {
 
         /*2.x版本中，爬虫的遍历由用户自定义(本质还是广度遍历，但是每个页面
