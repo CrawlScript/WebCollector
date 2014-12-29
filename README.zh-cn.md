@@ -26,3 +26,9 @@ WebCollector 2.x教程：
 * [WebCollector爬取JS生成数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
 * [WebCollector爬取搜狗搜索（分页）](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
 * [WebCollector爬取JSON数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
+
+WebCollector 2.x教程(镜像)：
+* [WebCollector 2.x tutorial（中文教程）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java)
+* [WebCollector爬取JS生成数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
+* [WebCollector爬取搜狗搜索（分页）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
+* [WebCollector爬取JSON数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
