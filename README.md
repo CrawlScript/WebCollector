@@ -16,7 +16,7 @@ WebCollector 2.x版本特性：
 * 2）内置Berkeley DB管理URL，可以处理更大量级的网页
 * 3）集成selenium，可以对javascript生成信息进行抽取
 * 4）直接支持多代理随机切换
-* 5）集成spring jdbc和mysql connection，方便数据持久化
+* 5）集成spring jdbc和mysql connector，方便数据持久化
 * 6）集成json解析器
 * 7）使用slf4j作为日志门面
 * 8）修改http请求接口，用户自定义http请求更加方便
