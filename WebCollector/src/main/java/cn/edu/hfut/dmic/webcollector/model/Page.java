@@ -111,7 +111,8 @@ public class Page{
             return doc;
         }
         try{
-            this.doc=Jsoup.parse(getHtml());
+            
+            this.doc=Jsoup.parse(getHtml(),url);
             return doc;
         }catch(Exception ex){
             LOG.info("Exception",ex);
