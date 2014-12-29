@@ -32,3 +32,5 @@ WebCollector 2.x教程(镜像)：
 * [WebCollector爬取JS生成数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
 * [WebCollector爬取搜狗搜索（分页）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
 * [WebCollector爬取JSON数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
+
+
