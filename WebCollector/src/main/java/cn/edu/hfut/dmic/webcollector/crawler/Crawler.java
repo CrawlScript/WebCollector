@@ -76,8 +76,13 @@ public abstract class Crawler implements VisitorFactory{
     public void start(int depth) throws Exception {
         File dir = new File(crawlPath);
         boolean needInject=true;
+        
+        
         if(resumable && dir.exists()){
             needInject=false;
+        }
+        if(resumable && !dir.exists()){
+            dir.mkdirs();
         }
         if (!resumable) {
 
