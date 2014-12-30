@@ -83,7 +83,7 @@ public class TutorialCrawler extends DeepCrawler {
                     + "id int(11) NOT NULL AUTO_INCREMENT,"
                     + "title varchar(50),url varchar(200),html longtext,"
                     + "PRIMARY KEY (id)"
-                    + ") ENGINE=MyISAM AUTO_INCREMENT=10124512 DEFAULT CHARSET=utf8;");
+                    + ") ENGINE=MyISAM DEFAULT CHARSET=utf8;");
             System.out.println("成功创建数据表 tb_content");
         } catch (Exception ex) {
             jdbcTemplate = null;
