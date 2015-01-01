@@ -28,6 +28,7 @@ import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLDocument;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLDocuments;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLElement;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLElements;
+import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLList;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLNext;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLNextElement;
 import cn.edu.hfut.dmic.webcollector.souplang.nodes.SLRoot;
@@ -61,7 +62,6 @@ public class Parser {
         DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = f.newDocumentBuilder();
         Document xmlDoc = builder.parse(is);
-        System.out.println(xmlDoc.getChildNodes().getLength());
         Element xmlRoot = xmlDoc.getDocumentElement();
         parse(xmlRoot, root);
     }
@@ -91,6 +91,14 @@ public class Parser {
         if (node instanceof Element) {
             Element element = (Element) node;
             String tagName = element.getTagName().toLowerCase();
+            
+            if (tagName.equals("list")) {
+
+                SLList slList=new SLList();
+                slList.readName(element);
+                slList.readCSSSelector(element);
+                return slList;
+            }
 
             if (tagName.equals("element")||tagName.equals("el")) {
 
@@ -165,8 +173,8 @@ public class Parser {
             if (tagName.equals("doc")) {
 
                 SLDocument sLDocument = new SLDocument();
-                String urlRegex = element.getAttribute("url");
-                sLDocument.urlRegex = urlRegex;
+                sLDocument.readName(element);
+                sLDocument.readUrlRegex(element);
                 return sLDocument;
             }
             if (tagName.equals("root")) {

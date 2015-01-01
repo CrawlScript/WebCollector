@@ -57,7 +57,6 @@ public class SegmentWriter {
      * 写入一条爬取历史记录
      *
      * @param fetch 爬取历史记录（爬取任务)
-     * @throws IOException
      */
     public void wrtieFetch(CrawlDatum fetch) throws Exception {
         DatabaseEntry key = fetch.getKey();
@@ -83,8 +82,7 @@ public class SegmentWriter {
 
     /**
      * 关闭Writer
-     *
-     * @throws IOException
+
      */
     public void close() throws Exception {
         fetchDatabase.sync();

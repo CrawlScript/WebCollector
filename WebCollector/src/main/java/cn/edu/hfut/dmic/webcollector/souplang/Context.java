@@ -59,4 +59,11 @@ public class Context {
             throw new Exception("not a list");
         }
     }
+
+    @Override
+    public String toString() {
+        return output.toString(); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
 }

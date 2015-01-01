@@ -54,7 +54,7 @@ public class DemoSoupLangCrawler extends DeepCrawler {
 
         /*soupLang可以从文件、InputStream中读取SoupLang写的抽取脚本
          如果从外部文件读取，soupLang=new SoupLang("文件路径")*/
-        soupLang = new SoupLang(ClassLoader.getSystemResourceAsStream("example/DemoRule.xml"));
+        soupLang = new SoupLang(ClassLoader.getSystemResourceAsStream("example/DemoRule1.xml"));
 
     }
 

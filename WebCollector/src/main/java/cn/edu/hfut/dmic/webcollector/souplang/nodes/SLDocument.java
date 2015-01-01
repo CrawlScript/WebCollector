@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.souplang.nodes;
 
 import java.util.regex.Pattern;
 import cn.edu.hfut.dmic.webcollector.souplang.Context;
+import cn.edu.hfut.dmic.webcollector.souplang.LangNode;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,19 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public class SLDocument extends SLElement{
+public class SLDocument extends LangNode{
     
     
     public static final Logger LOG=LoggerFactory.getLogger(SLDocument.class);
 
     public String urlRegex = null;
+    
+    public void readUrlRegex(org.w3c.dom.Element xmlElement){
+        urlRegex=xmlElement.getAttribute("url");
+        if(urlRegex.isEmpty()){
+            urlRegex=null;
+        }
+    }
 
    
 
@@ -53,7 +61,7 @@ public class SLDocument extends SLElement{
 
         Document jsoupDoc = (Document) input;
         LOG.debug("baseuri="+jsoupDoc.baseUri());
-        if (jsoupDoc.baseUri() != null) {
+        if (jsoupDoc.baseUri() != null&&urlRegex!=null) {
             if (!Pattern.matches(urlRegex, jsoupDoc.baseUri())) {
                 return null;
             }

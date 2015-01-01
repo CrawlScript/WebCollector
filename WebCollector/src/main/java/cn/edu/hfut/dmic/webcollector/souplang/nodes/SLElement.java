@@ -36,10 +36,10 @@ public class SLElement extends LangNode {
     public String cssSelector = null;
     public int index=0;
 
-     public void readCSSSelector(org.w3c.dom.Element xmlElement){
-        cssSelector=xmlElement.getAttribute("selector");
-        if(cssSelector.isEmpty()){
-            cssSelector=null;
+    public void readCSSSelector(org.w3c.dom.Element xmlElement) {
+        cssSelector = xmlElement.getAttribute("selector");
+        if (cssSelector.isEmpty()) {
+            cssSelector = null;
         }
     }
      
