@@ -52,6 +52,7 @@ public abstract class Crawler implements VisitorFactory{
     protected boolean resumable = false;
     protected int threads = 50;
     protected ArrayList<String> seeds = new ArrayList<String>();
+    protected ArrayList<String> forcedSeeds = new ArrayList<String>();
     protected Fetcher fetcher;
 
     protected VisitorFactory visitorFactory = this;
@@ -71,6 +72,11 @@ public abstract class Crawler implements VisitorFactory{
     public void inject() throws Exception {
         Injector injector = new Injector(env);
         injector.inject(seeds);
+    }
+    
+    public void injectForcedSeeds() throws Exception {
+        Injector injector = new Injector(env);
+        injector.inject(forcedSeeds);
     }
 
     public void start(int depth) throws Exception {
@@ -103,6 +109,10 @@ public abstract class Crawler implements VisitorFactory{
         
         if(needInject){
             inject();
+        }
+        
+        if(!forcedSeeds.isEmpty()){
+            injectForcedSeeds();
         }
 
         status = RUNNING;
@@ -139,12 +149,22 @@ public abstract class Crawler implements VisitorFactory{
     }
 
     /**
-     * 添加一个种子url
+     * 添加一个种子url(如果断点爬取，种子只会在第一次爬取时注入)
      *
      * @param seed 种子url
      */
     public void addSeed(String seed) {
         seeds.add(seed);
+    }
+    
+    /**
+     * 添加一个种子url(如果断点爬取，种子会在每次启动爬虫时注入，
+     * 如果爬取历史中有相同url,则覆盖)
+     * @param seed
+     * @param update 
+     */
+    public void addForcedSeed(String seed){
+        forcedSeeds.add(seed);
     }
 
     public ArrayList<String> getSeeds() {
@@ -154,6 +174,16 @@ public abstract class Crawler implements VisitorFactory{
     public void setSeeds(ArrayList<String> seeds) {
         this.seeds = seeds;
     }
+
+    public ArrayList<String> getForcedSeeds() {
+        return forcedSeeds;
+    }
+
+    public void setForcedSeeds(ArrayList<String> forcedSeeds) {
+        this.forcedSeeds = forcedSeeds;
+    }
+    
+    
 
     public boolean isResumable() {
         return resumable;
