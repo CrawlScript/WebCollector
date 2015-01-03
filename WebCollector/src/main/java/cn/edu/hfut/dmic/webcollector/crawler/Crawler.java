@@ -97,7 +97,7 @@ public abstract class Crawler implements VisitorFactory{
             }
             dir.mkdirs();
 
-            if (seeds.isEmpty()) {
+            if (seeds.isEmpty()&&forcedSeeds.isEmpty()) {
                 LOG.info("error:Please add at least one seed");
                 return;
             }
