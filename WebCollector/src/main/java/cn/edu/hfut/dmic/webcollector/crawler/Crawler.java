@@ -117,9 +117,8 @@ public abstract class Crawler implements VisitorFactory {
                 break;
             }
             LOG.info("starting depth " + (i + 1));
-            Database crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
-            Cursor crawldbCursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
-            Generator generator = new StandardGenerator(crawldbCursor);
+
+            StandardGenerator generator = new StandardGenerator(env);
             fetcher = new Fetcher();
             fetcher.setRetry(retry);
             fetcher.setHttpRequester(httpRequester);
@@ -127,8 +126,7 @@ public abstract class Crawler implements VisitorFactory {
             fetcher.setVisitorFactory(visitorFactory);
             fetcher.setThreads(threads);
             fetcher.fetchAll(generator);
-            crawldbCursor.close();
-            crawldbDatabase.close();
+
         }
         env.close();
     }

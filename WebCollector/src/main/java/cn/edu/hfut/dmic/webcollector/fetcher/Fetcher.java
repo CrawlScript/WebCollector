@@ -18,6 +18,7 @@
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
+import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
@@ -165,7 +166,7 @@ public class Fetcher {
         /**
          *
          */
-        public Generator generator;
+        public StandardGenerator generator;
 
         /**
          *
@@ -178,17 +179,30 @@ public class Fetcher {
          * @param generator
          * @param size
          */
-        public QueueFeeder(FetchQueue queue, Generator generator, int size) {
+        public QueueFeeder(FetchQueue queue, StandardGenerator generator, int size) {
             this.queue = queue;
             this.generator = generator;
             this.size = size;
         }
 
+        public void stopFeeder() {
+            running = false;
+            while (this.isAlive()) {
+                try {
+                    Thread.sleep(1000);
+                    LOG.info("stopping feeder......");
+                } catch (InterruptedException ex) {
+                }
+            }
+        }
+        public boolean running = true;
+
         @Override
         public void run() {
 
             boolean hasMore = true;
-            while (hasMore) {
+            running = true;
+            while (hasMore && running) {
 
                 int feed = size - queue.getSize();
                 if (feed <= 0) {
@@ -198,7 +212,7 @@ public class Fetcher {
                     }
                     continue;
                 }
-                while (feed > 0 && hasMore) {
+                while (feed > 0 && hasMore && running) {
 
                     CrawlDatum datum = generator.next();
                     hasMore = (datum != null);
@@ -211,6 +225,7 @@ public class Fetcher {
                 }
 
             }
+            generator.close();
 
         }
 
@@ -342,7 +357,7 @@ public class Fetcher {
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
      * @throws IOException
      */
-    public void fetchAll(Generator generator) throws Exception {
+    public void fetchAll(StandardGenerator generator) throws Exception {
         if (visitorFactory == null) {
             LOG.info("Please specify a VisitorFactory!");
             return;
@@ -388,7 +403,7 @@ public class Fetcher {
                 fetcherThreads[i].stop();
             }
         }
-        feeder.stop();
+        feeder.stopFeeder();
         fetchQueue.clear();
         after();
 

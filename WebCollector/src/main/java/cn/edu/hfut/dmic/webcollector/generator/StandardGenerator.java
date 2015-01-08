@@ -35,9 +35,15 @@ import java.io.UnsupportedEncodingException;
 public class StandardGenerator implements Generator {
 
     Cursor cursor = null;
-
-    public StandardGenerator(Cursor cursor) {
-        this.cursor = cursor;
+    Database crawldbDatabase=null;
+    Environment env;
+    public StandardGenerator(Environment env) {
+        this.env=env;
+    }
+    
+    public void close(){
+        cursor.close();
+        crawldbDatabase.close();
     }
 
     public DatabaseEntry key = new DatabaseEntry();
@@ -45,7 +51,10 @@ public class StandardGenerator implements Generator {
 
     @Override
     public CrawlDatum next() {
-
+        if(cursor==null){
+            crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+            cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
+        }
         while (true) {
             if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
 
