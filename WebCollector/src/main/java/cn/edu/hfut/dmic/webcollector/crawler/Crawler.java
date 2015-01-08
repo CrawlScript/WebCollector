@@ -19,17 +19,18 @@ package cn.edu.hfut.dmic.webcollector.crawler;
 
 import cn.edu.hfut.dmic.webcollector.fetcher.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-
 import cn.edu.hfut.dmic.webcollector.fetcher.VisitorFactory;
 import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
-
 import cn.edu.hfut.dmic.webcollector.net.HttpRequester;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequesterImpl;
 import cn.edu.hfut.dmic.webcollector.net.Proxys;
+import cn.edu.hfut.dmic.webcollector.util.BerkeleyDBUtils;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-
+import com.sleepycat.je.Cursor;
+import com.sleepycat.je.CursorConfig;
+import com.sleepycat.je.Database;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import java.io.File;
@@ -41,12 +42,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class Crawler implements VisitorFactory{
-    
+public abstract class Crawler implements VisitorFactory {
+
     public static final Logger LOG = LoggerFactory.getLogger(Crawler.class);
-    
 
     protected int status;
+    protected int retry = 3;
     public final static int RUNNING = 1;
     public final static int STOPED = 2;
     protected boolean resumable = false;
@@ -65,15 +66,11 @@ public abstract class Crawler implements VisitorFactory{
         this.crawlPath = crawlPath;
     }
 
-    public Generator createGenerator() {
-        return new StandardGenerator(env);
-    }
-
     public void inject() throws Exception {
         Injector injector = new Injector(env);
         injector.inject(seeds);
     }
-    
+
     public void injectForcedSeeds() throws Exception {
         Injector injector = new Injector(env);
         injector.inject(forcedSeeds);
@@ -81,13 +78,12 @@ public abstract class Crawler implements VisitorFactory{
 
     public void start(int depth) throws Exception {
         File dir = new File(crawlPath);
-        boolean needInject=true;
-        
-        
-        if(resumable && dir.exists()){
-            needInject=false;
+        boolean needInject = true;
+
+        if (resumable && dir.exists()) {
+            needInject = false;
         }
-        if(resumable && !dir.exists()){
+        if (resumable && !dir.exists()) {
             dir.mkdirs();
         }
         if (!resumable) {
@@ -97,7 +93,7 @@ public abstract class Crawler implements VisitorFactory{
             }
             dir.mkdirs();
 
-            if (seeds.isEmpty()&&forcedSeeds.isEmpty()) {
+            if (seeds.isEmpty() && forcedSeeds.isEmpty()) {
                 LOG.info("error:Please add at least one seed");
                 return;
             }
@@ -106,12 +102,12 @@ public abstract class Crawler implements VisitorFactory{
         EnvironmentConfig environmentConfig = new EnvironmentConfig();
         environmentConfig.setAllowCreate(true);
         env = new Environment(dir, environmentConfig);
-        
-        if(needInject){
+
+        if (needInject) {
             inject();
         }
-        
-        if(!forcedSeeds.isEmpty()){
+
+        if (!forcedSeeds.isEmpty()) {
             injectForcedSeeds();
         }
 
@@ -121,13 +117,18 @@ public abstract class Crawler implements VisitorFactory{
                 break;
             }
             LOG.info("starting depth " + (i + 1));
-            Generator generator = new StandardGenerator(env);
+            Database crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+            Cursor crawldbCursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
+            Generator generator = new StandardGenerator(crawldbCursor);
             fetcher = new Fetcher();
+            fetcher.setRetry(retry);
             fetcher.setHttpRequester(httpRequester);
             fetcher.setDbUpdater(new DbUpdater(env));
             fetcher.setVisitorFactory(visitorFactory);
             fetcher.setThreads(threads);
             fetcher.fetchAll(generator);
+            crawldbCursor.close();
+            crawldbDatabase.close();
         }
         env.close();
     }
@@ -156,14 +157,14 @@ public abstract class Crawler implements VisitorFactory{
     public void addSeed(String seed) {
         seeds.add(seed);
     }
-    
+
     /**
-     * 添加一个种子url(如果断点爬取，种子会在每次启动爬虫时注入，
-     * 如果爬取历史中有相同url,则覆盖)
+     * 添加一个种子url(如果断点爬取，种子会在每次启动爬虫时注入， 如果爬取历史中有相同url,则覆盖)
+     *
      * @param seed
-     * @param update 
+     * @param update
      */
-    public void addForcedSeed(String seed){
+    public void addForcedSeed(String seed) {
         forcedSeeds.add(seed);
     }
 
@@ -182,8 +183,6 @@ public abstract class Crawler implements VisitorFactory{
     public void setForcedSeeds(ArrayList<String> forcedSeeds) {
         this.forcedSeeds = forcedSeeds;
     }
-    
-    
 
     public boolean isResumable() {
         return resumable;
@@ -200,13 +199,21 @@ public abstract class Crawler implements VisitorFactory{
     public void setThreads(int threads) {
         this.threads = threads;
     }
-    
+
     public Proxys getProxys() {
         return httpRequester.getProxys();
     }
 
     public void setProxys(Proxys proxys) {
         httpRequester.setProxys(proxys);
+    }
+
+    public int getRetry() {
+        return retry;
+    }
+
+    public void setRetry(int retry) {
+        this.retry = retry;
     }
 
 }

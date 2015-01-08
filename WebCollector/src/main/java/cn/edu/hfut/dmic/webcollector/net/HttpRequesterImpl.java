@@ -30,10 +30,7 @@ import java.net.URL;
  */
 public class HttpRequesterImpl implements HttpRequester {
 
-    
-
     protected Proxys proxys = null;
-
     protected String userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0";
     protected String cookie = null;
 
@@ -66,6 +63,8 @@ public class HttpRequesterImpl implements HttpRequester {
 
         con.setDoInput(true);
         con.setDoOutput(true);
+        con.setConnectTimeout(3000);
+        con.setReadTimeout(10000);
 
         configConnection(con);
 
@@ -98,8 +97,6 @@ public class HttpRequesterImpl implements HttpRequester {
         return response;
     }
 
-    
-
     public String getUserAgent() {
         return userAgent;
     }
@@ -123,9 +120,6 @@ public class HttpRequesterImpl implements HttpRequester {
     public void setProxys(Proxys proxys) {
         this.proxys = proxys;
     }
-    
-    
-    
 
     public static void main(String[] args) throws Exception {
         HttpRequesterImpl requester = new HttpRequesterImpl();
