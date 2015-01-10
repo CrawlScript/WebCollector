@@ -28,7 +28,9 @@ import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 用于更新爬取任务列表的类
@@ -36,6 +38,8 @@ import java.io.IOException;
  * @author hu
  */
 public class DbUpdater {
+    
+    public static final Logger LOG = LoggerFactory.getLogger(DbUpdater.class);
 
     Environment env;
     SegmentWriter segmentWriter;
@@ -89,7 +93,10 @@ public class DbUpdater {
     }
 
     public void merge() throws Exception {
+        LOG.info("start merge");
         Database crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+        /*合并fetch库*/
+        LOG.info("merge fetch database");
         Database fetchDatabase = env.openDatabase(null, "fetch", BerkeleyDBUtils.defaultDBConfig);
         Cursor fetchCursor = fetchDatabase.openCursor(null, null);
         DatabaseEntry key = new DatabaseEntry();
@@ -97,11 +104,10 @@ public class DbUpdater {
         while(fetchCursor.getNext(key, value, LockMode.DEFAULT)==OperationStatus.SUCCESS){
             crawldbDatabase.put(null, key, value);
         }
-        
-        
-        
         fetchCursor.close();
-        fetchDatabase.close();
+        fetchDatabase.close();        
+        /*合并link库*/
+        LOG.info("merge link database");
         Database linkDatabase = env.openDatabase(null, "link", BerkeleyDBUtils.defaultDBConfig);
         Cursor linkCursor=linkDatabase.openCursor(null,null);
         while(linkCursor.getNext(key, value,LockMode.DEFAULT)==OperationStatus.SUCCESS){
@@ -111,12 +117,15 @@ public class DbUpdater {
         }
         linkCursor.close();
         linkDatabase.close();
-        
+        LOG.info("end merge");
         crawldbDatabase.sync();
         crawldbDatabase.close();
 
+        
         env.removeDatabase(null, "fetch");
+        LOG.debug("remove fetch database");
         env.removeDatabase(null, "link");
+        LOG.debug("remove link database");
   
     }
 

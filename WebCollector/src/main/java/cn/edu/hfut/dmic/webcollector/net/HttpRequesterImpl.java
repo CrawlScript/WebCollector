@@ -23,13 +23,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author hu
  */
 public class HttpRequesterImpl implements HttpRequester {
-
+    public static final Logger LOG = LoggerFactory.getLogger(HttpRequesterImpl.class);
     protected Proxys proxys = null;
     protected String userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0";
     protected String cookie = null;
@@ -41,35 +43,65 @@ public class HttpRequesterImpl implements HttpRequester {
     @Override
     public HttpResponse getResponse(String url) throws Exception {
         HttpResponse response = new HttpResponse(url);
-        HttpURLConnection con;
+        HttpURLConnection con = null;
         URL _URL = new URL(url);
-        if (proxys == null) {
-            con = (HttpURLConnection) _URL.openConnection();
-        } else {
-            Proxy proxy = proxys.nextProxy();
-            if (proxy == null) {
+        int code=-1;
+        int maxRedirect=Math.max(0, Config.MAX_REDIRECT);
+        for (int redirect = 0; redirect <= maxRedirect; redirect++) {
+            if (proxys == null) {
                 con = (HttpURLConnection) _URL.openConnection();
             } else {
-                con = (HttpURLConnection) _URL.openConnection(proxy);
+                Proxy proxy = proxys.nextProxy();
+                if (proxy == null) {
+                    con = (HttpURLConnection) _URL.openConnection();
+                } else {
+                    con = (HttpURLConnection) _URL.openConnection(proxy);
+                }
             }
-        }
+            //con.setInstanceFollowRedirects(false);
+            if (userAgent != null) {
+                con.setRequestProperty("User-Agent", userAgent);
+            }
+            if (cookie != null) {
+                con.setRequestProperty("Cookie", cookie);
+            }
+            con.setInstanceFollowRedirects(false);
+            con.setDoInput(true);
+            con.setDoOutput(true);
+            con.setConnectTimeout(3000);
+            con.setReadTimeout(10000);
 
-        if (userAgent != null) {
-            con.setRequestProperty("User-Agent", userAgent);
-        }
-        if (cookie != null) {
-            con.setRequestProperty("Cookie", cookie);
-        }
+            configConnection(con);
+            code = con.getResponseCode();
+            /*只记录第一次返回的code*/
+            if(redirect==0){
+                response.setCode(code);
+            }
 
-        con.setDoInput(true);
-        con.setDoOutput(true);
-        con.setConnectTimeout(3000);
-        con.setReadTimeout(10000);
+            switch (code) {
+                case HttpURLConnection.HTTP_MOVED_PERM:
+                case HttpURLConnection.HTTP_MOVED_TEMP:  
+                    response.setRedirect(true);
+                    if(redirect==Config.MAX_REDIRECT){
+                        throw new Exception("redirect to much time");
+                    }
+                    String location = con.getHeaderField("Location");
+                    if(location==null){
+                        throw new Exception("redirect with no location");
+                    }
+                    String originUrl=_URL.toString();
+                    _URL = new URL(_URL, location);
+                    response.setRealUrl(_URL.toString());
+                    LOG.info("redirect from "+originUrl+" to "+_URL.toString());
+                    continue;
+                default:
+                    break;
+            }
 
-        configConnection(con);
-
+        }    
+        
         InputStream is;
-        response.setCode(con.getResponseCode());
+        
         is = con.getInputStream();
 
         byte[] buf = new byte[2048];
@@ -123,8 +155,9 @@ public class HttpRequesterImpl implements HttpRequester {
 
     public static void main(String[] args) throws Exception {
         HttpRequesterImpl requester = new HttpRequesterImpl();
-        HttpResponse response = requester.getResponse("http://www.baidu.com");
+        HttpResponse response = requester.getResponse("http://localhost/test/haha.php");
         System.out.println(response.getCode());
+        System.out.println(new String(response.getContent(), "utf-8"));
     }
 
 }

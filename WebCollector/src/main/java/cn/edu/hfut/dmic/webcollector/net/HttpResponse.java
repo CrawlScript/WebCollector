@@ -19,7 +19,7 @@
 package cn.edu.hfut.dmic.webcollector.net;
 
 
-import java.net.URL;
+
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +33,9 @@ public class HttpResponse{
     private int code;
     private Map<String,List<String>> headers=null;
     private byte[] content=null;
+    private boolean redirect=false;
+    
+    private String realUrl=null;
     
     public HttpResponse(String url){
         this.url=url;
@@ -96,12 +99,24 @@ public class HttpResponse{
         }
     }
 
-    
+    public boolean getRedirect() {
+        return redirect;
+    }
 
-    
-    
-    
-    
+    public void setRedirect(boolean redirect) {
+        this.redirect = redirect;
+    }
+
+    public String getRealUrl() {
+        if(realUrl==null){
+            return url;
+        }
+        return realUrl;
+    }
+
+    public void setRealUrl(String realUrl) {
+        this.realUrl = realUrl;
+    }
     
     
 }

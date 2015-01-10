@@ -24,7 +24,10 @@ package cn.edu.hfut.dmic.webcollector.util;
  */
 public class Config {
     public static int MAX_RECEIVE_SIZE = 1000 * 1000;
-    public static long requestMaxInterval=1000*60;
+    public static long requestMaxInterval=1000*60*2;
     public static int retry=3;
+    public static long WAIT_THREAD_END_TIME=1000*60;
+    /*最大连续重定向次数*/
+    public static int MAX_REDIRECT=2;
 
 }

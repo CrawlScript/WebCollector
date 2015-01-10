@@ -130,6 +130,11 @@ public abstract class Crawler implements VisitorFactory {
         }
         env.close();
     }
+    
+    public void stop(){
+        status=STOPED;
+        fetcher.stop();
+    }
 
     public VisitorFactory getVisitorFactory() {
         return visitorFactory;

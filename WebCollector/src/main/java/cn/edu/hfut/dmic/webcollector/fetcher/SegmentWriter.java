@@ -36,10 +36,11 @@ public class SegmentWriter {
     public int BUFFER_SIZE = 20;
     Database fetchDatabase = null;
     Database linkDatabase = null;
+    Database redirectDatabase=null;
 
     AtomicInteger count_fetch = new AtomicInteger(0);
     AtomicInteger count_link = new AtomicInteger(0);
-
+    AtomicInteger count_redirect = new AtomicInteger(0);
     Environment env;
 
     public SegmentWriter(Environment env) {
@@ -49,8 +50,12 @@ public class SegmentWriter {
     public void init() {
         fetchDatabase = env.openDatabase(null, "fetch", BerkeleyDBUtils.defaultDBConfig);
         linkDatabase = env.openDatabase(null, "link", BerkeleyDBUtils.defaultDBConfig);
+        redirectDatabase = env.openDatabase(null, "redirect", BerkeleyDBUtils.defaultDBConfig);
+        
+        
         count_fetch = new AtomicInteger(0);
         count_link = new AtomicInteger(0);
+        count_redirect=new AtomicInteger(0);
     }
 
     /**
@@ -64,6 +69,15 @@ public class SegmentWriter {
         fetchDatabase.put(null, key, value);
         if (count_fetch.incrementAndGet() % BUFFER_SIZE == 0) {
             fetchDatabase.sync();
+        }
+    }
+    
+    public void writeRedirect(String originUrl,String realUrl) throws Exception{
+        DatabaseEntry key=new DatabaseEntry(originUrl.getBytes("utf-8"));
+        DatabaseEntry value=new DatabaseEntry(realUrl.getBytes("utf-8"));
+        redirectDatabase.put(null, key, value);
+        if (count_redirect.incrementAndGet() % BUFFER_SIZE == 0) {
+            redirectDatabase.sync();
         }
     }
 
@@ -89,6 +103,8 @@ public class SegmentWriter {
         linkDatabase.sync();
         fetchDatabase.close();
         linkDatabase.close();
+        redirectDatabase.sync();
+        redirectDatabase.close();
 
     }
 }
