@@ -289,11 +289,8 @@ public class Fetcher {
                         }
 
                         try {
-                            /*写入fetch信息*/
-                            long fetchStart = System.currentTimeMillis();
-                            dbUpdater.getSegmentWriter().wrtieFetch(crawlDatum);
-                            long fetchEnd = System.currentTimeMillis();
-                            LOG.debug("writing fetch elapse " + (fetchEnd - fetchStart));
+                            /*写入fetch信息*/                        
+                            dbUpdater.getSegmentWriter().wrtieFetch(crawlDatum);                            
                             if (response == null) {
                                 continue;
                             }
@@ -313,17 +310,15 @@ public class Fetcher {
                                 try {
                                     /*用户自定义visitor处理页面,并获取链接*/
                                     nextLinks = visitor.visitAndGetNextLinks(page);
-
                                 } catch (Exception ex) {
                                     LOG.info("Exception", ex);
                                 }
 
                                 /*写入解析出的链接*/
                                 if (nextLinks != null && !nextLinks.isEmpty()) {
-                                    long linkStart = System.currentTimeMillis();
+                                    
                                     dbUpdater.getSegmentWriter().wrtieLinks(nextLinks);
-                                    long linkEnd = System.currentTimeMillis();
-                                    LOG.debug("writing link elapse " + (linkEnd - linkStart));
+                                   
                                 }
                             }
 
