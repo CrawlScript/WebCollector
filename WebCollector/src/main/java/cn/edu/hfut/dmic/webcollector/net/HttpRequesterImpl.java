@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
+import java.util.zip.GZIPInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author hu
  */
 public class HttpRequesterImpl implements HttpRequester {
+
     public static final Logger LOG = LoggerFactory.getLogger(HttpRequesterImpl.class);
     protected Proxys proxys = null;
     protected String userAgent = "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0";
@@ -45,8 +47,8 @@ public class HttpRequesterImpl implements HttpRequester {
         HttpResponse response = new HttpResponse(url);
         HttpURLConnection con = null;
         URL _URL = new URL(url);
-        int code=-1;
-        int maxRedirect=Math.max(0, Config.MAX_REDIRECT);
+        int code = -1;
+        int maxRedirect = Math.max(0, Config.MAX_REDIRECT);
         for (int redirect = 0; redirect <= maxRedirect; redirect++) {
             if (proxys == null) {
                 con = (HttpURLConnection) _URL.openConnection();
@@ -74,35 +76,44 @@ public class HttpRequesterImpl implements HttpRequester {
             configConnection(con);
             code = con.getResponseCode();
             /*只记录第一次返回的code*/
-            if(redirect==0){
+            if (redirect == 0) {
                 response.setCode(code);
             }
 
+            boolean needBreak = false;
             switch (code) {
                 case HttpURLConnection.HTTP_MOVED_PERM:
-                case HttpURLConnection.HTTP_MOVED_TEMP:  
+                case HttpURLConnection.HTTP_MOVED_TEMP:
                     response.setRedirect(true);
-                    if(redirect==Config.MAX_REDIRECT){
+                    if (redirect == Config.MAX_REDIRECT) {
                         throw new Exception("redirect to much time");
                     }
                     String location = con.getHeaderField("Location");
-                    if(location==null){
+                    if (location == null) {
                         throw new Exception("redirect with no location");
                     }
-                    String originUrl=_URL.toString();
+                    String originUrl = _URL.toString();
                     _URL = new URL(_URL, location);
                     response.setRealUrl(_URL.toString());
-                    LOG.info("redirect from "+originUrl+" to "+_URL.toString());
+                    LOG.info("redirect from " + originUrl + " to " + _URL.toString());
                     continue;
                 default:
+                    needBreak = true;
                     break;
             }
+            if (needBreak) {
+                break;
+            }
 
-        }    
-        
+        }
+
         InputStream is;
-        
+
         is = con.getInputStream();
+        String contentEncoding = con.getContentEncoding();
+        if (contentEncoding != null && contentEncoding.equals("gzip")) {
+            is = new GZIPInputStream(is);
+        }
 
         byte[] buf = new byte[2048];
         int read;
