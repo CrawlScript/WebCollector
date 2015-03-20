@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Webcollector : A java crawler for information collection.">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Webcollector</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/CrawlScript/WebCollector">View on GitHub</a>
+
+          <h1 id="project_title">Webcollector</h1>
+          <h2 id="project_tagline">A java crawler for information collection.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/CrawlScript/WebCollector/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/CrawlScript/WebCollector/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="webcollector" class="anchor" href="#webcollector" aria-hidden="true"><span class="octicon octicon-link"></span></a>WebCollector</h1>
+
+<h3>
+<a id="爬虫简介" class="anchor" href="#%E7%88%AC%E8%99%AB%E7%AE%80%E4%BB%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>爬虫简介</h3>
+
+<p>WebCollector是一个无须配置、便于二次开发的JAVA爬虫框架（内核），它提供精简的的API，只需少量代码即可实现一个功能强大的爬虫。</p>
+
+<h3>
+<a id="爬虫内核" class="anchor" href="#%E7%88%AC%E8%99%AB%E5%86%85%E6%A0%B8" aria-hidden="true"><span class="octicon octicon-link"></span></a>爬虫内核：</h3>
+
+<p>WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发者进行灵活的二次开发。内核具有很强的扩展性，用户可以在内核基础上开发自己想要的爬虫。源码中集成了Jsoup，可进行精准的网页解析。</p>
+
+<h3>
+<a id="1x" class="anchor" href="#1x" aria-hidden="true"><span class="octicon octicon-link"></span></a>1.x：</h3>
+
+<p>WebCollector 1.x版本现已转移到<a href="http://git.oschina.net/webcollector/WebCollector-1.x">http://git.oschina.net/webcollector/WebCollector-1.x</a>维护，建议使用2.x版本。</p>
+
+<h3>
+<a id="2x" class="anchor" href="#2x" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.x：</h3>
+
+<p>WebCollector 2.x版本特性：</p>
+
+<ul>
+<li>1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX</li>
+<li>2）内置Berkeley DB管理URL，可以处理更大量级的网页</li>
+<li>3）集成selenium，可以对javascript生成信息进行抽取</li>
+<li>4）直接支持多代理随机切换</li>
+<li>5）集成spring jdbc和mysql connector，方便数据持久化</li>
+<li>6）集成json解析器</li>
+<li>7）使用slf4j作为日志门面</li>
+<li>8）修改http请求接口，用户自定义http请求更加方便</li>
+</ul>
+
+<p>WebCollector 2.x教程：</p>
+
+<ul>
+<li><a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java">WebCollector 2.x tutorial（中文教程）</a></li>
+<li><a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java">WebCollector爬取JS生成数据</a></li>
+<li><a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java">WebCollector爬取搜狗搜索（分页）</a></li>
+<li><a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java">WebCollector爬取JSON数据</a></li>
+<li>
+<a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java">使用SoupLang脚本同时管理多个页面爬取</a>     <a href="https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/resources/example/DemoRule.xml">SoupLang脚本</a>
+</li>
+<li><a href="http://blog.csdn.net/ajaxhu/article/details/42346471">用WebCollector 2.x爬取新浪微博（无需手动获取cookie)</a></li>
+</ul>
+
+<p>WebCollector 2.x教程(镜像)：</p>
+
+<ul>
+<li><a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java">WebCollector 2.x tutorial（中文教程）</a></li>
+<li><a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java">WebCollector爬取JS生成数据</a></li>
+<li><a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java">WebCollector爬取搜狗搜索（分页）</a></li>
+<li><a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java">WebCollector爬取JSON数据</a></li>
+<li>
+<a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java">使用SoupLang脚本同时管理多个页面爬取</a>     <a href="http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/resources/example/DemoRule.xml">SoupLang脚本</a>
+</li>
+<li><a href="http://blog.csdn.net/ajaxhu/article/details/42346471">用WebCollector 2.x爬取新浪微博（无需手动获取cookie)</a></li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Webcollector maintained by <a href="https://github.com/CrawlScript">CrawlScript</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
