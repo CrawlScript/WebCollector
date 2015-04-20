@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * 如果autoParse设置为true，遍历器会自动解析页面中符合正则的链接，加入后续爬取任务，否则不自动解析链接。
  * 注意，爬虫会保证URL的唯一性，也就是会自动进行URL去重，所以用户在编写爬虫时完全不必考虑生成重复URL的问题。
  * 断点爬取中，爬虫仍然会保证爬取任务的唯一性。
- * 
+ *
  * @author hu
  */
 public abstract class BreadthCrawler extends DeepCrawler {
@@ -70,9 +70,11 @@ public abstract class BreadthCrawler extends DeepCrawler {
         Links nextLinks = new Links();
         if (autoParse) {
             String conteType = page.getResponse().getContentType();
-            Document doc = page.getDoc();
-            if (conteType != null && doc != null && conteType.contains("text/html")) {
-                nextLinks.addAllFromDocument(page.getDoc(), regexRule);
+            if (conteType != null && conteType.contains("text/html")) {
+                Document doc = page.getDoc();
+                if (doc != null) {
+                    nextLinks.addAllFromDocument(page.getDoc(), regexRule);
+                }
             }
         }
         try {
@@ -85,6 +87,7 @@ public abstract class BreadthCrawler extends DeepCrawler {
 
     /**
      * 用户自定义对每个页面的操作，一般将抽取、持久化等操作写在visit方法中。
+     *
      * @param page
      * @param nextLinks 需要后续爬取的URL。如果autoParse为true，爬虫会自动抽取符合正则的链接并加入nextLinks。
      */
@@ -92,6 +95,7 @@ public abstract class BreadthCrawler extends DeepCrawler {
 
     /**
      * 添加URL正则约束
+     *
      * @param urlRegex
      */
     public void addRegex(String urlRegex) {
@@ -99,7 +103,7 @@ public abstract class BreadthCrawler extends DeepCrawler {
     }
 
     /**
-     * 
+     *
      * @return 返回是否自动抽取符合正则的链接并加入后续任务
      */
     public boolean isAutoParse() {
@@ -108,6 +112,7 @@ public abstract class BreadthCrawler extends DeepCrawler {
 
     /**
      * 设置是否自动抽取符合正则的链接并加入后续任务
+     *
      * @param autoParse
      */
     public void setAutoParse(boolean autoParse) {
@@ -129,8 +134,5 @@ public abstract class BreadthCrawler extends DeepCrawler {
     public void setRegexRule(RegexRule regexRule) {
         this.regexRule = regexRule;
     }
-    
-  
-  
 
 }
