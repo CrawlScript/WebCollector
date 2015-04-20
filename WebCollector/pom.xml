@@ -174,7 +174,7 @@
                                     </fileset>
                                 </copy>
                                 
-                                <zip basedir="${project.build.directory}/bin" destfile="../webcollector_example-${project.version}-bin.zip" />
+                                <zip basedir="${project.build.directory}/bin" destfile="../webcollector-${project.version}-bin.zip" />
                             </tasks>
                         </configuration>
                         <goals>
