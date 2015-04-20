@@ -22,19 +22,21 @@ WebCollector 2.x版本特性：
 * 8）修改http请求接口，用户自定义http请求更加方便
 
 WebCollector 2.x教程：
-* [WebCollector 2.x tutorial（中文教程）](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java)
-* [WebCollector爬取JS生成数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
-* [WebCollector爬取搜狗搜索（分页）](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
-* [WebCollector爬取JSON数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
-* [使用SoupLang脚本同时管理多个页面爬取](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java)     [SoupLang脚本](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/resources/example/DemoRule.xml)
+* [WebCollector 2.x tutorial 1 (DeepCrawler中文教程)](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java)
+* [WebCollector 2.x tutorial 2 (BreadthCrawler中文教程)](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler2.java)
+* [WebCollector爬取JS生成数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
+* [WebCollector爬取搜狗搜索（分页）](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
+* [WebCollector爬取JSON数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
+* [使用SoupLang脚本同时管理多个页面爬取](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java)     [SoupLang脚本](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/resources/example/DemoRule1.xml)
 * [用WebCollector 2.x爬取新浪微博（无需手动获取cookie)](http://blog.csdn.net/ajaxhu/article/details/42346471)
 
 WebCollector 2.x教程(镜像)：
-* [WebCollector 2.x tutorial（中文教程）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java)
-* [WebCollector爬取JS生成数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
-* [WebCollector爬取搜狗搜索（分页）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
-* [WebCollector爬取JSON数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
-* [使用SoupLang脚本同时管理多个页面爬取](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java)     [SoupLang脚本](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollector/src/main/resources/example/DemoRule.xml)
+* [WebCollector 2.x tutorial 1 (DeepCrawler中文教程)](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java)
+* [WebCollector 2.x tutorial 2 (BreadthCrawler中文教程)](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler2.java)
+* [WebCollector爬取JS生成数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
+* [WebCollector爬取搜狗搜索（分页）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
+* [WebCollector爬取JSON数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJsonCrawler.java)
+* [使用SoupLang脚本同时管理多个页面爬取](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSoupLangCrawler.java)     [SoupLang脚本](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/resources/example/DemoRule1.xml)
 * [用WebCollector 2.x爬取新浪微博（无需手动获取cookie)](http://blog.csdn.net/ajaxhu/article/details/42346471)
 
 

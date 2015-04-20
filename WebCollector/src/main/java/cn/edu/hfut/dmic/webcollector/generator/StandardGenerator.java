@@ -37,8 +37,11 @@ public class StandardGenerator implements Generator {
     Cursor cursor = null;
     Database crawldbDatabase=null;
     Environment env;
+    protected int totalGenerate=0;
+    protected Integer topN=null;
     public StandardGenerator(Environment env) {
         this.env=env;
+        totalGenerate=0;
     }
     
     public void close(){
@@ -51,6 +54,11 @@ public class StandardGenerator implements Generator {
 
     @Override
     public CrawlDatum next() {
+        if(topN!=null){
+            if(totalGenerate>=topN){
+                return null;
+            }
+        }
         if(cursor==null){
             crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
             cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
@@ -66,6 +74,7 @@ public class StandardGenerator implements Generator {
                         if (datum.getRetry() >= 10) {
                             continue;
                         }
+                        totalGenerate++;
                         return datum;
                     }
                 } catch (UnsupportedEncodingException ex) {
@@ -76,5 +85,21 @@ public class StandardGenerator implements Generator {
             }
         }
     }
+
+    public int getTotalGenerate() {
+        return totalGenerate;
+    }
+
+    public Integer getTopN() {
+        return topN;
+    }
+
+    public void setTopN(Integer topN) {
+        this.topN = topN;
+    }
+
+  
+    
+    
 
 }

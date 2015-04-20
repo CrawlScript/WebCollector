@@ -20,11 +20,9 @@ package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import java.io.UnsupportedEncodingException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,19 +119,9 @@ public class Page{
         
     }
     
-    public HtmlUnitDriver getDriver(){
-        HtmlUnitDriver driver=new HtmlUnitDriver();
-        driver.setJavascriptEnabled(true);
-        driver.get(url);
-        return driver;
-    }
+
     
-    public HtmlUnitDriver getDriver(BrowserVersion browserVersion){
-        HtmlUnitDriver driver=new HtmlUnitDriver(browserVersion);
-        driver.setJavascriptEnabled(true);
-        driver.get(url);
-        return driver;
-    }
+    
 
     /**
      * 设置网页解析后的DOM树(Jsoup的Document对象)

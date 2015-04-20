@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <name>WebCollector</name>
-    
-    <groupId>cn.edu.hfut.dmic.webcollector</groupId>
-    <artifactId>WebCollector</artifactId>
+    <groupId>cn.edu.hfut.dmic.webcollector.example</groupId>
+    <artifactId>WebCollectorExample</artifactId>
     <version>2.05</version>
-    <description>A java crawler for infomation collection</description>
-    <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-    </properties>
     
-    <licenses>
+     <licenses>
         <license>
             <name>GPL2.0</name>
             <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
@@ -28,14 +19,18 @@
         <connection>scm:git:https://github.com/CrawlScript/WebCollector.git</connection>
     </scm>
     
-    
-    
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+    </properties>
     
     <build>
 
@@ -187,56 +182,34 @@
         </plugins>
        
     </build>
-
+    
     <dependencies>
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.7.3</version>
+            <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+            <artifactId>WebCollector</artifactId>
+            <version>2.05</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.juniversalchardet</groupId>
-            <artifactId>juniversalchardet</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20140107</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.sleepycat</groupId>
-            <artifactId>je</artifactId>
-            <version>5.0.73</version>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.44.0</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.9</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.31</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.9</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.0.5.RELEASE</version>
         </dependency>
-        
-     
-        
-  
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
     
     <developers>
@@ -250,6 +223,4 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
-    
-   
 </project>

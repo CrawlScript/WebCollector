@@ -20,17 +20,12 @@ package cn.edu.hfut.dmic.webcollector.crawler;
 import cn.edu.hfut.dmic.webcollector.fetcher.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.fetcher.VisitorFactory;
-import cn.edu.hfut.dmic.webcollector.generator.Generator;
 import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequester;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequesterImpl;
 import cn.edu.hfut.dmic.webcollector.net.Proxys;
-import cn.edu.hfut.dmic.webcollector.util.BerkeleyDBUtils;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import com.sleepycat.je.Cursor;
-import com.sleepycat.je.CursorConfig;
-import com.sleepycat.je.Database;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import java.io.File;
@@ -52,6 +47,7 @@ public abstract class Crawler implements VisitorFactory {
     public final static int STOPED = 2;
     protected boolean resumable = false;
     protected int threads = 50;
+    protected Integer topN=null;
     protected ArrayList<String> seeds = new ArrayList<String>();
     protected ArrayList<String> forcedSeeds = new ArrayList<String>();
     protected Fetcher fetcher;
@@ -117,8 +113,10 @@ public abstract class Crawler implements VisitorFactory {
                 break;
             }
             LOG.info("starting depth " + (i + 1));
+            long startTime=System.currentTimeMillis();
 
             StandardGenerator generator = new StandardGenerator(env);
+            generator.setTopN(topN);
             fetcher = new Fetcher();
             fetcher.setRetry(retry);
             fetcher.setHttpRequester(httpRequester);
@@ -126,6 +124,14 @@ public abstract class Crawler implements VisitorFactory {
             fetcher.setVisitorFactory(visitorFactory);
             fetcher.setThreads(threads);
             fetcher.fetchAll(generator);
+            long endTime=System.currentTimeMillis();
+            long costTime=(endTime-startTime)/1000;
+            int totalGenerate=generator.getTotalGenerate();
+           
+            LOG.info("depth " + (i + 1) +" finish: \n\tTOTAL urls:\t"+totalGenerate+"\n\tTOTAL time:\t"+costTime+" seconds");
+             if(totalGenerate==0){
+                break;
+            }
 
         }
         env.close();
@@ -218,5 +224,15 @@ public abstract class Crawler implements VisitorFactory {
     public void setRetry(int retry) {
         this.retry = retry;
     }
+
+    public Integer getTopN() {
+        return topN;
+    }
+
+    public void setTopN(Integer topN) {
+        this.topN = topN;
+    }
+    
+    
 
 }

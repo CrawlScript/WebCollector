@@ -173,6 +173,7 @@ public class Fetcher {
          */
         public int size;
 
+
         /**
          *
          * @param queue
@@ -229,6 +230,10 @@ public class Fetcher {
 
         }
 
+       
+
+       
+
     }
 
     private class FetcherThread extends Thread {
@@ -272,9 +277,9 @@ public class Fetcher {
                                 response = httpRequester.getResponse(url);
                                 break;
                             } catch (Exception ex) {
-                                String logMessage="fetch of "+url+" failed once with "+ex.getMessage();
-                                if(retryCount<retry){
-                                    logMessage+="   retry";
+                                String logMessage = "fetch of " + url + " failed once with " + ex.getMessage();
+                                if (retryCount < retry) {
+                                    logMessage += "   retry";
                                 }
                                 LOG.info(logMessage);
                             }
@@ -289,13 +294,13 @@ public class Fetcher {
                         }
 
                         try {
-                            /*写入fetch信息*/                        
-                            dbUpdater.getSegmentWriter().wrtieFetch(crawlDatum);                            
+                            /*写入fetch信息*/
+                            dbUpdater.getSegmentWriter().wrtieFetch(crawlDatum);
                             if (response == null) {
                                 continue;
                             }
-                            if(response.getRedirect()){
-                                if(response.getRealUrl()!=null){
+                            if (response.getRedirect()) {
+                                if (response.getRealUrl() != null) {
                                     dbUpdater.getSegmentWriter().writeRedirect(response.getUrl(), response.getRealUrl());
                                 }
                             }
@@ -316,9 +321,9 @@ public class Fetcher {
 
                                 /*写入解析出的链接*/
                                 if (nextLinks != null && !nextLinks.isEmpty()) {
-                                    
+
                                     dbUpdater.getSegmentWriter().wrtieLinks(nextLinks);
-                                   
+
                                 }
                             }
 
@@ -408,26 +413,27 @@ public class Fetcher {
             }
 
         } while (activeThreads.get() > 0 && running);
-        running=false;
-        long waitThreadEndStartTime=System.currentTimeMillis();
-        if(activeThreads.get()>0){
+        running = false;
+        long waitThreadEndStartTime = System.currentTimeMillis();
+        if (activeThreads.get() > 0) {
             LOG.info("wait for activeThreads to end");
         }
         /*等待存活线程结束*/
-        while (activeThreads.get()>0) {
-            LOG.info("-activeThreads="+activeThreads.get());
-            try{
+        while (activeThreads.get() > 0) {
+            LOG.info("-activeThreads=" + activeThreads.get());
+            try {
                 Thread.sleep(500);
-            }catch(Exception ex){}
-            if(System.currentTimeMillis()-waitThreadEndStartTime>Config.WAIT_THREAD_END_TIME){
+            } catch (Exception ex) {
+            }
+            if (System.currentTimeMillis() - waitThreadEndStartTime > Config.WAIT_THREAD_END_TIME) {
                 LOG.info("kill threads");
-                for(int i=0;i<fetcherThreads.length;i++){
-                    if(fetcherThreads[i].isAlive()){
-                        try{
+                for (int i = 0; i < fetcherThreads.length; i++) {
+                    if (fetcherThreads[i].isAlive()) {
+                        try {
                             fetcherThreads[i].stop();
-                            LOG.info("kill thread "+i);
-                        }catch(Exception ex){
-                            LOG.info("Exception",ex);
+                            LOG.info("kill thread " + i);
+                        } catch (Exception ex) {
+                            LOG.info("Exception", ex);
                         }
                     }
                 }
@@ -545,5 +551,7 @@ public class Fetcher {
     public void setVisitorFactory(VisitorFactory visitorFactory) {
         this.visitorFactory = visitorFactory;
     }
+    
+
 
 }
