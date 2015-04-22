@@ -16,7 +16,7 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 + __webcollector-version-bin.zip__ contains core jars.
 
-+ __webcollector_example-2.05-bin.zip__ contains core jars with examples.
++ __webcollector_example-version-bin.zip__ contains core jars with examples.
 
 ##Demo
 Lets crawl some news from yahoo.This demo print the title and content extracted from news.
