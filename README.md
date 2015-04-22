@@ -1,5 +1,5 @@
 #WebCollector
-WebCollector is an open source web crawler framework for Java.It provides
+WebCollector is an open source web crawler framework based on Java.It provides
   some simple interfaces for crawling the Web,you can setup a
   multi-threaded web crawler in less than 5 minutes.
 
@@ -19,7 +19,9 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 + __webcollector_example-version-bin.zip__ contains core jars with examples.
 
 ##Demo
-Lets crawl some news from yahoo.This demo print the title and content extracted from news.
+Lets crawl some news from yahoo.This demo prints out the titles and contents extracted from news of yahoo.
+
+[YahooCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/README.md):
 
 
     import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
@@ -72,10 +74,9 @@ Lets crawl some news from yahoo.This demo print the title and content extracted 
                 System.out.println("title:\n" + title);
                 System.out.println("content:\n" + content);
 
-                /*if you want to add urls to crawl,add them to nextLink*/
-                /*WebCollector filters links that have been fetched before*/
-                /*if autoParse is true and the link you add to nextLinks do not matches the regex rules,
-                   the link will also been filtered.*/
+                /*If you want to add urls to crawl,add them to nextLink*/
+                /*WebCollector automatically filters links that have been fetched before*/
+                /*If autoParse is true and the link you add to nextLinks does not match the regex rules,the link will also been filtered.*/
                 // nextLinks.add("http://xxxxxx.com");
             }
         }
