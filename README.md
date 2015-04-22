@@ -96,4 +96,5 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
 
 
 ###Other Documentation
-[中文文档](https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md)
+
++ [中文文档](https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md)
