@@ -21,7 +21,7 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 ##Demo
 Lets crawl some news from yahoo.This demo prints out the titles and contents extracted from news of yahoo.
 
-[YahooCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/README.md):
+[YahooCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/YahooCrawler.java):
 
 
     import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
@@ -91,3 +91,9 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
         }
 
     }
+
+
+
+
+###Other Documentation
+[中文文档](https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md)
