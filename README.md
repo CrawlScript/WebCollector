@@ -74,7 +74,7 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
                 System.out.println("title:\n" + title);
                 System.out.println("content:\n" + content);
 
-                /*If you want to add urls to crawl,add them to nextLink*/
+                /*If you want to add urls to crawl,add them to nextLinks*/
                 /*WebCollector automatically filters links that have been fetched before*/
                 /*If autoParse is true and the link you add to nextLinks does not match the regex rules,the link will also been filtered.*/
                 // nextLinks.add("http://xxxxxx.com");
