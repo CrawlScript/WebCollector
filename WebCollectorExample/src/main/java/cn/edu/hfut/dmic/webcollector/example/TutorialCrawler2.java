@@ -125,22 +125,19 @@ public class TutorialCrawler2 extends BreadthCrawler {
         crawler.addSeed("http://www.zhihu.com/");
         crawler.setResumable(false);
 
-        /*2.x版本直接支持多代理随机切换*/
-        Proxys proxys = new Proxys();
         /*
-         可用代理可以到 http://www.brieftools.info/proxy/ 获取
-         添加代理的方式:
-         1)ip和端口
-         proxys.add("123.123.123.123",8080);
-         2)文件
-         proxys.addAllFromFile(new File("xxx.txt"));
-         文件内容类似:
-         123.123.123.123:90
-         234.234.324.234:8080
-         一个代理占一行
-         */
+        //requester是负责发送http请求的插件，可以通过requester中的方法来指定http/socks代理
+        HttpRequesterImpl requester=(HttpRequesterImpl) crawler.getHttpRequester();    
+       
+        //单代理
+        requester.setProxy("127.0.0.1", 1080,Proxy.Type.SOCKS);
+        
+        //多代理随机
+        RandomProxyGenerator proxyGenerator=new RandomProxyGenerator();
+        proxyGenerator.addProxy("127.0.0.1",8080,Proxy.Type.SOCKS);
+        requester.setProxyGenerator(proxyGenerator);
+        */
 
-        crawler.setProxys(proxys);
 
         /*设置是否断点爬取*/
         crawler.setResumable(false);

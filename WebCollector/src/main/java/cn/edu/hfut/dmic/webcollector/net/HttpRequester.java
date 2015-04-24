@@ -24,6 +24,4 @@ package cn.edu.hfut.dmic.webcollector.net;
  */
 public interface HttpRequester {
     public HttpResponse getResponse(String url) throws Exception;
-    public Proxys getProxys();
-    public void setProxys(Proxys proxys);
 }

@@ -135,4 +135,5 @@ public abstract class BreadthCrawler extends DeepCrawler {
         this.regexRule = regexRule;
     }
 
+    
 }

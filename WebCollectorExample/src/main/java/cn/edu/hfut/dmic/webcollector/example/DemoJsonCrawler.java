@@ -22,6 +22,7 @@ import cn.edu.hfut.dmic.webcollector.crawler.DeepCrawler;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequesterImpl;
+import cn.edu.hfut.dmic.webcollector.net.RequestConfig;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 
@@ -44,24 +45,19 @@ public class DemoJsonCrawler extends DeepCrawler{
 
     public DemoJsonCrawler(String crawlPath) {
         super(crawlPath);
-        HttpRequesterImpl myRequester=new HttpRequesterImpl(){
-            /*Override这个方法，可以用来修改http请求(HttpURLConnection)*/
-            @Override
-            public void configConnection(HttpURLConnection con) {
-                
-                try {
-                    con.setRequestMethod("POST");
-                } catch (ProtocolException ex) {
-                   ex.printStackTrace();
-                }
-                
-                /*添加http头*/
-                con.addRequestProperty("xxx", "xxxxxxx");
-            }
-            
-        };
-        myRequester.setCookie("你的cookie");
-        this.setHttpRequester(myRequester);
+        HttpRequesterImpl requester=(HttpRequesterImpl) this.getHttpRequester();
+        
+        requester.setMethod("POST");
+        requester.setCookie("你的cookie");
+        requester.addHeader("xxx", "xxxxxxxx");  
+
+        /*
+        //上面的操作也可以像下面这样做，效果是等价的
+        RequestConfig requestConfig=requester.getRequestConfig();
+        requestConfig.setMethod("POST");
+        requestConfig.setCookie("你的cookie");
+        requestConfig.addHeader("xxx", "xxxxxxxx");
+        */
         
     }
 

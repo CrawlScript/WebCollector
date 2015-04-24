@@ -57,22 +57,7 @@ public class Proxys extends ArrayList<Proxy> {
 
     }
     
-    public Proxy nextProxy(){
-        return getRandomProxy();
-    }
-
-    public Proxy getRandomProxy() {
-
-        if (this.isEmpty()) {
-            return null;
-        }
-        try {
-            int r = random.nextInt(this.size());
-            return this.get(r);
-        } catch (Exception ex) {
-            return null;
-        }
-    }
+   
 
     public void addAllFromFile(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);

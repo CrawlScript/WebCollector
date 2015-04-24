@@ -49,12 +49,12 @@ public class Fetcher {
 
     public VisitorFactory visitorFactory = null;
 
-    private int retry = 3;
     private AtomicInteger activeThreads;
     private AtomicInteger spinWaiting;
     private AtomicLong lastRequestStart;
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
+    private int retry=3;
 
     /**
      *
@@ -173,7 +173,6 @@ public class Fetcher {
          */
         public int size;
 
-
         /**
          *
          * @param queue
@@ -230,10 +229,6 @@ public class Fetcher {
 
         }
 
-       
-
-       
-
     }
 
     private class FetcherThread extends Thread {
@@ -268,28 +263,47 @@ public class Fetcher {
                         String url = item.datum.getUrl();
 
                         HttpResponse response = null;
+                        CrawlDatum crawlDatum = null;
+
                         int retryCount = 0;
+
+                        Exception lastException = null;
                         for (; retryCount <= retry; retryCount++) {
                             if (retryCount > 0) {
-                                LOG.info("retry " + retryCount + "th " + url);
+                                String suffix = "th ";
+                                switch (retryCount) {
+                                    case 1:
+                                        suffix = "st ";
+                                        break;
+                                    case 2:
+                                        suffix = "nd ";
+                                        break;
+                                    case 3:
+                                        suffix = "rd ";
+                                        break;
+                                    default:
+                                        suffix = "th ";
+                                }
+                                LOG.info("retry " + retryCount + suffix + url);
                             }
                             try {
                                 response = httpRequester.getResponse(url);
                                 break;
                             } catch (Exception ex) {
-                                String logMessage = "fetch of " + url + " failed once with " + ex.getMessage();
+                                lastException = ex;
+                                String logMessage = "fetch " + url + " failed," + ex.toString();
                                 if (retryCount < retry) {
                                     logMessage += "   retry";
                                 }
                                 LOG.info(logMessage);
                             }
                         }
-                        CrawlDatum crawlDatum = null;
+
                         if (response != null) {
                             LOG.info("fetch " + url);
                             crawlDatum = new CrawlDatum(url, CrawlDatum.STATUS_DB_FETCHED, item.datum.getRetry() + retryCount);
                         } else {
-                            LOG.info("failed " + url);
+                            LOG.info("failed " + url + " " + lastException.toString());
                             crawlDatum = new CrawlDatum(url, CrawlDatum.STATUS_DB_UNFETCHED, item.datum.getRetry() + retryCount);
                         }
 
@@ -301,7 +315,7 @@ public class Fetcher {
                             }
                             if (response.getRedirect()) {
                                 if (response.getRealUrl() != null) {
-                                    dbUpdater.getSegmentWriter().writeRedirect(response.getUrl(), response.getRealUrl());
+                                    dbUpdater.getSegmentWriter().writeRedirect(response.getUrl().toString(), response.getRealUrl().toString());
                                 }
                             }
                             String contentType = response.getContentType();
@@ -483,24 +497,6 @@ public class Fetcher {
     }
 
     /**
-     * 返回http请求失败后重试的次数
-     *
-     * @return http请求失败后重试的次数
-     */
-    public int getRetry() {
-        return retry;
-    }
-
-    /**
-     * 设置http请求失败后重试的次数
-     *
-     * @param retry http请求失败后重试的次数
-     */
-    public void setRetry(int retry) {
-        this.retry = retry;
-    }
-
-    /**
      * 返回是否存储网页/文件的内容
      *
      * @return 是否存储网页/文件的内容
@@ -551,7 +547,13 @@ public class Fetcher {
     public void setVisitorFactory(VisitorFactory visitorFactory) {
         this.visitorFactory = visitorFactory;
     }
-    
 
+    public int getRetry() {
+        return retry;
+    }
+
+    public void setRetry(int retry) {
+        this.retry = retry;
+    }
 
 }

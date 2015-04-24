@@ -24,7 +24,7 @@ import cn.edu.hfut.dmic.webcollector.generator.Injector;
 import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequester;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequesterImpl;
-import cn.edu.hfut.dmic.webcollector.net.Proxys;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
@@ -42,7 +42,6 @@ public abstract class Crawler implements VisitorFactory {
     public static final Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
     protected int status;
-    protected int retry = 3;
     public final static int RUNNING = 1;
     public final static int STOPED = 2;
     protected boolean resumable = false;
@@ -51,6 +50,7 @@ public abstract class Crawler implements VisitorFactory {
     protected ArrayList<String> seeds = new ArrayList<String>();
     protected ArrayList<String> forcedSeeds = new ArrayList<String>();
     protected Fetcher fetcher;
+    int retry=Config.retry;
 
     protected VisitorFactory visitorFactory = this;
     protected HttpRequester httpRequester = new HttpRequesterImpl();
@@ -118,10 +118,10 @@ public abstract class Crawler implements VisitorFactory {
             StandardGenerator generator = new StandardGenerator(env);
             generator.setTopN(topN);
             fetcher = new Fetcher();
-            fetcher.setRetry(retry);
             fetcher.setHttpRequester(httpRequester);
             fetcher.setDbUpdater(new DbUpdater(env));
             fetcher.setVisitorFactory(visitorFactory);
+            fetcher.setRetry(retry);
             fetcher.setThreads(threads);
             fetcher.fetchAll(generator);
             long endTime=System.currentTimeMillis();
@@ -209,12 +209,14 @@ public abstract class Crawler implements VisitorFactory {
         this.threads = threads;
     }
 
-    public Proxys getProxys() {
-        return httpRequester.getProxys();
+    
+
+    public Integer getTopN() {
+        return topN;
     }
 
-    public void setProxys(Proxys proxys) {
-        httpRequester.setProxys(proxys);
+    public void setTopN(Integer topN) {
+        this.topN = topN;
     }
 
     public int getRetry() {
@@ -224,15 +226,7 @@ public abstract class Crawler implements VisitorFactory {
     public void setRetry(int retry) {
         this.retry = retry;
     }
-
-    public Integer getTopN() {
-        return topN;
-    }
-
-    public void setTopN(Integer topN) {
-        this.topN = topN;
-    }
     
-    
+   
 
 }

@@ -18,48 +18,77 @@
 
 package cn.edu.hfut.dmic.webcollector.net;
 
+import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 
-
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.LoggerFactory;
 
 /**
- * Response的一种实现，WebCollector默认使用HttpResponse作为http响应
+ *
  * @author hu
  */
-public class HttpResponse{
-
-    private String url;
+public class HttpResponse {
+    
+    public static final org.slf4j.Logger LOG = LoggerFactory.getLogger(HttpResponse.class);
+    
+    private URL url;
     private int code;
-    private Map<String,List<String>> headers=null;
-    private byte[] content=null;
-    private boolean redirect=false;
+    private Map<String, List<String>> headers = null;
+    private byte[] content = null;
+    private boolean redirect = false;
+ 
+  
     
-    private String realUrl=null;
+    private URL realUrl = null;
     
-    public HttpResponse(String url){
-        this.url=url;
+    public HttpResponse(URL url) {
+        this.url = url;
     }
     
-    
-    public String getUrl() {
+    public URL getUrl() {
         return url;
     }
     
-    public void setUrl(String url) {
+    public void setUrl(URL url) {
         this.url = url;
     }
-
-   
+    
+    public String getHtml(String charset) {
+        if (content == null) {
+            return null;
+        }
+        try {
+            String html = new String(content, charset);
+            return html;
+        } catch (Exception ex) {
+            LOG.info("Exception", ex);
+            return null;
+        }
+    }
+    
+    public String getHtmlByCharsetDetect() {
+        if (content == null) {
+            return null;
+        }
+        String charset=CharsetDetector.guessEncoding(content);
+        try {
+            String html = new String(content, charset);
+            return html;
+        } catch (Exception ex) {
+            LOG.info("Exception", ex);
+            return null;
+        }
+    }
+    
     public int getCode() {
         return code;
     }
-
     
     public List<String> getHeader(String name) {
         return headers.get(name);
     }
-
     
     public byte[] getContent() {
         return content;
@@ -68,55 +97,58 @@ public class HttpResponse{
     public void setContent(byte[] content) {
         this.content = content;
     }
-
+    
     public void setCode(int code) {
         this.code = code;
     }
 
     
+    
+    
     public Map<String, List<String>> getHeaders() {
         return headers;
     }
-
     
     public void setHeaders(Map<String, List<String>> headers) {
-        this.headers=headers;
+        this.headers = headers;
     }
-
     
     public String getContentType() {
-        try{
-        String contentType;
-        List<String> contentTypeList = getHeader("Content-Type");
-        if (contentTypeList == null) {
-            contentType = null;
-        } else {
-            contentType = contentTypeList.get(0);
-        }
+        try {
+            String contentType;
+            List<String> contentTypeList = getHeader("Content-Type");
+            if (contentTypeList == null) {
+                contentType = null;
+            } else {
+                contentType = contentTypeList.get(0);
+            }
             return contentType;
-        }catch(Exception ex){
+        } catch (Exception ex) {
+            LOG.info("Exception", ex);
             return null;
         }
     }
-
+    
     public boolean getRedirect() {
         return redirect;
     }
-
+    
     public void setRedirect(boolean redirect) {
         this.redirect = redirect;
     }
-
-    public String getRealUrl() {
-        if(realUrl==null){
+    
+    public URL getRealUrl() {
+        if (realUrl == null) {
             return url;
         }
         return realUrl;
     }
-
-    public void setRealUrl(String realUrl) {
+    
+    public void setRealUrl(URL realUrl) {
         this.realUrl = realUrl;
     }
+
+
     
     
 }
