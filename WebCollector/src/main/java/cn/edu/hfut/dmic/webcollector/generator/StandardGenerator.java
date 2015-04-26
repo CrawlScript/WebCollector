@@ -73,7 +73,7 @@ public class StandardGenerator implements Generator {
                     if (datum.getStatus() == CrawlDatum.STATUS_DB_FETCHED) {
                         continue;
                     } else {
-                        if (datum.getRetry() >= 10) {
+                        if (datum.getRetry() >= maxRetry) {
                             continue;
                         }
                         totalGenerate++;
