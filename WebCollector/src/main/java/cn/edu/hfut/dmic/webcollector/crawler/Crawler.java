@@ -51,6 +51,7 @@ public abstract class Crawler implements VisitorFactory {
     protected ArrayList<String> forcedSeeds = new ArrayList<String>();
     protected Fetcher fetcher;
     int retry=Config.retry;
+     protected int maxRetry=Config.MAX_RETRY;
 
     protected VisitorFactory visitorFactory = this;
     protected HttpRequester httpRequester = new HttpRequesterImpl();
@@ -116,6 +117,7 @@ public abstract class Crawler implements VisitorFactory {
             long startTime=System.currentTimeMillis();
 
             StandardGenerator generator = new StandardGenerator(env);
+            generator.setMaxRetry(maxRetry);
             generator.setTopN(topN);
             fetcher = new Fetcher();
             fetcher.setHttpRequester(httpRequester);
@@ -226,6 +228,14 @@ public abstract class Crawler implements VisitorFactory {
         this.retry = retry;
     }
     
+    
+    public int getMaxRetry() {
+        return maxRetry;
+    }
+
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
    
 
 }

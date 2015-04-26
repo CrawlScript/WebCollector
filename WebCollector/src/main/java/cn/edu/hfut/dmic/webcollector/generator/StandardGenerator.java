@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.generator;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.BerkeleyDBUtils;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.CursorConfig;
 import com.sleepycat.je.Database;
@@ -39,6 +40,7 @@ public class StandardGenerator implements Generator {
     Environment env;
     protected int totalGenerate=0;
     protected Integer topN=null;
+    protected int maxRetry=Config.MAX_RETRY;
     public StandardGenerator(Environment env) {
         this.env=env;
         totalGenerate=0;
@@ -97,6 +99,16 @@ public class StandardGenerator implements Generator {
     public void setTopN(Integer topN) {
         this.topN = topN;
     }
+
+    public int getMaxRetry() {
+        return maxRetry;
+    }
+
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
+    
+    
 
   
     

@@ -33,5 +33,6 @@ public class Config {
     
      public static int TIMEOUT_CONNECT = 3000;
      public static int TIMEOUT_READ = 10000;
+     public static int MAX_RETRY=20;
 
 }
