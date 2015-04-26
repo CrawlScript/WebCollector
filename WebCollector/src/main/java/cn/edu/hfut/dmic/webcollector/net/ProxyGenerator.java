@@ -25,7 +25,7 @@ import java.net.Proxy;
  * @author hu
  */
 public interface ProxyGenerator {
-    public Proxy next();
+    public Proxy next(String url);
     public void markGood(Proxy proxy,String url);
     public void markBad(Proxy proxy,String url);
 }

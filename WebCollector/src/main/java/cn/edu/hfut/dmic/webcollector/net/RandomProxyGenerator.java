@@ -54,7 +54,7 @@ public class RandomProxyGenerator implements ProxyGenerator {
     Random random = new Random();
     
     @Override
-    public Proxy next() {
+    public Proxy next(String url) {
         synchronized (lock) {
             if (proxys == null) {
                 return null;

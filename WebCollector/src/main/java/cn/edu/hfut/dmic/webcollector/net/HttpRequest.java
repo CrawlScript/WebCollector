@@ -58,7 +58,7 @@ public class HttpRequest {
         if (proxyGenerator == null) {
             proxy = null;
         } else {
-            proxy = proxyGenerator.next();
+            proxy = proxyGenerator.next(url.toString());
         }
 
         try {

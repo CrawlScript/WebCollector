@@ -35,9 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class BreadthCrawler extends DeepCrawler {
 
-    /**
-     *
-     */
+
     public static final Logger LOG = LoggerFactory.getLogger(BreadthCrawler.class);
 
     /**

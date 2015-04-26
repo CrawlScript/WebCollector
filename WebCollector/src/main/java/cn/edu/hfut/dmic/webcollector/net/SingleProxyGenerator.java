@@ -45,7 +45,7 @@ public class SingleProxyGenerator implements ProxyGenerator {
     }
 
     @Override
-    public Proxy next() {
+    public Proxy next(String url) {
         return proxy;
     }
 

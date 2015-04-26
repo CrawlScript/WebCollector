@@ -171,7 +171,6 @@ public abstract class Crawler implements VisitorFactory {
      * 添加一个种子url(如果断点爬取，种子会在每次启动爬虫时注入， 如果爬取历史中有相同url,则覆盖)
      *
      * @param seed
-     * @param update
      */
     public void addForcedSeed(String seed) {
         forcedSeeds.add(seed);
