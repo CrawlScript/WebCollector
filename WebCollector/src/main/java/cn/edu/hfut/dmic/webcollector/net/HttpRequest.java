@@ -47,8 +47,6 @@ public class HttpRequest {
         this.requestConfig = requestConfig;
     }
 
-  
-
     public HttpResponse getResponse() throws Exception {
         HttpResponse response = new HttpResponse(url);
         int code = -1;
@@ -67,11 +65,7 @@ public class HttpRequest {
                 if (proxy == null) {
                     con = (HttpURLConnection) url.openConnection();
                 } else {
-                    if (proxy == null) {
-                        con = (HttpURLConnection) url.openConnection();
-                    } else {
-                        con = (HttpURLConnection) url.openConnection(proxy);
-                    }
+                    con = (HttpURLConnection) url.openConnection(proxy);
                 }
 
                 requestConfig.config(con);
@@ -167,6 +161,5 @@ public class HttpRequest {
     public void setRequestConfig(RequestConfig requestConfig) {
         this.requestConfig = requestConfig;
     }
-
 
 }
