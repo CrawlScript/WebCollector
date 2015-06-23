@@ -79,17 +79,5 @@ public class RegexExtractorFactory implements ExtractorFactory {
         
     }
     
-    public static void main(String[] args) throws Exception {
-        /*
-        Page page=new Page();
-        page.setUrl("http://www.baidu.com/abc.html");
-        RegexExtractorFactory ref=new RegexExtractorFactory();
-        ref.addExtractor("http://www.baidu.com/.*", MyExtractor.class);
-        System.out.println(ref.createExtractor(page).getClass());
-                */
-        
-        ExtractorTest.testExtractorByUrl("http://36kr.com/",MyExtractor.class);
-        
-    }
-
+    
 }

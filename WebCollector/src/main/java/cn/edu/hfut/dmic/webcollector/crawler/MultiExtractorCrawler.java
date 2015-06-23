@@ -69,13 +69,4 @@ public class MultiExtractorCrawler extends BreadthCrawler{
     
     
     
-    
-    public static void main(String[] args) {
-        
-    }
-    
-    
-    
-    
-    
 }

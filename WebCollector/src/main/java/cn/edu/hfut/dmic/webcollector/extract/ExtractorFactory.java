@@ -25,5 +25,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
  * @author hu
  */
 public interface ExtractorFactory {
+    
     public Extractors createExtractor(Page page) throws Exception;
+    
 }
