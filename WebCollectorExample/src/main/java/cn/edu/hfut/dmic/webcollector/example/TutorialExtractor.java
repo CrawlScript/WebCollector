@@ -165,20 +165,25 @@ public class TutorialExtractor {
     public static class HtmlExtractor extends Extractor {
 
         public static FileSystemOutput fsOutput;
+        public static AtomicInteger counter = new AtomicInteger(0);
 
         public HtmlExtractor(Page page, ExtractorParams params) {
             super(page, params);
-            /*从配置中读取参数path*/
-            String path = params.getString("path");
-            if (path == null) {
-                path = "html";
+
+            //FileSystemOuput只要实例化一次
+            if (counter.incrementAndGet() == 1) {
+                /*从配置中读取参数path*/
+                String path = params.getString("path");
+                if (path == null) {
+                    path = "html";
+                }
+                File dir = new File(path);
+                if (dir.exists()) {
+                    FileUtils.deleteDir(dir);
+                }
+                dir.mkdirs();
+                fsOutput = new FileSystemOutput(path);
             }
-            File dir = new File(path);
-            if (dir.exists()) {
-                FileUtils.deleteDir(dir);
-            }
-            dir.mkdirs();
-            fsOutput = new FileSystemOutput(path);
         }
 
         /*HtmlExtractor需要对所有页面执行，所以这里都返回true*/
@@ -219,7 +224,7 @@ public class TutorialExtractor {
         /*同一个url可以执行多个Extractor，HtmlExtractor会在所有页面上执行*/
         /*HtmlExtractor这个抽取器需要额外的参数指定存放html文件的路径*/
         /*ExtractorParams继承自HashMap，可以使用put方法添加参数*/
-        crawler.addExtractor(".*", HtmlExtractor.class, new ExtractorParams("path", "download/html1"));
+        crawler.addExtractor(".*", HtmlExtractor.class, new ExtractorParams("path", "download/html"));
 
         crawler.setThreads(100);
         crawler.start(10);
