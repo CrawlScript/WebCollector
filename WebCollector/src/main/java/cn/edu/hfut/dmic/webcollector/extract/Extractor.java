@@ -210,10 +210,16 @@ public abstract class Extractor {
     }
 
     public Object getParam(String key) {
+        if(params==null){
+            return null;
+        }
         return params.get(key);
     }
 
     public String getParamString(String key) {
+        if(params==null){
+            return null;
+        }
         return params.getString(key);
     }
     
