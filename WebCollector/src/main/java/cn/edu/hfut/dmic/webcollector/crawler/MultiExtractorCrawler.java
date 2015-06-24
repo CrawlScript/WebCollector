@@ -20,6 +20,7 @@ package cn.edu.hfut.dmic.webcollector.crawler;
 
 import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
 import cn.edu.hfut.dmic.webcollector.extract.Extractor;
+import cn.edu.hfut.dmic.webcollector.extract.ExtractorParams;
 import cn.edu.hfut.dmic.webcollector.extract.Extractors;
 import cn.edu.hfut.dmic.webcollector.extract.RegexExtractorFactory;
 import cn.edu.hfut.dmic.webcollector.model.Links;
@@ -58,6 +59,12 @@ public class MultiExtractorCrawler extends BreadthCrawler{
     public void addExtractor(String urlRegex,Class<? extends Extractor> extractorClass){
         regexExtractorFactory.addExtractor(urlRegex, extractorClass);
     }
+    
+     public void addExtractor(String urlRegex,Class<? extends Extractor> extractorClass,ExtractorParams params){
+        regexExtractorFactory.addExtractor(urlRegex, extractorClass,params);
+    }
+     
+
     
     public RegexExtractorFactory getRegexExtractorFactory() {
         return regexExtractorFactory;

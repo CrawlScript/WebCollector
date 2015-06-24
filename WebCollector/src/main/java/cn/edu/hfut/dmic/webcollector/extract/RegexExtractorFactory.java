@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.extract;
 
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -31,53 +32,57 @@ import java.util.regex.Pattern;
  */
 public class RegexExtractorFactory implements ExtractorFactory {
 
-    public HashMap<String, Class<? extends Extractor>> extractorClassMap
-            = new HashMap<String, Class<? extends Extractor>>();
+    
+    
+    protected ArrayList<ExtractorInfo> extractorInfoList=new ArrayList<ExtractorInfo>();
+    
+    public static class ExtractorInfo{
+        public String regex;
+        public Class<? extends Extractor> extractorClass;
+        public ExtractorParams params;
+
+        public ExtractorInfo(String regex, Class<? extends Extractor> extractorClass, ExtractorParams params) {
+            this.regex = regex;
+            this.extractorClass = extractorClass;
+            this.params = params;
+        }
+    }
 
     @Override
     public Extractors createExtractor(Page page) throws Exception {
         String url = page.getUrl();
-        Extractors extractors=new Extractors();
-        for (Entry<String, Class<? extends Extractor>> entry : extractorClassMap.entrySet()) {
-            String regex = entry.getKey();
-            if (Pattern.matches(regex, url)) {
-                Class extractorClass = entry.getValue();
-                Constructor<? extends Extractor> cons = extractorClass.getDeclaredConstructor(Page.class);
-                Extractor extractor=cons.newInstance(page);
+        Extractors extractors = new Extractors();
+        for(ExtractorInfo extractorInfo:extractorInfoList){
+            String regex=extractorInfo.regex;
+             if (Pattern.matches(regex, url)) {
+                Class extractorClass = extractorInfo.extractorClass;
+                Constructor<? extends Extractor> cons = extractorClass.getDeclaredConstructor(Page.class, ExtractorParams.class);
+                ExtractorParams params = extractorInfo.params;
+                Extractor extractor = cons.newInstance(page, params);
                 extractors.add(extractor);
             }
         }
+        
         return extractors;
     }
-    
-    public void addExtractor(String urlRegex,Class<? extends Extractor> extractorClass){
-        extractorClassMap.put(urlRegex, extractorClass);
+
+    public void addExtractor(String urlRegex, Class<? extends Extractor> extractorClass) {
+        addExtractor(urlRegex, extractorClass, null);
     }
-    
-    public static class MyExtractor extends Extractor{
 
-        public MyExtractor(Page page) {
-            super(page);
-            System.out.println("my extractor");
-        }
-
-        @Override
-        public boolean shouldExecute() {
-            return true;
-        }
-
-        @Override
-        public void extract() throws Exception {
-            addNextLinksByRegex(".*");
-        }
-
-        @Override
-        public void output() throws Exception {
-        }
-
-    
-        
+    public void addExtractor(String urlRegex, Class<? extends Extractor> extractorClass, ExtractorParams params) {
+        ExtractorInfo extractorInfo=new ExtractorInfo(urlRegex, extractorClass, params);
+        extractorInfoList.add(extractorInfo);
     }
+
+    public ArrayList<ExtractorInfo> getExtractorInfoList() {
+        return extractorInfoList;
+    }
+
+    public void setExtractorInfoList(ArrayList<ExtractorInfo> extractorInfoList) {
+        this.extractorInfoList = extractorInfoList;
+    }
+
     
-    
+
 }

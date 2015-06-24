@@ -33,13 +33,13 @@ import org.jsoup.nodes.Document;
  */
 public class ExtractorTest {
 
-    public static Extractor getInstance(Class<? extends Extractor> extractorClass, Page page) throws Exception {
-        Constructor<? extends Extractor> cons=extractorClass.getDeclaredConstructor(Page.class);
-        return cons.newInstance(page);
+    public static Extractor getInstance(Class<? extends Extractor> extractorClass, Page page,ExtractorParams params) throws Exception {
+        Constructor<? extends Extractor> cons=extractorClass.getDeclaredConstructor(Page.class,ExtractorParams.class);
+        return cons.newInstance(page,params);
 
     }
 
-    public static void testExtractorByUrl(String url, Class<? extends Extractor> extractorClass) throws Exception {
+    public static void testExtractorByUrl(String url, Class<? extends Extractor> extractorClass,ExtractorParams params) throws Exception {
         HttpRequest httpRequest = new HttpRequest(url);
         HttpResponse response=httpRequest.getResponse();
         String htm=response.getHtmlByCharsetDetect();
@@ -49,12 +49,14 @@ public class ExtractorTest {
         page.setHtml(response.getHtmlByCharsetDetect());
         page.setResponse(response);
         
-        Extractor extractor=getInstance(extractorClass, page);
+        Extractor extractor=getInstance(extractorClass, page,params);
         Links nextLinks=new Links();
         extractor.execute(nextLinks);
         for(String nextLink:nextLinks){
             System.out.println("nextLink:"+nextLink);
         }
     }
+    
+   
     
 }

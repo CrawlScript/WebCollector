@@ -7,6 +7,7 @@ package cn.edu.hfut.dmic.webcollector.example;
 
 import cn.edu.hfut.dmic.webcollector.extract.Extractor;
 import cn.edu.hfut.dmic.webcollector.crawler.MultiExtractorCrawler;
+import cn.edu.hfut.dmic.webcollector.extract.ExtractorParams;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.util.FileSystemOutput;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
@@ -17,24 +18,17 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 
 /**
- * 对于需要抽取多种页面的任务，例如多网站采集新闻，使用抽取器可以很好地进行任务分工
- * 本教程给出一个爬取知乎的例子，整个爬虫包含三种抽取业务：
- * 1) 抽取用户页面的用户信息
- * 2) 抽取问题页面的问题信息
- * 3) 将所有网页保存到文件中
- * 我们分别编写三个抽取器来分别解决这三个问题：
- * 1) PeopleExtractor
- * 2) QuestionExtractor
- * 3) HtmlExtractor
+ * 对于需要抽取多种页面的任务，例如多网站采集新闻，使用抽取器可以很好地进行任务分工 本教程给出一个爬取知乎的例子，整个爬虫包含三种抽取业务： 1)
+ * 抽取用户页面的用户信息 2) 抽取问题页面的问题信息 3) 将所有网页保存到文件中 我们分别编写三个抽取器来分别解决这三个问题： 1)
+ * PeopleExtractor 2) QuestionExtractor 3) HtmlExtractor
  * 最后在main函数中将三种抽取器加载到爬虫MultiExtractorCrawler中
- * 
+ *
  * 可以加载抽取器的爬虫类为MultiExtractorCrawler，由于抽取业务由抽取器完成，所以不需要
  * 用户编写继承MultiExtractorCrawler的类，直接实例化MultiExtractorCrawler，将抽取器直接
  * 加载到MultiExtractorCrawler对象中
- * 
- * 本程序将三种抽取业务的数据分别存储在 download/people download/question 
- * 和 download/html 文件夹中
- * 
+ *
+ * 本程序将三种抽取业务的数据分别存储在 download/people download/question 和 download/html 文件夹中
+ *
  * @author hu
  */
 public class TutorialExtractor {
@@ -63,8 +57,8 @@ public class TutorialExtractor {
             id = new AtomicInteger(0);
         }
 
-        public PeopleExtractor(Page page) {
-            super(page);
+        public PeopleExtractor(Page page, ExtractorParams params) {
+            super(page, params);
         }
 
         @Override
@@ -84,16 +78,15 @@ public class TutorialExtractor {
             /*如果获取不到，则返回缺省值"未知"*/
             location = selectText("span.location.item", "未知");
             description = selectText("span.content", 0, null);
-            
+
             /*这里也可以直接调获取到Page对象*/
             /*上面获取description的代码也可以像下面这样写，但是获取不到元素时会出现异常
-               需要加额外代码控制*/
+             需要加额外代码控制*/
             //description=page.getDoc().select("span.content").first().text();
-            
             /*可以通过addNextLinks添加需要后续爬取的页面*/
             //addNextLinks("http://www.sina.com");
             /*可以通过addNextLinksByRegex将页面中所有满足正则的链接加入后续任务。
-               注意爬虫会去掉重复的链接（包括和爬取历史重复的链接），也就是说同一个url只会爬取一次*/
+             注意爬虫会去掉重复的链接（包括和爬取历史重复的链接），也就是说同一个url只会爬取一次*/
             //addNextLinksByRegex("http://www.zhihu.com/.*");
         }
 
@@ -134,8 +127,8 @@ public class TutorialExtractor {
             id = new AtomicInteger(0);
         }
 
-        public QuestionExtractor(Page page) {
-            super(page);
+        public QuestionExtractor(Page page, ExtractorParams params) {
+            super(page, params);
         }
 
         @Override
@@ -167,22 +160,25 @@ public class TutorialExtractor {
 
     /**
      * HtmlExtractor并不执行抽取操作，只是希望将网页源码保存到文件中 只需要进行输出操作，所以只需要在output方法中添加自定义内容
+     * ExtractorParams是抽取器的参数配置，本抽取器从参数配置中读取文件夹的位置
      */
     public static class HtmlExtractor extends Extractor {
 
         public static FileSystemOutput fsOutput;
 
-        static {
-            File dir = new File("download/html");
+        public HtmlExtractor(Page page, ExtractorParams params) {
+            super(page, params);
+            /*从配置中读取参数path*/
+            String path = params.getString("path");
+            if (path == null) {
+                path = "html";
+            }
+            File dir = new File(path);
             if (dir.exists()) {
                 FileUtils.deleteDir(dir);
             }
             dir.mkdirs();
-            fsOutput = new FileSystemOutput("download/html");
-        }
-
-        public HtmlExtractor(Page page) {
-            super(page);
+            fsOutput = new FileSystemOutput(path);
         }
 
         /*HtmlExtractor需要对所有页面执行，所以这里都返回true*/
@@ -221,11 +217,12 @@ public class TutorialExtractor {
         crawler.addExtractor("http://www.zhihu.com/question/[0-9]+", QuestionExtractor.class);
 
         /*同一个url可以执行多个Extractor，HtmlExtractor会在所有页面上执行*/
-        crawler.addExtractor(".*", HtmlExtractor.class);
+        /*HtmlExtractor这个抽取器需要额外的参数指定存放html文件的路径*/
+        /*ExtractorParams继承自HashMap，可以使用put方法添加参数*/
+        crawler.addExtractor(".*", HtmlExtractor.class, new ExtractorParams("path", "download/html1"));
 
         crawler.setThreads(100);
         crawler.start(10);
     }
 
-    
 }

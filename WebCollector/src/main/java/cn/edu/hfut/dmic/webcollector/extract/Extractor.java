@@ -21,6 +21,7 @@ import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
+import java.util.ArrayList;
 import java.util.List;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,12 +31,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 可以针对每一种抽取业务（例如抽取用户信息、新闻内容）分别编写抽取器，最后将抽取器统一
- * 加载到支持抽取器的爬虫MultiExtractorCrawler上，这样方便爬虫代码的分工和维护，并且一些
- * 通用的抽取器可以作为组件重复使用。
- * 
+ * 加载到支持抽取器的爬虫MultiExtractorCrawler上，这样方便爬虫代码的分工和维护，并且一些 通用的抽取器可以作为组件重复使用。
+ *
  * 关于抽取器的使用，可以参考WebCollectorExample中的TutorialExtractor
  * (cn.edu.hfut.dmic.webcollector.example.TutorialExtractor)
- * 
+ *
  * @author hu
  */
 public abstract class Extractor {
@@ -45,9 +45,11 @@ public abstract class Extractor {
     protected Page page = null;
     protected Links nextLinks = null;
     protected boolean output = true;
+    protected ExtractorParams params = null;
 
-    public Extractor(Page page) {
+    public Extractor(Page page, ExtractorParams params) {
         this.page = page;
+        this.params = params;
         nextLinks = new Links();
     }
 
@@ -157,14 +159,14 @@ public abstract class Extractor {
         this.nextLinks = nextLinks;
     }
 
-    public void addNextLinks(String url){
+    public void addNextLinks(String url) {
         nextLinks.add(url);
     }
-    
-    public void addNextLinks(List<String> urls){
+
+    public void addNextLinks(List<String> urls) {
         nextLinks.addAll(urls);
     }
-    
+
     public void addNextLinksByRegex(String regex) {
         RegexRule regexRule = new RegexRule();
         regexRule.addRule(regex);
@@ -199,5 +201,22 @@ public abstract class Extractor {
         return page.getResponse();
     }
 
+    public ExtractorParams getParams() {
+        return params;
+    }
+
+    public void setParams(ExtractorParams params) {
+        this.params = params;
+    }
+
+    public Object getParam(String key) {
+        return params.get(key);
+    }
+
+    public String getParamString(String key) {
+        return params.getString(key);
+    }
     
+   
+
 }
