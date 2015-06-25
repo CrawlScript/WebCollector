@@ -43,7 +43,7 @@ public class HttpRequest {
 
     public HttpRequest(String url) throws Exception {
         this.url = new URL(url);
-        requestConfig = new RequestConfig();
+        requestConfig = RequestConfig.createDefaultRequestConfig();
     }
 
     public HttpRequest(String url, RequestConfig requestConfig) throws Exception {
