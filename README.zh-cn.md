@@ -21,6 +21,15 @@ WebCollector 2.x版本特性：
 * 7）使用slf4j作为日志门面
 * 8）修改http请求接口，用户自定义http请求更加方便
 
+###Maven：
+```xml
+    <dependency>
+        <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+        <artifactId>WebCollector</artifactId>
+        <version>2.09</version>
+    </dependency>
+```
+
 
 WebCollector 2.x教程：
 * [WebCollector 2.x tutorial 2 (BreadthCrawler中文教程)](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler2.java)

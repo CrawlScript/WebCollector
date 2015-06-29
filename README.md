@@ -19,9 +19,9 @@ To use the latest release of WebCollector, please use the following snippet in y
 
 ```xml
     <dependency>
-	<groupId>cn.edu.hfut.dmic.webcollector</groupId>
-	<artifactId>WebCollector</artifactId>
-	<version>2.09</version>
+        <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+        <artifactId>WebCollector</artifactId>
+        <version>2.09</version>
     </dependency>
 ```
 
