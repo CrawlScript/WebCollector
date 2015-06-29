@@ -12,6 +12,20 @@ WebCollector is an open source web crawler framework based on Java.It provides
 
 
 ##Installation
+
+### Using Maven
+
+To use the latest release of WebCollector, please use the following snippet in your pom.xml
+
+```xml
+    <dependency>
+	<groupId>cn.edu.hfut.dmic.webcollector</groupId>
+	<artifactId>WebCollector</artifactId>
+	<version>2.09</version>
+    </dependency>
+```
+
+### Without Maven
 WebCollector jars are available on the [HomePage](https://github.com/CrawlScript/WebCollector).
 
 + __webcollector-version-bin.zip__ contains core jars.
