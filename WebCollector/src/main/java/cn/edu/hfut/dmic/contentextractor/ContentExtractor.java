@@ -139,7 +139,7 @@ public class ContentExtractor {
 
     public Element getContentElement() throws Exception {
         clean();
-        computeInfo(doc);
+        computeInfo(doc.body());
         double maxScore = 0;
         Element content = null;
         for (Map.Entry<Element, CountInfo> entry : infoMap.entrySet()) {
@@ -229,7 +229,7 @@ public class ContentExtractor {
         final String metaTitle = doc.title();
         Element current = contentElement;
         for (int i = 0; i < 3; i++) {
-            if (current.parent() != null) {
+            if (current!=doc.body()&&current.parent() != null) {
                 current = current.parent();
             }
         }
