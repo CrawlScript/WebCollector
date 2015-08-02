@@ -20,6 +20,7 @@ WebCollector 2.x版本特性：
 * 6）集成json解析器
 * 7）使用slf4j作为日志门面
 * 8）修改http请求接口，用户自定义http请求更加方便
+* 9）2.10版开始新增新闻网页正文自动提取算法，可自动抽取新闻网页正文、标题和日期
 
 ###Maven：
 ```xml
@@ -33,6 +34,7 @@ WebCollector 2.x版本特性：
 
 WebCollector 2.x教程：
 * [WebCollector 2.x tutorial 2 (BreadthCrawler中文教程)](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler2.java)
+* [WebCollector 2.x 新闻网页正文自动提取算法](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialContentExtractor.java)
 * [WebCollector 2.x 抽取器 (Extractor和MultiExtractorCrawler)](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialExtractor.java)
 * [WebCollector爬取JS生成数据](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
 * [WebCollector爬取搜狗搜索（分页）](https://github.com/CrawlScript/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
@@ -42,6 +44,7 @@ WebCollector 2.x教程：
 
 WebCollector 2.x教程(镜像)：
 * [WebCollector 2.x tutorial 2 (BreadthCrawler中文教程)](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler2.java)
+* [WebCollector 2.x 新闻网页正文自动提取算法](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialContentExtractor.java)
 * [WebCollector 2.x 抽取器 (Extractor和MultiExtractorCrawler)](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialExtractor.java)
 * [WebCollector爬取JS生成数据](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoJSCrawler.java)
 * [WebCollector爬取搜狗搜索（分页）](http://git.oschina.net/webcollector/WebCollector/blob/master/WebCollectorExample/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSogouCrawler.java)
