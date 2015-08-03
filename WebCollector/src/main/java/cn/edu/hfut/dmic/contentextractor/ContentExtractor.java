@@ -198,7 +198,7 @@ public class ContentExtractor {
                 }
             }
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             if (current == null) {
                 break;
             }
@@ -233,7 +233,7 @@ public class ContentExtractor {
                 }
             }
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             if (current == null) {
                 break;
             }
@@ -259,7 +259,7 @@ public class ContentExtractor {
                 }
             }
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             Elements hs = current.select("h1,h2,h3,h4,h5,h6");
             if (hs.size() > 0) {
                 String title = hs.first().text().trim();
