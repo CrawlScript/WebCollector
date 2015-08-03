@@ -21,6 +21,7 @@ import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -72,7 +73,7 @@ public class ContentExtractor {
 
         if (node instanceof Element) {
             Element tag = (Element) node;
-            String tagName = tag.tagName();
+
             CountInfo countInfo = new CountInfo();
             for (Node childNode : tag.childNodes()) {
                 CountInfo childCountInfo = computeInfo(childNode);
@@ -83,17 +84,19 @@ public class ContentExtractor {
                 countInfo.leafList.addAll(childCountInfo.leafList);
                 countInfo.densitySum += childCountInfo.density;
             }
+           
             countInfo.tagCount++;
             if (tag.tagName().equals("a")) {
                 countInfo.linkTextCount = countInfo.textCount;
                 countInfo.linkTagCount++;
             }
 
+            int pureLen=countInfo.textCount-countInfo.linkTagCount;
             int len = countInfo.tagCount - countInfo.linkTagCount;
-            if (len == 0) {
-                countInfo.density = 0;
-            } else {
-                countInfo.density = (countInfo.textCount + 0.0) / len;
+            if(pureLen==0||len==0){
+                countInfo.density=0;
+            }else{
+                countInfo.density=(pureLen+0.0)/len;
             }
             
             infoMap.put(tag, countInfo);
@@ -101,7 +104,8 @@ public class ContentExtractor {
         } else if (node instanceof TextNode) {
             TextNode tn = (TextNode) node;
             CountInfo countInfo = new CountInfo();
-            int len = tn.text().length();
+            String text=tn.text();
+            int len = text.length();
             countInfo.textCount = len;
             countInfo.leafList.add(len);
             return countInfo;
@@ -113,16 +117,18 @@ public class ContentExtractor {
     public double computeScore(Element tag) {
         CountInfo countInfo = infoMap.get(tag);
         double var = Math.sqrt(computeVar(countInfo.leafList) + 1);
-        double score = var * countInfo.densitySum * (countInfo.textCount - countInfo.linkTextCount);
+        double score = Math.log(var) * countInfo.densitySum *(countInfo.textCount - countInfo.linkTextCount) ;
         return score;
     }
+    
+   
 
     public double computeVar(ArrayList<Integer> data) {
         if (data.size() == 0) {
             return 0;
         }
         if (data.size() == 1) {
-            return data.get(0)/2;
+            return data.get(0) / 2;
         }
         double sum = 0;
         for (Integer i : data) {
@@ -144,7 +150,7 @@ public class ContentExtractor {
         Element content = null;
         for (Map.Entry<Element, CountInfo> entry : infoMap.entrySet()) {
             Element tag = entry.getKey();
-            if(tag.tagName().equals("a")||tag==doc.body()){
+            if (tag.tagName().equals("a") || tag == doc.body()) {
                 continue;
             }
             double score = computeScore(tag);
@@ -307,12 +313,21 @@ public class ContentExtractor {
         }
         final StringBuilder sb = new StringBuilder();
         final AtomicInteger minDis = new AtomicInteger(10000);
+        final AtomicBoolean shouldStop=new AtomicBoolean(false);
         current.traverse(new NodeVisitor() {
 
             public void head(Node node, int i) {
+                if(shouldStop.get()){
+                    return;
+                }
                 if (node instanceof TextNode) {
                     TextNode tn = (TextNode) node;
                     String text = tn.text();
+                    if(metaTitle.startsWith(text)){
+                        sb.append(text);
+                        shouldStop.set(true);
+                        return;
+                    }
                     int dis = editDistance(text, metaTitle);
                     if (dis < 5 && dis < minDis.get()) {
                         minDis.set(dis);
@@ -325,6 +340,9 @@ public class ContentExtractor {
             public void tail(Node node, int i) {
             }
         });
+        if(shouldStop.get()){
+            return sb.toString();
+        }
         if (minDis.get() >= 5) {
             throw new Exception();
         }
@@ -444,12 +462,12 @@ public class ContentExtractor {
 
     public static void main(String[] args) throws Exception {
 
-
         News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
         System.out.println(news.getUrl());
         System.out.println(news.getTitle());
         System.out.println(news.getTime());
         System.out.println(news.getContent());
+        //System.out.println(news.getContentElement());
 
         //System.out.println(news);
     }
