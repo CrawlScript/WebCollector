@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * ContentExtractor could extract content,title,time from news webpage
+ *
  * @author hu
  */
 public class ContentExtractor {
@@ -187,9 +188,15 @@ public class ContentExtractor {
     protected String getTime(Element contentElement) throws Exception {
         String regex = "([0-9]{4}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
-        Element current = contentElement.parent();
-         if(current!=null){
-            current=current.parent();
+
+        Element current = contentElement;
+        for (int i = 0; i < 2; i++) {
+            if (current != null && current != doc.body()) {
+                Element parent = current.parent();
+                if (parent != null) {
+                    current = parent;
+                }
+            }
         }
         for (int i = 0; i < 3; i++) {
             if (current == null) {
@@ -208,6 +215,14 @@ public class ContentExtractor {
 
     protected String getTitle(Element contentElement) throws Exception {
         Element current = contentElement;
+        for (int i = 0; i < 2; i++) {
+            if (current != null && current != doc.body()) {
+                Element parent = current.parent();
+                if (parent != null) {
+                    current = parent;
+                }
+            }
+        }
         for (int i = 0; i < 3; i++) {
             Elements hs = current.select("h1,h2,h3,h4,h5,h6");
             if (hs.size() > 0) {
@@ -230,8 +245,16 @@ public class ContentExtractor {
     protected String getTitleByEditDistance(Element contentElement) throws Exception {
         final String metaTitle = doc.title();
         Element current = contentElement;
+        for (int i = 0; i < 2; i++) {
+            if (current != null && current != doc.body()) {
+                Element parent = current.parent();
+                if (parent != null) {
+                    current = parent;
+                }
+            }
+        }
         for (int i = 0; i < 3; i++) {
-            if (current!=doc.body()&&current.parent() != null) {
+            if (current != doc.body() && current.parent() != null) {
                 current = current.parent();
             }
         }
@@ -376,9 +399,8 @@ public class ContentExtractor {
         System.out.println(news.getTitle());
         System.out.println(news.getTime());
         System.out.println(news.getContent());
-        
-        //System.out.println(news);
 
+        //System.out.println(news);
     }
 
 }
