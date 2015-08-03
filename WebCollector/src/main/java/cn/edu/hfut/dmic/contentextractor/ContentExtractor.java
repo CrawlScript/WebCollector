@@ -209,7 +209,7 @@ public class ContentExtractor {
             }
         }
 
-        throw new Exception("time not fount");
+        throw new Exception("time not found");
 
     }
 
@@ -234,12 +234,17 @@ public class ContentExtractor {
                 }
             }
         }
-        Elements titles = doc.select("title");
-        if (titles.size() > 0) {
-            return titles.first().text();
-        } else {
+        try {
             return getTitleByEditDistance(contentElement);
+        } catch (Exception ex) {
+            Elements titles = doc.select("title");
+            if (titles.size() > 0) {
+                return titles.first().text();
+            } else {
+                throw new Exception("title not found");
+            }
         }
+
     }
 
     protected String getTitleByEditDistance(Element contentElement) throws Exception {
