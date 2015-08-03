@@ -209,8 +209,38 @@ public class ContentExtractor {
             }
         }
 
-        throw new Exception("time not found");
+        try {
+            return getDate(contentElement);
+        } catch (Exception ex) {
+            throw new Exception("time not found");
+        }
 
+    }
+
+    protected String getDate(Element contentElement) throws Exception {
+        String regex = "([0-9]{4}).*?([0-9]{1,2}).*?([0-9]{1,2})";
+        Pattern pattern = Pattern.compile(regex);
+
+        Element current = contentElement;
+        for (int i = 0; i < 2; i++) {
+            if (current != null && current != doc.body()) {
+                Element parent = current.parent();
+                if (parent != null) {
+                    current = parent;
+                }
+            }
+        }
+        for (int i = 0; i < 3; i++) {
+            if (current == null) {
+                break;
+            }
+            String currentHtml = current.outerHtml();
+            Matcher matcher = pattern.matcher(currentHtml);
+            if (matcher.find()) {
+                return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3);
+            }
+        }
+        throw new Exception("date not found");
     }
 
     protected String getTitle(Element contentElement) throws Exception {
@@ -234,13 +264,13 @@ public class ContentExtractor {
                 }
             }
         }
-        try {
-            return getTitleByEditDistance(contentElement);
-        } catch (Exception ex) {
-            Elements titles = doc.select("title");
-            if (titles.size() > 0) {
-                return titles.first().text();
-            } else {
+        Elements titles = doc.body().select("#title,.title");
+        if (titles.size() > 0) {
+            return titles.first().text();
+        } else {
+            try {
+                return getTitleByEditDistance(contentElement);
+            } catch (Exception ex) {
                 throw new Exception("title not found");
             }
         }
@@ -272,7 +302,7 @@ public class ContentExtractor {
                     TextNode tn = (TextNode) node;
                     String text = tn.text();
                     int dis = editDistance(text, metaTitle);
-                    if (dis < minDis.get()) {
+                    if (dis < 5 && dis < minDis.get()) {
                         minDis.set(dis);
                         sb.setLength(0);
                         sb.append(text);
@@ -283,6 +313,9 @@ public class ContentExtractor {
             public void tail(Node node, int i) {
             }
         });
+        if (minDis.get() >= 5) {
+            throw new Exception();
+        }
         return sb.toString();
     }
 
