@@ -95,7 +95,7 @@ public class ContentExtractor {
             } else {
                 countInfo.density = (countInfo.textCount + 0.0) / len;
             }
-
+            
             infoMap.put(tag, countInfo);
             return countInfo;
         } else if (node instanceof TextNode) {
@@ -144,6 +144,9 @@ public class ContentExtractor {
         Element content = null;
         for (Map.Entry<Element, CountInfo> entry : infoMap.entrySet()) {
             Element tag = entry.getKey();
+            if(tag.tagName().equals("a")||tag==doc.body()){
+                continue;
+            }
             double score = computeScore(tag);
             if (score > maxScore) {
                 maxScore = score;
@@ -440,7 +443,6 @@ public class ContentExtractor {
     }
 
     public static void main(String[] args) throws Exception {
-
 
         News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
         System.out.println(news.getUrl());
