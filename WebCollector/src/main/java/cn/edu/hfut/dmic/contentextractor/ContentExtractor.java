@@ -61,15 +61,16 @@ public class ContentExtractor {
         double density = 0;
         double densitySum = 0;
         double score = 0;
+        int pCount = 0;
         ArrayList<Integer> leafList = new ArrayList<Integer>();
 
     }
 
-    public void clean() {
-        doc.select("script,noscript,style,iframe").remove();
+    protected void clean() {
+        doc.select("script,noscript,style,iframe,br").remove();
     }
 
-    public CountInfo computeInfo(Node node) {
+    protected CountInfo computeInfo(Node node) {
 
         if (node instanceof Element) {
             Element tag = (Element) node;
@@ -83,28 +84,32 @@ public class ContentExtractor {
                 countInfo.linkTagCount += childCountInfo.linkTagCount;
                 countInfo.leafList.addAll(childCountInfo.leafList);
                 countInfo.densitySum += childCountInfo.density;
+                countInfo.pCount += childCountInfo.pCount;
             }
-           
             countInfo.tagCount++;
-            if (tag.tagName().equals("a")) {
+            String tagName = tag.tagName();
+            if (tagName.equals("a")) {
                 countInfo.linkTextCount = countInfo.textCount;
                 countInfo.linkTagCount++;
+            } else if (tagName.equals("p")) {
+                countInfo.pCount++;
             }
 
-            int pureLen=countInfo.textCount-countInfo.linkTagCount;
+            int pureLen = countInfo.textCount - countInfo.linkTextCount;
             int len = countInfo.tagCount - countInfo.linkTagCount;
-            if(pureLen==0||len==0){
-                countInfo.density=0;
-            }else{
-                countInfo.density=(pureLen+0.0)/len;
+            if (pureLen == 0 || len == 0) {
+                countInfo.density = 0;
+            } else {
+                countInfo.density = (pureLen + 0.0) / len;
             }
-            
+
             infoMap.put(tag, countInfo);
+
             return countInfo;
         } else if (node instanceof TextNode) {
             TextNode tn = (TextNode) node;
             CountInfo countInfo = new CountInfo();
-            String text=tn.text();
+            String text = tn.text();
             int len = text.length();
             countInfo.textCount = len;
             countInfo.leafList.add(len);
@@ -114,16 +119,14 @@ public class ContentExtractor {
         }
     }
 
-    public double computeScore(Element tag) {
+    protected double computeScore(Element tag) {
         CountInfo countInfo = infoMap.get(tag);
         double var = Math.sqrt(computeVar(countInfo.leafList) + 1);
-        double score = Math.log(var) * countInfo.densitySum *(countInfo.textCount - countInfo.linkTextCount) ;
+        double score = Math.log(var) * countInfo.densitySum * Math.log(countInfo.textCount - countInfo.linkTextCount + 1) * Math.log10(countInfo.pCount + 2);
         return score;
     }
-    
-   
 
-    public double computeVar(ArrayList<Integer> data) {
+    protected double computeVar(ArrayList<Integer> data) {
         if (data.size() == 0) {
             return 0;
         }
@@ -195,9 +198,8 @@ public class ContentExtractor {
     }
 
     protected String getTime(Element contentElement) throws Exception {
-        String regex = "([0-9]{4})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
+        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-2]?[1-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
-
         Element current = contentElement;
         for (int i = 0; i < 2; i++) {
             if (current != null && current != doc.body()) {
@@ -230,9 +232,8 @@ public class ContentExtractor {
     }
 
     protected String getDate(Element contentElement) throws Exception {
-        String regex = "([0-9]{4})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
+        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
-
         Element current = contentElement;
         for (int i = 0; i < 2; i++) {
             if (current != null && current != doc.body()) {
@@ -258,30 +259,70 @@ public class ContentExtractor {
         throw new Exception("date not found");
     }
 
-    protected String getTitle(Element contentElement) throws Exception {
-        Element current = contentElement;
-        for (int i = 0; i < 2; i++) {
-            if (current != null && current != doc.body()) {
-                Element parent = current.parent();
-                if (parent != null) {
-                    current = parent;
+    protected double strSim(String a, String b) {
+        int len1 = a.length();
+        int len2 = b.length();
+        if (len1 == 0 || len2 == 0) {
+            return 0;
+        }
+        double ratio;
+        if (len1 > len2) {
+            ratio = (len1 + 0.0) / len2;
+        } else {
+            ratio = (len2 + 0.0) / len1;
+        }
+        if (ratio >= 3) {
+            return 0;
+        }
+        return (lcs(a, b) + 0.0) / Math.max(len1, len2);
+    }
+
+    protected String getTitle(final Element contentElement) throws Exception {
+        final ArrayList<Element> titleList = new ArrayList<Element>();
+        final ArrayList<Double> titleSim = new ArrayList<Double>();
+        final AtomicInteger contentIndex = new AtomicInteger();
+        final String metaTitle = doc.title().trim();
+        if (!metaTitle.isEmpty()) {
+            doc.body().traverse(new NodeVisitor() {
+                @Override
+                public void head(Node node, int i) {
+                    if (node instanceof Element) {
+                        Element tag = (Element) node;
+                        if (tag == contentElement) {
+                            contentIndex.set(titleList.size());
+                            return;
+                        }
+                        String tagName = tag.tagName();
+                        if (Pattern.matches("h[1-6]", tagName)) {
+                            String title = tag.text().trim();
+                            double sim = strSim(title, metaTitle);
+                            titleSim.add(sim);
+                            titleList.add(tag);
+                        }
+                    }
+                }
+
+                @Override
+                public void tail(Node node, int i) {
+                }
+            });
+            int index = contentIndex.get();
+            if (index > 0) {
+                double maxScore = 0;
+                int maxIndex = -1;
+                for (int i = 0; i < index; i++) {
+                    double score = (i + 1) * titleSim.get(i);
+                    if (score > maxScore) {
+                        maxScore = score;
+                        maxIndex = i;
+                    }
+                }
+                if (maxIndex != -1) {
+                    return titleList.get(maxIndex).text();
                 }
             }
         }
-        for (int i = 0; i < 6; i++) {
-            Elements hs = current.select("h1,h2,h3,h4,h5,h6");
-            if (hs.size() > 0) {
-                String title = hs.first().text().trim();
-                if (title.length() > 4) {
-                    return title;
-                }
-            } else {
-                current = current.parent();
-                if (current == null) {
-                    break;
-                }
-            }
-        }
+
         Elements titles = doc.body().select("#title,.title");
         if (titles.size() > 0) {
             return titles.first().text();
@@ -297,59 +338,63 @@ public class ContentExtractor {
 
     protected String getTitleByEditDistance(Element contentElement) throws Exception {
         final String metaTitle = doc.title();
-        Element current = contentElement;
-        for (int i = 0; i < 2; i++) {
-            if (current != null && current != doc.body()) {
-                Element parent = current.parent();
-                if (parent != null) {
-                    current = parent;
-                }
-            }
-        }
-        for (int i = 0; i < 3; i++) {
-            if (current != doc.body() && current.parent() != null) {
-                current = current.parent();
-            }
-        }
+
+        final ArrayList<Double> max = new ArrayList<Double>();
+        max.add(0.0);
         final StringBuilder sb = new StringBuilder();
-        final AtomicInteger minDis = new AtomicInteger(10000);
-        final AtomicBoolean shouldStop=new AtomicBoolean(false);
-        current.traverse(new NodeVisitor() {
+        doc.body().traverse(new NodeVisitor() {
 
             public void head(Node node, int i) {
-                if(shouldStop.get()){
-                    return;
-                }
+
                 if (node instanceof TextNode) {
                     TextNode tn = (TextNode) node;
-                    String text = tn.text();
-                    if(metaTitle.startsWith(text)){
-                        sb.append(text);
-                        shouldStop.set(true);
-                        return;
+                    String text = tn.text().trim();
+                    double sim = strSim(text, metaTitle);
+                    if (sim > 0) {
+                        if (sim > max.get(0)) {
+                            max.set(0, sim);
+                            sb.setLength(0);
+                            sb.append(text);
+                        }
                     }
-                    int dis = editDistance(text, metaTitle);
-                    if (dis < 5 && dis < minDis.get()) {
-                        minDis.set(dis);
-                        sb.setLength(0);
-                        sb.append(text);
-                    }
+
                 }
             }
 
             public void tail(Node node, int i) {
             }
         });
-        if(shouldStop.get()){
+        if (sb.length() > 0) {
             return sb.toString();
         }
-        if (minDis.get() >= 5) {
-            throw new Exception();
-        }
-        return sb.toString();
+        throw new Exception();
+
     }
 
-    public static int editDistance(String word1, String word2) {
+    protected int lcs(String x, String y) {
+
+        int M = x.length();
+        int N = y.length();
+        if (M == 0 || N == 0) {
+            return 0;
+        }
+        int[][] opt = new int[M + 1][N + 1];
+
+        for (int i = M - 1; i >= 0; i--) {
+            for (int j = N - 1; j >= 0; j--) {
+                if (x.charAt(i) == y.charAt(j)) {
+                    opt[i][j] = opt[i + 1][j + 1] + 1;
+                } else {
+                    opt[i][j] = Math.max(opt[i + 1][j], opt[i][j + 1]);
+                }
+            }
+        }
+
+        return opt[0][0];
+
+    }
+
+    protected int editDistance(String word1, String word2) {
         int len1 = word1.length();
         int len2 = word2.length();
 
