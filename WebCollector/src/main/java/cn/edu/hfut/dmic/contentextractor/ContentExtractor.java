@@ -186,7 +186,7 @@ public class ContentExtractor {
     }
 
     protected String getTime(Element contentElement) throws Exception {
-        String regex = "([0-9]{4}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2})";
+        String regex = "([0-9]{4})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
 
         Element current = contentElement;
@@ -218,7 +218,7 @@ public class ContentExtractor {
     }
 
     protected String getDate(Element contentElement) throws Exception {
-        String regex = "([0-9]{4}).*?([0-9]{1,2}).*?([0-9]{1,2})";
+        String regex = "([0-9]{4})[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
 
         Element current = contentElement;
@@ -256,8 +256,8 @@ public class ContentExtractor {
         for (int i = 0; i < 3; i++) {
             Elements hs = current.select("h1,h2,h3,h4,h5,h6");
             if (hs.size() > 0) {
-                String title=hs.first().text().trim();
-                if(title.length()>4){
+                String title = hs.first().text().trim();
+                if (title.length() > 4) {
                     return title;
                 }
             } else {
