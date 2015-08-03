@@ -256,7 +256,10 @@ public class ContentExtractor {
         for (int i = 0; i < 3; i++) {
             Elements hs = current.select("h1,h2,h3,h4,h5,h6");
             if (hs.size() > 0) {
-                return hs.first().text();
+                String title=hs.first().text().trim();
+                if(title.length()>4){
+                    return title;
+                }
             } else {
                 current = current.parent();
                 if (current == null) {
