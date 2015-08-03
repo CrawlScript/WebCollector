@@ -113,7 +113,7 @@ public class ContentExtractor {
     public double computeScore(Element tag) {
         CountInfo countInfo = infoMap.get(tag);
         double var = Math.sqrt(computeVar(countInfo.leafList) + 1);
-        double score = var * countInfo.densitySum * Math.sqrt(countInfo.textCount - countInfo.linkTextCount);
+        double score = var * countInfo.densitySum * (countInfo.textCount - countInfo.linkTextCount);
         return score;
     }
 
@@ -122,7 +122,7 @@ public class ContentExtractor {
             return 0;
         }
         if (data.size() == 1) {
-            return data.get(0);
+            return data.get(0)/2;
         }
         double sum = 0;
         for (Integer i : data) {
@@ -443,6 +443,7 @@ public class ContentExtractor {
     }
 
     public static void main(String[] args) throws Exception {
+
 
         News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
         System.out.println(news.getUrl());
