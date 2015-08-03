@@ -18,7 +18,6 @@
 package cn.edu.hfut.dmic.contentextractor;
 
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,6 +188,9 @@ public class ContentExtractor {
         String regex = "([0-9]{4}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2}).*?([0-9]{1,2})";
         Pattern pattern = Pattern.compile(regex);
         Element current = contentElement.parent();
+         if(current!=null){
+            current=current.parent();
+        }
         for (int i = 0; i < 3; i++) {
             if (current == null) {
                 break;
