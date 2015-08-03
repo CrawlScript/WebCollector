@@ -207,6 +207,9 @@ public class ContentExtractor {
             if (matcher.find()) {
                 return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3) + " " + matcher.group(4) + ":" + matcher.group(5) + ":" + matcher.group(6);
             }
+            if (current != doc.body()) {
+                current = current.parent();
+            }
         }
 
         try {
@@ -238,6 +241,9 @@ public class ContentExtractor {
             Matcher matcher = pattern.matcher(currentHtml);
             if (matcher.find()) {
                 return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3);
+            }
+            if (current != doc.body()) {
+                current = current.parent();
             }
         }
         throw new Exception("date not found");
@@ -434,6 +440,7 @@ public class ContentExtractor {
     }
 
     public static void main(String[] args) throws Exception {
+
 
         News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
         System.out.println(news.getUrl());
