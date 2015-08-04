@@ -31,7 +31,7 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 + __webcollector-version-bin.zip__ contains core jars.
 
 
-##Demo
+##Quickstart
 Lets crawl some news from yahoo.This demo prints out the titles and contents extracted from news of yahoo.
 
 [YahooCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/YahooCrawler.java):
@@ -104,6 +104,25 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
         }
 
     }
+
+
+##Content Extraction
+WebCollector could automatically extract content from news web-pages:
+
+    News news = ContentExtractor.getNewsByHtml(html, url);
+    News news = ContentExtractor.getNewsByHtml(html);
+    News news = ContentExtractor.getNewsByUrl(url);
+
+    String content = ContentExtractor.getContentByHtml(html, url);
+    String content = ContentExtractor.getContentByHtml(html);
+    String content = ContentExtractor.getContentByUrl(url);
+
+    Element contentElement = ContentExtractor.getContentElementByHtml(html, url);
+    Element contentElement = ContentExtractor.getContentElementByHtml(html);
+    Element contentElement = ContentExtractor.getContentElementByUrl(url);
+
+
+
 
 
 
