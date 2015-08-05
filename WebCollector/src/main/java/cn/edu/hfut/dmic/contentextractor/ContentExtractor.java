@@ -509,8 +509,7 @@ public class ContentExtractor {
 
     public static void main(String[] args) throws Exception {
 
-//        News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
-        News news = ContentExtractor.getNewsByUrl("http://www.lianjiang.gov.cn/pure/recview.asp?type_level=0&id=82899");
+        News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
         System.out.println(news.getUrl());
         System.out.println(news.getTitle());
         System.out.println(news.getTime());
