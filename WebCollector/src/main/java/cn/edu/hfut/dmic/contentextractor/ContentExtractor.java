@@ -325,13 +325,15 @@ public class ContentExtractor {
 
         Elements titles = doc.body().select("#title,.title");
         if (titles.size() > 0) {
-            return titles.first().text();
-        } else {
-            try {
-                return getTitleByEditDistance(contentElement);
-            } catch (Exception ex) {
-                throw new Exception("title not found");
+            String title = titles.first().text();
+            if (title.length() > 5) {
+                return titles.first().text();
             }
+        }
+        try {
+            return getTitleByEditDistance(contentElement);
+        } catch (Exception ex) {
+            throw new Exception("title not found");
         }
 
     }
