@@ -323,10 +323,10 @@ public class ContentExtractor {
             }
         }
 
-        Elements titles = doc.body().select("#title,.title");
+        Elements titles = doc.body().select("*[id^=title],*[id$=title],*[class^=title],*[class$=title]");
         if (titles.size() > 0) {
             String title = titles.first().text();
-            if (title.length() > 5) {
+            if (title.length() > 5 && title.length()<40) {
                 return titles.first().text();
             }
         }
@@ -509,7 +509,8 @@ public class ContentExtractor {
 
     public static void main(String[] args) throws Exception {
 
-        News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
+//        News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
+        News news = ContentExtractor.getNewsByUrl("http://www.lianjiang.gov.cn/pure/recview.asp?type_level=0&id=82899");
         System.out.println(news.getUrl());
         System.out.println(news.getTitle());
         System.out.println(news.getTime());
