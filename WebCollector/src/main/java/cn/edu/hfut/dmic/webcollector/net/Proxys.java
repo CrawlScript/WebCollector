@@ -37,6 +37,16 @@ public class Proxys extends ArrayList<Proxy> {
     public static final Logger LOG=LoggerFactory.getLogger(Proxys.class);
 
     public static Random random = new Random();
+    
+    public Proxy nextRandom(){
+        int r=random.nextInt(this.size());
+        return this.get(r);
+    }
+    
+    public void addEmpty(){
+        Proxy nullProxy=null;
+        this.add(nullProxy);
+    }
 
     public void add(String ip, int port) {
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(ip, port));
@@ -56,8 +66,7 @@ public class Proxys extends ArrayList<Proxy> {
         }
 
     }
-    
-   
+
 
     public void addAllFromFile(File file) throws Exception {
         FileInputStream fis = new FileInputStream(file);

@@ -17,12 +17,13 @@
  */
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
+import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
+import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.Links;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequester;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
+import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,18 +45,20 @@ public class Fetcher {
 
     public static final Logger LOG = LoggerFactory.getLogger(Fetcher.class);
 
-    public DbUpdater dbUpdater = null;
+    public DBManager dbManager;
 
-    public HttpRequester httpRequester = null;
+    public Requester requester;
 
-    public VisitorFactory visitorFactory = null;
+    public Visitor visitor;
 
     private AtomicInteger activeThreads;
     private AtomicInteger spinWaiting;
     private AtomicLong lastRequestStart;
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
-    private int retry=3;
+    private int retry = 3;
+    private long retryInterval=0;
+    private long visitInterval=0;
 
     /**
      *
@@ -67,6 +71,14 @@ public class Fetcher {
     public static final int FETCH_FAILED = 2;
     private int threads = 50;
     private boolean isContentStored = false;
+
+    public Visitor getVisitor() {
+        return visitor;
+    }
+
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
+    }
 
     /**
      *
@@ -166,7 +178,7 @@ public class Fetcher {
         /**
          *
          */
-        public StandardGenerator generator;
+        public Generator generator;
 
         /**
          *
@@ -179,7 +191,7 @@ public class Fetcher {
          * @param generator
          * @param size
          */
-        public QueueFeeder(FetchQueue queue, StandardGenerator generator, int size) {
+        public QueueFeeder(FetchQueue queue, Generator generator, int size) {
             this.queue = queue;
             this.generator = generator;
             this.size = size;
@@ -225,7 +237,11 @@ public class Fetcher {
                 }
 
             }
-            generator.close();
+            try {
+                generator.close();
+            } catch (Exception ex) {
+                LOG.info("Exception when closing generator", ex);
+            }
 
         }
 
@@ -260,90 +276,39 @@ public class Fetcher {
 
                         lastRequestStart.set(System.currentTimeMillis());
 
-                        String url = item.datum.getUrl();
+                        CrawlDatum crawlDatum = item.datum;
+                        String url = crawlDatum.getUrl();
+                        Page page = getPage(crawlDatum);
 
-                        HttpResponse response = null;
-                        CrawlDatum crawlDatum = null;
+                        crawlDatum.incrRetry(page.getRetry());
+                        crawlDatum.setFetchTime(System.currentTimeMillis());
 
-                        int retryCount = 0;
-
-                        Exception lastException = null;
-                        for (; retryCount <= retry; retryCount++) {
-                            if (retryCount > 0) {
-                                String suffix = "th ";
-                                switch (retryCount) {
-                                    case 1:
-                                        suffix = "st ";
-                                        break;
-                                    case 2:
-                                        suffix = "nd ";
-                                        break;
-                                    case 3:
-                                        suffix = "rd ";
-                                        break;
-                                    default:
-                                        suffix = "th ";
-                                }
-                                LOG.info("retry " + retryCount + suffix + url);
-                            }
+                        CrawlDatums next = new CrawlDatums();
+                        if (visit(crawlDatum, page, next)) {
                             try {
-                                response = httpRequester.getResponse(url);
-                                break;
+                                /*写入fetch信息*/
+                                dbManager.wrtieFetchSegment(crawlDatum);
+                                if (page.getResponse() == null) {
+                                    continue;
+                                }
+                                if (page.getResponse().isRedirect()) {
+                                    if (page.getResponse().getRealUrl() != null) {
+                                        dbManager.writeRedirectSegment(crawlDatum, page.getResponse().getRealUrl().toString());
+                                    }
+                                }
+                                if (!next.isEmpty()) {
+                                    dbManager.wrtieParseSegment(next);
+                                }
+
                             } catch (Exception ex) {
-                                lastException = ex;
-                                String logMessage = "fetch " + url + " failed," + ex.toString();
-                                if (retryCount < retry) {
-                                    logMessage += "   retry";
-                                }
-                                LOG.info(logMessage);
+                                LOG.info("Exception when updating db", ex);
                             }
                         }
-
-                        if (response != null) {
-                            LOG.info("fetch " + url);
-                            crawlDatum = new CrawlDatum(url, CrawlDatum.STATUS_DB_FETCHED, item.datum.getRetry() + retryCount);
-                        } else {
-                            LOG.info("failed " + url + " " + lastException.toString());
-                            crawlDatum = new CrawlDatum(url, CrawlDatum.STATUS_DB_UNFETCHED, item.datum.getRetry() + retryCount);
-                        }
-
-                        try {
-                            /*写入fetch信息*/
-                            dbUpdater.getSegmentWriter().wrtieFetch(crawlDatum);
-                            if (response == null) {
-                                continue;
+                        if (visitInterval > 0) {
+                            try {
+                                Thread.sleep(visitInterval);
+                            } catch (Exception sleepEx) {
                             }
-                            if (response.getRedirect()) {
-                                if (response.getRealUrl() != null) {
-                                    dbUpdater.getSegmentWriter().writeRedirect(response.getUrl().toString(), response.getRealUrl().toString());
-                                }
-                            }
-                            String contentType = response.getContentType();
-                            Visitor visitor = visitorFactory.createVisitor(url, contentType);
-
-                            Page page = new Page();
-                            page.setUrl(url);
-                            page.setResponse(response);
-                            if (visitor != null) {
-                                Links nextLinks = null;
-                                try {
-                                    /*用户自定义visitor处理页面,并获取链接*/
-                                    nextLinks = visitor.visitAndGetNextLinks(page);
-                                } catch (Exception ex) {
-                                    LOG.info("Exception", ex);
-                                }
-
-                                /*写入解析出的链接*/
-                                if (nextLinks != null && !nextLinks.isEmpty()) {
-
-                                    dbUpdater.getSegmentWriter().wrtieLinks(nextLinks);
-
-                                }
-                            }
-
-                        } catch (Exception ex) {
-                            LOG.info("Exception", ex);
-
                         }
 
                     } catch (Exception ex) {
@@ -367,17 +332,17 @@ public class Fetcher {
 
         try {
 
-            if (dbUpdater.isLocked()) {
-                dbUpdater.merge();
-                dbUpdater.unlock();
+            if (dbManager.isLocked()) {
+                dbManager.merge();
+                dbManager.unlock();
             }
 
         } catch (Exception ex) {
             LOG.info("Exception", ex);
         }
 
-        dbUpdater.lock();
-        dbUpdater.getSegmentWriter().init();
+        dbManager.lock();
+        dbManager.initSegmentWriter();
         running = true;
     }
 
@@ -387,9 +352,9 @@ public class Fetcher {
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
      * @throws IOException
      */
-    public void fetchAll(StandardGenerator generator) throws Exception {
-        if (visitorFactory == null) {
-            LOG.info("Please specify a VisitorFactory!");
+    public void fetchAll(Generator generator) throws Exception {
+        if (visitor == null) {
+            LOG.info("Please specify a Visitor!");
             return;
         }
         before();
@@ -421,7 +386,7 @@ public class Fetcher {
                 fetchQueue.dump();
             }
 
-            if ((System.currentTimeMillis() - lastRequestStart.get()) > Config.requestMaxInterval) {
+            if ((System.currentTimeMillis() - lastRequestStart.get()) > Config.THREAD_KILLER) {
                 LOG.info("Aborting with " + activeThreads + " hung threads.");
                 break;
             }
@@ -472,9 +437,9 @@ public class Fetcher {
 
     private void after() throws Exception {
 
-        dbUpdater.close();
-        dbUpdater.merge();
-        dbUpdater.unlock();
+        dbManager.closeSegmentWriter();
+        dbManager.merge();
+        dbManager.unlock();
 
     }
 
@@ -514,40 +479,6 @@ public class Fetcher {
         this.isContentStored = isContentStored;
     }
 
-    /**
-     * 返回CrawlDB更新器
-     *
-     * @return CrawlDB更新器
-     */
-    public DbUpdater getDbUpdater() {
-        return dbUpdater;
-    }
-
-    /**
-     * 设置CrawlDB更新器
-     *
-     * @param dbUpdater CrawlDB更新器
-     */
-    public void setDbUpdater(DbUpdater dbUpdater) {
-        this.dbUpdater = dbUpdater;
-    }
-
-    public HttpRequester getHttpRequester() {
-        return httpRequester;
-    }
-
-    public void setHttpRequester(HttpRequester httpRequester) {
-        this.httpRequester = httpRequester;
-    }
-
-    public VisitorFactory getVisitorFactory() {
-        return visitorFactory;
-    }
-
-    public void setVisitorFactory(VisitorFactory visitorFactory) {
-        this.visitorFactory = visitorFactory;
-    }
-
     public int getRetry() {
         return retry;
     }
@@ -555,5 +486,135 @@ public class Fetcher {
     public void setRetry(int retry) {
         this.retry = retry;
     }
+
+    public DBManager getDBManager() {
+        return dbManager;
+    }
+
+    public void setDBManager(DBManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
+    public Requester getRequester() {
+        return requester;
+    }
+
+    public void setRequester(Requester requester) {
+        this.requester = requester;
+    }
+
+    public boolean visit(CrawlDatum crawlDatum, Page page, CrawlDatums next) {
+        String url = crawlDatum.getUrl();
+        if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
+
+            crawlDatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
+            crawlDatum.setHttpCode(page.getResponse().getCode());
+
+            try {
+                visitor.visit(page, next);
+            } catch (Exception ex) {
+                LOG.info("Exception when visit URL: " + url, ex);
+                return false;
+            }
+
+            try {
+                visitor.afterVisit(page, next);
+            } catch (Exception ex) {
+                LOG.info("Exception after visit URL: " + url, ex);
+                return false;
+            }
+
+        } else if (page.getStatus() == Page.STATUS_FETCH_FAILED) {
+
+            crawlDatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
+
+            try {
+                visitor.fail(page, next);
+            } catch (Exception ex) {
+                LOG.info("Exception when execute failed URL: " + url, ex);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Page getPage(CrawlDatum crawlDatum) {
+
+        String url = crawlDatum.getUrl();
+        Page page;
+        HttpResponse response = null;
+        int retryIndex = 0;
+        Exception lastException = null;
+        int retryCount = 0;
+        for (; retryIndex <= retry; retryIndex++) {
+            try {
+                response = requester.getResponse(crawlDatum);//this.getHttpResponse(crawlDatum);
+                break;
+            } catch (Exception ex) {
+
+                String suffix = "th ";
+                switch (retryIndex + 1) {
+                    case 1:
+                        suffix = "st ";
+                        break;
+                    case 2:
+                        suffix = "nd ";
+                        break;
+                    case 3:
+                        suffix = "rd ";
+                        break;
+                    default:
+                        suffix = "th ";
+                }
+
+                lastException = ex;
+
+                if (retryIndex < retry) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("retry ").append(retryIndex + 1).append(suffix).append("URL:")
+                            .append(url).append(" after ").append(retryInterval)
+                            .append("ms ").append("(").append(ex.toString()).append(")");
+                    String logMessage = sb.toString();
+                    LOG.info(logMessage);
+                    retryCount++;
+                    if (retryInterval > 0) {
+                        try {
+                            Thread.sleep(retryInterval);
+                        } catch (Exception sleepEx) {
+                        }
+                    }
+                }
+
+            }
+        }
+
+        if (response != null) {
+            LOG.info("fetch URL: " + url);
+            page = Page.createSuccessPage(crawlDatum, retryCount, response);
+        } else {
+            LOG.info("failed URL: " + url + " (" + lastException+")");
+            page = Page.createFailedPage(crawlDatum, retryCount, lastException);
+        }
+
+        return page;
+    }
+
+    public long getRetryInterval() {
+        return retryInterval;
+    }
+
+    public void setRetryInterval(long retryInterval) {
+        this.retryInterval = retryInterval;
+    }
+
+    public long getVisitInterval() {
+        return visitInterval;
+    }
+
+    public void setVisitInterval(long visitInterval) {
+        this.visitInterval = visitInterval;
+    }
+    
+    
 
 }

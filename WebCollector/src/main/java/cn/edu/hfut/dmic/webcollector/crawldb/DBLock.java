@@ -15,17 +15,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-package cn.edu.hfut.dmic.webcollector.extract;
-
-import cn.edu.hfut.dmic.webcollector.model.Page;
+package cn.edu.hfut.dmic.webcollector.crawldb;
 
 /**
  *
  * @author hu
  */
-public interface ExtractorFactory {
-    
-    public Extractors createExtractor(Page page) throws Exception;
-    
+public interface DBLock {
+
+    public void lock() throws Exception;
+
+    public boolean isLocked() throws Exception;
+
+    public void unlock() throws Exception;
 }

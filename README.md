@@ -32,23 +32,21 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 
 ##Quickstart
-Lets crawl some news from yahoo.This demo prints out the titles and contents extracted from news of yahoo.
+Lets crawl some news from hfut news.This demo prints out the titles and contents extracted from news of hfut news.
 
-[YahooCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/YahooCrawler.java):
+[NewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/NewsCrawler.java):
 
-
-    import cn.edu.hfut.dmic.webcollector.crawler.BreadthCrawler;
-    import cn.edu.hfut.dmic.webcollector.model.Links;
+    import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
     import cn.edu.hfut.dmic.webcollector.model.Page;
-    import java.util.regex.Pattern;
+    import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
     import org.jsoup.nodes.Document;
 
     /**
-     * Crawl news from yahoo news
+     * Crawling news from hfut news
      *
      * @author hu
      */
-    public class YahooCrawler extends BreadthCrawler {
+    public class NewsCrawler extends BreadthCrawler {
 
         /**
          * @param crawlPath crawlPath is the path of the directory which maintains
@@ -56,15 +54,13 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
          * @param autoParse if autoParse is true,BreadthCrawler will auto extract
          * links which match regex rules from pag
          */
-        public YahooCrawler(String crawlPath, boolean autoParse) {
+        public NewsCrawler(String crawlPath, boolean autoParse) {
             super(crawlPath, autoParse);
             /*start page*/
-            this.addSeed("http://news.yahoo.com/");
+            this.addSeed("http://news.hfut.edu.cn/list-1-1.html");
 
-            /*fetch url like http://news.yahoo.com/xxxxx*/
-            this.addRegex("http://news.yahoo.com/.*");
-            /*do not fetch url like http://news.yahoo.com/xxxx/xxx)*/
-            this.addRegex("-http://news.yahoo.com/.+/.*");
+            /*fetch url like http://news.hfut.edu.cn/show-xxxxxxhtml*/
+            this.addRegex("http://news.hfut.edu.cn/show-.*html");
             /*do not fetch jpg|png|gif*/
             this.addRegex("-.*\\.(jpg|png|gif).*");
             /*do not fetch url contains #*/
@@ -72,30 +68,30 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
         }
 
         @Override
-        public void visit(Page page, Links nextLinks) {
+        public void visit(Page page, CrawlDatums next) {
             String url = page.getUrl();
             /*if page is news page*/
-            if (Pattern.matches("http://news.yahoo.com/.+html", url)) {
+            if (page.matchUrl("http://news.hfut.edu.cn/show-.*html")) {
                 /*we use jsoup to parse page*/
                 Document doc = page.getDoc();
 
                 /*extract title and content of news by css selector*/
-                String title = doc.select("h1[class=headline]").first().text();
-                String content = doc.select("div[class=body yom-art-content clearfix]").first().text();
+                String title = page.select("div[id=Article]>h2").first().text();
+                String content = page.select("div#artibody", 0).text();
 
                 System.out.println("URL:\n" + url);
                 System.out.println("title:\n" + title);
                 System.out.println("content:\n" + content);
 
-                /*If you want to add urls to crawl,add them to nextLinks*/
+                /*If you want to add urls to crawl,add them to nextLink*/
                 /*WebCollector automatically filters links that have been fetched before*/
                 /*If autoParse is true and the link you add to nextLinks does not match the regex rules,the link will also been filtered.*/
-                // nextLinks.add("http://xxxxxx.com");
+                //next.add("http://xxxxxx.com");
             }
         }
 
         public static void main(String[] args) throws Exception {
-            YahooCrawler crawler = new YahooCrawler("crawl", true);
+            NewsCrawler crawler = new NewsCrawler("crawl", true);
             crawler.setThreads(50);
             crawler.setTopN(100);
             //crawler.setResumable(true);
@@ -104,6 +100,8 @@ Lets crawl some news from yahoo.This demo prints out the titles and contents ext
         }
 
     }
+
+    
 
 
 ##Content Extraction

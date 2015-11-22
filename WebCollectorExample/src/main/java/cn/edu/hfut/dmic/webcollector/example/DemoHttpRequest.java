@@ -19,7 +19,6 @@ package cn.edu.hfut.dmic.webcollector.example;
 
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
-import cn.edu.hfut.dmic.webcollector.net.RequestConfig;
 
 /**
  *
@@ -37,13 +36,13 @@ public class DemoHttpRequest {
     }
 
     public static void demo2() throws Exception {
-        RequestConfig requestConfig = new RequestConfig();
-        requestConfig.setMethod("GET");
-        requestConfig.setUserAgent("WebCollector");
-        requestConfig.setCookie("xxxxxxxxxxxxxx");
-        requestConfig.addHeader("xxx", "xxxxxxxxx");
 
-        HttpRequest request = new HttpRequest("http://www.csdn.net", requestConfig);
+
+        HttpRequest request = new HttpRequest("http://www.csdn.net");
+        request.setMethod("GET");
+        request.setUserAgent("WebCollector");
+        request.setCookie("xxxxxxxxxxxxxx");
+        request.addHeader("xxx", "xxxxxxxxx");
 
         HttpResponse response = request.getResponse();
         String html = response.getHtmlByCharsetDetect();

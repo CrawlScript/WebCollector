@@ -15,35 +15,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package cn.edu.hfut.dmic.webcollector.crawler;
+package cn.edu.hfut.dmic.webcollector.crawldb;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.Visitor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 
 /**
+ * 爬取过程中，写入爬取历史、网页Content、解析信息的Writer
  *
  * @author hu
  */
-public abstract class DeepCrawler extends Crawler implements Visitor {
+public interface SegmentWriter {
 
-    public static final Logger LOG = LoggerFactory.getLogger(DeepCrawler.class);
+    public void initSegmentWriter() throws Exception;
 
-    public DeepCrawler(String crawlPath) {
-        super(crawlPath);
-    }
+    public void wrtieFetchSegment(CrawlDatum fetchDatum) throws Exception;
 
+    public void writeRedirectSegment(CrawlDatum datum, String realUrl) throws Exception;
 
-    public static void main(String[] args) throws Exception {
-        //DeepCrawler crawler = new DeepCrawler("/home/hu/data/bdbcrawl");
-       // crawler.addSeed("http://www.xinhuanet.com/");
-        //crawler.addSeed("http://www.sina.com");
-       // crawler.start(3);
-    }
+    public void wrtieParseSegment(CrawlDatums parseDatums) throws Exception;
 
-    @Override
-    public Visitor createVisitor(String url, String contentType) {
-        return this;
-    }
+    public void closeSegmentWriter() throws Exception;
 
 }

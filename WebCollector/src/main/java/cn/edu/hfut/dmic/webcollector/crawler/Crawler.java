@@ -17,19 +17,16 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.DbUpdater;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
-import cn.edu.hfut.dmic.webcollector.fetcher.VisitorFactory;
-import cn.edu.hfut.dmic.webcollector.generator.Injector;
-import cn.edu.hfut.dmic.webcollector.generator.StandardGenerator;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequester;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequesterImpl;
+import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
+import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
+import cn.edu.hfut.dmic.webcollector.fetcher.Visitor;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
+import cn.edu.hfut.dmic.webcollector.model.Links;
+import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
-import java.io.File;
-import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class Crawler implements VisitorFactory {
+public abstract class Crawler {
 
     public static final Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
@@ -46,49 +43,42 @@ public abstract class Crawler implements VisitorFactory {
     public final static int STOPED = 2;
     protected boolean resumable = false;
     protected int threads = 50;
-    protected Integer topN=null;
-    protected ArrayList<String> seeds = new ArrayList<String>();
-    protected ArrayList<String> forcedSeeds = new ArrayList<String>();
+
+    protected int topN = -1;
+    protected int retry = 3;
+    protected long retryInterval = 0;
+    protected long visitInterval = 0;
+
+    protected CrawlDatums seeds = new CrawlDatums();
+    protected CrawlDatums forcedSeeds = new CrawlDatums();
     protected Fetcher fetcher;
-    int retry=Config.retry;
-     protected int maxRetry=Config.MAX_RETRY;
+    protected int maxRetry = -1;
 
-    protected VisitorFactory visitorFactory = this;
-    protected HttpRequester httpRequester = new HttpRequesterImpl();
-    String crawlPath;
+    protected Requester requester;
+    protected Visitor visitor;
+    protected DBManager dbManager;
+    protected Generator generator;
 
-    Environment env;
-
-    public Crawler(String crawlPath) {
-        this.crawlPath = crawlPath;
-    }
-
-    public void inject() throws Exception {
-        Injector injector = new Injector(env);
-        injector.inject(seeds);
+    protected void inject() throws Exception {
+        dbManager.inject(seeds);
     }
 
     public void injectForcedSeeds() throws Exception {
-        Injector injector = new Injector(env);
-        injector.inject(forcedSeeds);
+        dbManager.inject(forcedSeeds);
     }
 
     public void start(int depth) throws Exception {
-        File dir = new File(crawlPath);
+
         boolean needInject = true;
 
-        if (resumable && dir.exists()) {
+        if (resumable && dbManager.isDBExists()) {
             needInject = false;
         }
-        if (resumable && !dir.exists()) {
-            dir.mkdirs();
-        }
-        if (!resumable) {
 
-            if (dir.exists()) {
-                FileUtils.deleteDir(dir);
+        if (!resumable) {
+            if (dbManager.isDBExists()) {
+                dbManager.clear();
             }
-            dir.mkdirs();
 
             if (seeds.isEmpty() && forcedSeeds.isEmpty()) {
                 LOG.info("error:Please add at least one seed");
@@ -96,9 +86,7 @@ public abstract class Crawler implements VisitorFactory {
             }
 
         }
-        EnvironmentConfig environmentConfig = new EnvironmentConfig();
-        environmentConfig.setAllowCreate(true);
-        env = new Environment(dir, environmentConfig);
+        dbManager.open();
 
         if (needInject) {
             inject();
@@ -114,84 +102,82 @@ public abstract class Crawler implements VisitorFactory {
                 break;
             }
             LOG.info("starting depth " + (i + 1));
-            long startTime=System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
 
-            StandardGenerator generator = new StandardGenerator(env);
-            generator.setMaxRetry(maxRetry);
+            //BerkeleyGenerator generator = new BerkeleyGenerator(env);
+            generator.open();
+            if (maxRetry >= 0) {
+                generator.setMaxRetry(maxRetry);
+            } else {
+                generator.setMaxRetry(Config.MAX_RETRY);
+            }
             generator.setTopN(topN);
             fetcher = new Fetcher();
-            fetcher.setHttpRequester(httpRequester);
-            fetcher.setDbUpdater(new DbUpdater(env));
-            fetcher.setVisitorFactory(visitorFactory);
+            fetcher.setRetryInterval(retryInterval);
+            fetcher.setVisitInterval(visitInterval);
+            fetcher.setDBManager(dbManager);
+            fetcher.setRequester(requester);
+            fetcher.setVisitor(visitor);
             fetcher.setRetry(retry);
             fetcher.setThreads(threads);
             fetcher.fetchAll(generator);
-            long endTime=System.currentTimeMillis();
-            long costTime=(endTime-startTime)/1000;
-            int totalGenerate=generator.getTotalGenerate();
-           
-            LOG.info("depth " + (i + 1) +" finish: \n\tTOTAL urls:\t"+totalGenerate+"\n\tTOTAL time:\t"+costTime+" seconds");
-             if(totalGenerate==0){
+            long endTime = System.currentTimeMillis();
+            long costTime = (endTime - startTime) / 1000;
+            int totalGenerate = generator.getTotalGenerate();
+
+            LOG.info("depth " + (i + 1) + " finish: \n\tTOTAL urls:\t" + totalGenerate + "\n\tTOTAL time:\t" + costTime + " seconds");
+            if (totalGenerate == 0) {
                 break;
             }
 
         }
-        env.close();
+        dbManager.close();
     }
-    
-    public void stop(){
-        status=STOPED;
+
+    public void stop() {
+        status = STOPED;
         fetcher.stop();
     }
 
-    public VisitorFactory getVisitorFactory() {
-        return visitorFactory;
+    public void addSeed(CrawlDatum datum, boolean force) {
+        if (force) {
+            forcedSeeds.add(datum);
+        } else {
+            seeds.add(datum);
+        }
     }
 
-    public void setVisitorFactory(VisitorFactory visitorFactory) {
-        this.visitorFactory = visitorFactory;
+    public void addSeed(CrawlDatum datum) {
+        addSeed(datum, false);
     }
 
-    public HttpRequester getHttpRequester() {
-        return httpRequester;
+    public void addSeed(CrawlDatums datums, boolean force) {
+        for (CrawlDatum datum : datums) {
+            addSeed(datum, force);
+        }
     }
 
-    public void setHttpRequester(HttpRequester httpRequester) {
-        this.httpRequester = httpRequester;
+    public void addSeed(CrawlDatums datums) {
+        addSeed(datums, false);
     }
 
-    /**
-     * 添加一个种子url(如果断点爬取，种子只会在第一次爬取时注入)
-     *
-     * @param seed 种子url
-     */
-    public void addSeed(String seed) {
-        seeds.add(seed);
+    public void addSeed(Links links, boolean force) {
+        for (String url : links) {
+            addSeed(url, force);
+        }
     }
 
-    /**
-     * 添加一个种子url(如果断点爬取，种子会在每次启动爬虫时注入， 如果爬取历史中有相同url,则覆盖)
-     *
-     * @param seed
-     */
-    public void addForcedSeed(String seed) {
-        forcedSeeds.add(seed);
+    public void addSeed(Links links) {
+        addSeed(links, false);
     }
 
-    public ArrayList<String> getSeeds() {
-        return seeds;
+    public void addSeed(String url, boolean force) {
+        CrawlDatum datum = new CrawlDatum(url);
+        addSeed(datum, force);
     }
 
-    public void setSeeds(ArrayList<String> seeds) {
-        this.seeds = seeds;
-    }
-
-    public ArrayList<String> getForcedSeeds() {
-        return forcedSeeds;
-    }
-
-    public void setForcedSeeds(ArrayList<String> forcedSeeds) {
-        this.forcedSeeds = forcedSeeds;
+    public void addSeed(String url) {
+        addSeed(url, false);
     }
 
     public boolean isResumable() {
@@ -210,13 +196,43 @@ public abstract class Crawler implements VisitorFactory {
         this.threads = threads;
     }
 
-    
+    public int getMaxRetry() {
+        return maxRetry;
+    }
 
-    public Integer getTopN() {
+    public void setMaxRetry(int maxRetry) {
+        this.maxRetry = maxRetry;
+    }
+
+    public Requester getRequester() {
+        return requester;
+    }
+
+    public void setRequester(Requester requester) {
+        this.requester = requester;
+    }
+
+    public Visitor getVisitor() {
+        return visitor;
+    }
+
+    public void setVisitor(Visitor visitor) {
+        this.visitor = visitor;
+    }
+
+    public Generator getGenerator() {
+        return generator;
+    }
+
+    public void setGenerator(Generator generator) {
+        this.generator = generator;
+    }
+
+    public int getTopN() {
         return topN;
     }
 
-    public void setTopN(Integer topN) {
+    public void setTopN(int topN) {
         this.topN = topN;
     }
 
@@ -227,15 +243,29 @@ public abstract class Crawler implements VisitorFactory {
     public void setRetry(int retry) {
         this.retry = retry;
     }
-    
-    
-    public int getMaxRetry() {
-        return maxRetry;
+
+    public long getRetryInterval() {
+        return retryInterval;
     }
 
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
+    public void setRetryInterval(long retryInterval) {
+        this.retryInterval = retryInterval;
     }
-   
+
+    public long getVisitInterval() {
+        return visitInterval;
+    }
+
+    public void setVisitInterval(long visitInterval) {
+        this.visitInterval = visitInterval;
+    }
+
+    public DBManager getDbManager() {
+        return dbManager;
+    }
+
+    public void setDbManager(DBManager dbManager) {
+        this.dbManager = dbManager;
+    }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 hu
+ * Copyright (C) 2015 hu
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,15 +15,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package cn.edu.hfut.dmic.webcollector.plugin.ram;
 
-package cn.edu.hfut.dmic.webcollector.fetcher;
-
-
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import java.util.HashMap;
 
 /**
  *
  * @author hu
  */
-public interface VisitorFactory {
-    public Visitor createVisitor(String url,String contentType);
+public class RamDB {
+
+    protected HashMap<String, CrawlDatum> crawlDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, CrawlDatum> fetchDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, CrawlDatum> linkDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, String> redirectDB = new HashMap<String, String>();
 }

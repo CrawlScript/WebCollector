@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 hu
+ * Copyright (C) 2014 hu
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,16 +15,27 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package cn.edu.hfut.dmic.webcollector.crawldb;
 
-package cn.edu.hfut.dmic.webcollector.extract;
-
-import java.util.ArrayList;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 
 /**
+ * 抓取任务生成器
  *
  * @author hu
  */
-public class Extractors extends ArrayList<Extractor>{
+public interface Generator {
+
+    public CrawlDatum next();
     
-    
+    public void open() throws Exception;
+
+    public void setTopN(int topN);
+
+    public void setMaxRetry(int maxRetry);
+
+    public int getTotalGenerate();
+
+    public void close() throws Exception;
+
 }

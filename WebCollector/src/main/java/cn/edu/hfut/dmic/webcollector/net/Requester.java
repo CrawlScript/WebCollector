@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 hu
+ * Copyright (C) 2015 hu
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,24 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-package cn.edu.hfut.dmic.webcollector.generator;
-
+package cn.edu.hfut.dmic.webcollector.net;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 
-
 /**
- * 抓取任务生成器
+ *
  * @author hu
  */
-public interface Generator{
-   
-    /**
-     * 获取下一个抓取任务
-     * @return 下一个抓取任务，如果没有任务，返回null
-     */
-    public  CrawlDatum next();
- 
-    
+public interface Requester {
+     public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception;
 }

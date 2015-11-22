@@ -15,40 +15,60 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package cn.edu.hfut.dmic.webcollector.generator;
+package cn.edu.hfut.dmic.webcollector.plugin.berkeley;
 
+import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.util.BerkeleyDBUtils;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 import com.sleepycat.je.Cursor;
 import com.sleepycat.je.CursorConfig;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.Environment;
+import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
-import java.io.UnsupportedEncodingException;
+import java.io.File;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author hu
  */
-public class StandardGenerator implements Generator {
+public class BerkeleyGenerator implements Generator {
+
+    public static final Logger LOG = LoggerFactory.getLogger(BerkeleyGenerator.class);
 
     Cursor cursor = null;
-    Database crawldbDatabase=null;
+    Database crawldbDatabase = null;
     Environment env;
-    protected int totalGenerate=0;
-    protected Integer topN=null;
-    protected int maxRetry=Config.MAX_RETRY;
-    public StandardGenerator(Environment env) {
-        this.env=env;
-        totalGenerate=0;
+    protected int totalGenerate = 0;
+    protected int topN = -1;
+    protected int maxRetry = Config.MAX_RETRY;
+    String crawlPath;
+
+    public BerkeleyGenerator(String crawlPath) {
+        this.crawlPath = crawlPath;
+
     }
-    
-    public void close(){
+
+    @Override
+    public void open() throws Exception {
+        File dir = new File(crawlPath);
+        EnvironmentConfig environmentConfig = new EnvironmentConfig();
+        environmentConfig.setAllowCreate(true);
+        env = new Environment(dir, environmentConfig);
+        totalGenerate = 0;
+
+    }
+
+    public void close() throws Exception {
+
         cursor.close();
+        cursor = null;
         crawldbDatabase.close();
+        env.close();
     }
 
     public DatabaseEntry key = new DatabaseEntry();
@@ -56,20 +76,22 @@ public class StandardGenerator implements Generator {
 
     @Override
     public CrawlDatum next() {
-        if(topN!=null){
-            if(totalGenerate>=topN){
+        if (topN >= 0) {
+            if (totalGenerate >= topN) {
                 return null;
             }
         }
-        if(cursor==null){
+
+        if (cursor == null) {
             crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
             cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
         }
+
         while (true) {
             if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
 
                 try {
-                    CrawlDatum datum = new CrawlDatum(key, value);
+                    CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
                     if (datum.getStatus() == CrawlDatum.STATUS_DB_FETCHED) {
                         continue;
                     } else {
@@ -79,7 +101,8 @@ public class StandardGenerator implements Generator {
                         totalGenerate++;
                         return datum;
                     }
-                } catch (UnsupportedEncodingException ex) {
+                } catch (Exception ex) {
+                    LOG.info("Exception when generating", ex);
                     continue;
                 }
             } else {
@@ -88,15 +111,17 @@ public class StandardGenerator implements Generator {
         }
     }
 
+    @Override
     public int getTotalGenerate() {
         return totalGenerate;
     }
 
-    public Integer getTopN() {
+    public int getTopN() {
         return topN;
     }
 
-    public void setTopN(Integer topN) {
+    @Override
+    public void setTopN(int topN) {
         this.topN = topN;
     }
 
@@ -104,14 +129,9 @@ public class StandardGenerator implements Generator {
         return maxRetry;
     }
 
+    @Override
     public void setMaxRetry(int maxRetry) {
         this.maxRetry = maxRetry;
     }
-    
-    
-
-  
-    
-    
 
 }

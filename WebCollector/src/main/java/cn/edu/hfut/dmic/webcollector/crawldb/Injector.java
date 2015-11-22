@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 hu
+ * Copyright (C) 2014 hu
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,17 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+package cn.edu.hfut.dmic.webcollector.crawldb;
 
-package cn.edu.hfut.dmic.webcollector.net;
-
-import java.net.Proxy;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 
 /**
- * 
+ *
  * @author hu
  */
-public interface ProxyGenerator {
-    public Proxy next(String url);
-    public void markGood(Proxy proxy,String url);
-    public void markBad(Proxy proxy,String url);
+public interface Injector {
+     public void inject(CrawlDatum datum) throws Exception;
 }

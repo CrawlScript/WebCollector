@@ -43,6 +43,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * 
  * 可在cn.edu.hfut.dmic.webcollector.example包中找到例子(Demo)
  * 
+ * 
+ *  
+ * 本教程演示如何利用WebCollector爬取网页、抽取数据并插入数据库
+ * 由于使用的mysql相关组件jar包过大，已在pom.xml中注释mysql相关的dependency，
+ * 但本教程依赖mysql相关组件，为了能够编译通过，将本教程代码注释 如果希望编译此教程，请先取消pom.xml中以下dependency取消注释：
+ * 1)mysql-connector-java 2)spring-jdbc 3)commons-dbcp 重新构建工程后， 取消此教程的注释即可
+ * 
+ * 
  * @author hu
  */
 public class TutorialCrawler extends DeepCrawler {
