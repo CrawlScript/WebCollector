@@ -41,7 +41,7 @@ WebCollector 2.x版本特性：
 
 
 ###教程：
-[WebCollector 2.x教程](https://github.com/CrawlScript/WebCollector/tree/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/crawler)
+[WebCollector 2.x教程](https://github.com/CrawlScript/WebCollector/tree/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example)
 
 
 
