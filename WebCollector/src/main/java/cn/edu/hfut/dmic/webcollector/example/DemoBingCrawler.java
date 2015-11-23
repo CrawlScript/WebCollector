@@ -53,7 +53,8 @@ public class DemoBingCrawler extends RamCrawler {
             CrawlDatum datum = new CrawlDatum(url)
                     .putMetaData("keyword", keyword)
                     .putMetaData("pageNum", pageNum + "")
-                    .putMetaData("pageType", "searchEngine");
+                    .putMetaData("pageType", "searchEngine")
+                    .putMetaData("depth", "1");
             addSeed(datum);
         }
     }
@@ -63,6 +64,7 @@ public class DemoBingCrawler extends RamCrawler {
 
         String keyword = page.getMetaData("keyword");
         String pageType = page.getMetaData("pageType");
+        int depth=Integer.valueOf(page.getMetaData("depth"));
         if (pageType.equals("searchEngine")) {
             int pageNum = Integer.valueOf(page.getMetaData("pageNum"));
             System.out.println("成功抓取关键词" + keyword + "的第" + pageNum + "页搜索结果");
@@ -82,12 +84,17 @@ public class DemoBingCrawler extends RamCrawler {
                 则这些网页的refer值都是新浪首页。WebCollector不直接保存refer值，
                 但我们可以通过下面的方式，将refer信息保存在metaData中，达到同样的效果。
                 经典爬虫中锚文本的存储也可以通过下面方式实现。
+                
+                在一些需求中，希望得到当前页面在遍历树中的深度，利用metaData很容易实现
+                这个功能，在将CrawlDatum添加到next中时，将其depth设置为当前访问页面
+                的depth+1即可。
                 */
                 CrawlDatum datum = new CrawlDatum(result.attr("abs:href"))
                         .putMetaData("keyword", keyword)
                         .putMetaData("pageNum", pageNum + "")
                         .putMetaData("rank", rank + "")
                         .putMetaData("pageType", "outlink")
+                        .putMetaData("depth", (depth+1)+"")
                         .putMetaData("refer", page.getUrl());
                 next.add(datum);
             }
@@ -97,8 +104,8 @@ public class DemoBingCrawler extends RamCrawler {
             int rank = Integer.valueOf(page.getMetaData("rank"));
             String refer=page.getMetaData("refer");
 
-            String line = String.format("第%s页第%s个结果:%s(%s字节)\trefer=%s",
-                    pageNum, rank + 1, page.getDoc().title(), page.getContent().length,refer);
+            String line = String.format("第%s页第%s个结果:%s(%s字节)\tdepth=%s\trefer=%s",
+                    pageNum, rank + 1, page.getDoc().title(),page.getContent().length,depth,refer);
             System.out.println(line);
 
         }
