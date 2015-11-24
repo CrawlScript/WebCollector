@@ -57,8 +57,8 @@ public class Fetcher {
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
     private int retry = 3;
-    private long retryInterval=0;
-    private long visitInterval=0;
+    private long retryInterval = 0;
+    private long visitInterval = 0;
 
     /**
      *
@@ -237,7 +237,6 @@ public class Fetcher {
                 }
 
             }
-          
 
         }
 
@@ -323,25 +322,6 @@ public class Fetcher {
 
     }
 
-    private void before() throws Exception {
-        //DbUpdater recoverDbUpdater = createRecoverDbUpdater();
-
-        try {
-
-            if (dbManager.isLocked()) {
-                dbManager.merge();
-                dbManager.unlock();
-            }
-
-        } catch (Exception ex) {
-            LOG.info("Exception", ex);
-        }
-
-        dbManager.lock();
-        dbManager.initSegmentWriter();
-        running = true;
-    }
-
     /**
      * 抓取当前所有任务，会阻塞到爬取完成
      *
@@ -350,76 +330,97 @@ public class Fetcher {
      */
     public void fetchAll(Generator generator) throws Exception {
         if (visitor == null) {
-            LOG.info("Please specify a Visitor!");
+            LOG.info("Please Specify A Visitor!");
             return;
         }
-        before();
 
-        lastRequestStart = new AtomicLong(System.currentTimeMillis());
-
-        activeThreads = new AtomicInteger(0);
-        spinWaiting = new AtomicInteger(0);
-        fetchQueue = new FetchQueue();
-        feeder = new QueueFeeder(fetchQueue, generator, 1000);
-        feeder.start();
-
-        FetcherThread[] fetcherThreads = new FetcherThread[threads];
-        for (int i = 0; i < threads; i++) {
-            fetcherThreads[i] = new FetcherThread();
-            fetcherThreads[i].start();
+        try {
+            if (dbManager.isLocked()) {
+                dbManager.merge();
+                dbManager.unlock();
+            }
+        } catch (Exception ex) {
+            LOG.info("Exception when merging history");
         }
+        try {
+            dbManager.lock();
+            generator.open();
+            LOG.info("open generator:" + generator.getClass().getName());
+            dbManager.initSegmentWriter();
+            LOG.info("init segmentWriter:" + dbManager.getClass().getName());
+            running = true;
 
-        do {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-            }
-            LOG.info("-activeThreads=" + activeThreads.get()
-                    + ", spinWaiting=" + spinWaiting.get() + ", fetchQueue.size="
-                    + fetchQueue.getSize());
+            lastRequestStart = new AtomicLong(System.currentTimeMillis());
 
-            if (!feeder.isAlive() && fetchQueue.getSize() < 5) {
-                fetchQueue.dump();
-            }
+            activeThreads = new AtomicInteger(0);
+            spinWaiting = new AtomicInteger(0);
+            fetchQueue = new FetchQueue();
+            feeder = new QueueFeeder(fetchQueue, generator, 1000);
+            feeder.start();
 
-            if ((System.currentTimeMillis() - lastRequestStart.get()) > Config.THREAD_KILLER) {
-                LOG.info("Aborting with " + activeThreads + " hung threads.");
-                break;
+            FetcherThread[] fetcherThreads = new FetcherThread[threads];
+            for (int i = 0; i < threads; i++) {
+                fetcherThreads[i] = new FetcherThread();
+                fetcherThreads[i].start();
             }
 
-        } while (activeThreads.get() > 0 && running);
-        running = false;
-        long waitThreadEndStartTime = System.currentTimeMillis();
-        if (activeThreads.get() > 0) {
-            LOG.info("wait for activeThreads to end");
-        }
-        /*等待存活线程结束*/
-        while (activeThreads.get() > 0) {
-            LOG.info("-activeThreads=" + activeThreads.get());
-            try {
-                Thread.sleep(500);
-            } catch (Exception ex) {
+            do {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                }
+                LOG.info("-activeThreads=" + activeThreads.get()
+                        + ", spinWaiting=" + spinWaiting.get() + ", fetchQueue.size="
+                        + fetchQueue.getSize());
+
+                if (!feeder.isAlive() && fetchQueue.getSize() < 5) {
+                    fetchQueue.dump();
+                }
+
+                if ((System.currentTimeMillis() - lastRequestStart.get()) > Config.THREAD_KILLER) {
+                    LOG.info("Aborting with " + activeThreads + " hung threads.");
+                    break;
+                }
+
+            } while (activeThreads.get() > 0 && running);
+            running = false;
+            long waitThreadEndStartTime = System.currentTimeMillis();
+            if (activeThreads.get() > 0) {
+                LOG.info("wait for activeThreads to end");
             }
-            if (System.currentTimeMillis() - waitThreadEndStartTime > Config.WAIT_THREAD_END_TIME) {
-                LOG.info("kill threads");
-                for (int i = 0; i < fetcherThreads.length; i++) {
-                    if (fetcherThreads[i].isAlive()) {
-                        try {
-                            fetcherThreads[i].stop();
-                            LOG.info("kill thread " + i);
-                        } catch (Exception ex) {
-                            LOG.info("Exception", ex);
+            /*等待存活线程结束*/
+            while (activeThreads.get() > 0) {
+                LOG.info("-activeThreads=" + activeThreads.get());
+                try {
+                    Thread.sleep(500);
+                } catch (Exception ex) {
+                }
+                if (System.currentTimeMillis() - waitThreadEndStartTime > Config.WAIT_THREAD_END_TIME) {
+                    LOG.info("kill threads");
+                    for (int i = 0; i < fetcherThreads.length; i++) {
+                        if (fetcherThreads[i].isAlive()) {
+                            try {
+                                fetcherThreads[i].stop();
+                                LOG.info("kill thread " + i);
+                            } catch (Exception ex) {
+                                LOG.info("Exception", ex);
+                            }
                         }
                     }
+                    break;
                 }
-                break;
             }
+            LOG.info("clear all activeThread");
+            feeder.stopFeeder();
+            fetchQueue.clear();
+        } finally {
+            generator.close();
+            LOG.info("close generator:" + generator.getClass().getName());
+            dbManager.closeSegmentWriter();
+            LOG.info("close segmentwriter:" + dbManager.getClass().getName());
+            dbManager.merge();
+            dbManager.unlock();
         }
-        LOG.info("clear all activeThread");
-        feeder.stopFeeder();
-        fetchQueue.clear();
-        generator.close();
-        after();
     }
 
     boolean running;
@@ -429,14 +430,6 @@ public class Fetcher {
      */
     public void stop() {
         running = false;
-    }
-
-    private void after() throws Exception {
-
-        dbManager.closeSegmentWriter();
-        dbManager.merge();
-        dbManager.unlock();
-
     }
 
     /**
@@ -588,7 +581,7 @@ public class Fetcher {
             LOG.info("fetch URL: " + url);
             page = Page.createSuccessPage(crawlDatum, retryCount, response);
         } else {
-            LOG.info("failed URL: " + url + " (" + lastException+")");
+            LOG.info("failed URL: " + url + " (" + lastException + ")");
             page = Page.createFailedPage(crawlDatum, retryCount, lastException);
         }
 
@@ -610,7 +603,5 @@ public class Fetcher {
     public void setVisitInterval(long visitInterval) {
         this.visitInterval = visitInterval;
     }
-    
-    
 
 }

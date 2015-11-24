@@ -42,7 +42,7 @@ public class BerkeleyGenerator implements Generator {
 
     Cursor cursor = null;
     Database crawldbDatabase = null;
-    Environment env;
+    Environment env=null;
     protected int totalGenerate = 0;
     protected int topN = -1;
     protected int maxRetry = Config.MAX_RETRY;
@@ -65,10 +65,16 @@ public class BerkeleyGenerator implements Generator {
 
     public void close() throws Exception {
 
-        cursor.close();
+        if(cursor!=null){
+            cursor.close();
+        }
         cursor = null;
-        crawldbDatabase.close();
-        env.close();
+        if(crawldbDatabase!=null){
+            crawldbDatabase.close();
+        }
+        if(env!=null){
+            env.close();
+        }
     }
 
     public DatabaseEntry key = new DatabaseEntry();

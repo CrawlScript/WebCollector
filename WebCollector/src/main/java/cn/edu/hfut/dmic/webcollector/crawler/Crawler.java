@@ -101,11 +101,9 @@ public abstract class Crawler {
             if (status == STOPED) {
                 break;
             }
-            LOG.info("starting depth " + (i + 1));
+            LOG.info("start depth " + (i + 1));
             long startTime = System.currentTimeMillis();
 
-            //BerkeleyGenerator generator = new BerkeleyGenerator(env);
-            generator.open();
             if (maxRetry >= 0) {
                 generator.setMaxRetry(maxRetry);
             } else {
