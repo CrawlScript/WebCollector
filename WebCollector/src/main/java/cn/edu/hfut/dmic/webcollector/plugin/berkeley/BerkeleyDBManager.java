@@ -56,6 +56,7 @@ public class BerkeleyDBManager extends DBManager {
         DatabaseEntry value = new DatabaseEntry();
         if (!force) {
             if (database.get(null, key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+                database.close();
                 return;
             }
         }
