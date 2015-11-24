@@ -237,11 +237,7 @@ public class Fetcher {
                 }
 
             }
-            try {
-                generator.close();
-            } catch (Exception ex) {
-                LOG.info("Exception when closing generator", ex);
-            }
+          
 
         }
 
@@ -422,8 +418,8 @@ public class Fetcher {
         LOG.info("clear all activeThread");
         feeder.stopFeeder();
         fetchQueue.clear();
+        generator.close();
         after();
-
     }
 
     boolean running;
