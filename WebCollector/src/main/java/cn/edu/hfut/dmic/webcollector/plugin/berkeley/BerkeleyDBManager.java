@@ -30,6 +30,7 @@ import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,12 +187,7 @@ public class BerkeleyDBManager extends DBManager {
 
     @Override
     public void lock() throws Exception {
-        lockDatabase = env.openDatabase(null, "lock", BerkeleyDBUtils.defaultDBConfig);
-        DatabaseEntry key = new DatabaseEntry("lock".getBytes("utf-8"));
-        DatabaseEntry value = new DatabaseEntry("locked".getBytes("utf-8"));
-        lockDatabase.put(null, key, value);
-        lockDatabase.sync();
-        lockDatabase.close();
+        openLockDatabaseByEntry("locked");
     }
 
     @Override
@@ -212,9 +208,13 @@ public class BerkeleyDBManager extends DBManager {
 
     @Override
     public void unlock() throws Exception {
+        openLockDatabaseByEntry("unlocked");
+    }
+
+    private void openLockDatabaseByEntry(String locked) throws UnsupportedEncodingException {
         lockDatabase = env.openDatabase(null, "lock", BerkeleyDBUtils.defaultDBConfig);
         DatabaseEntry key = new DatabaseEntry("lock".getBytes("utf-8"));
-        DatabaseEntry value = new DatabaseEntry("unlocked".getBytes("utf-8"));
+        DatabaseEntry value = new DatabaseEntry(locked.getBytes("utf-8"));
         lockDatabase.put(null, key, value);
         lockDatabase.sync();
         lockDatabase.close();
