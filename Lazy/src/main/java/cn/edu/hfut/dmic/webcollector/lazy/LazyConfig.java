@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.lazy;
 
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.net.Proxys;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class LazyConfig {
     protected long retryInterval = 0;
     protected int threads = 50;
     protected int retry = 3;
+    protected int maxReceiveSize=Config.MAX_RECEIVE_SIZE;
 
     public LazyConfig(String confFileName) throws Exception {
         String jsonStr = FileUtils.readFile(confFileName, "utf-8");
@@ -109,9 +111,15 @@ public class LazyConfig {
                 proxys = null;
                 LOG.info("set proxys=no proxy");
             } else {
+                proxys=new Proxys();
                 for (int i = 0; i < proxysJA.length(); i++) {
+                    
                     String proxy=proxysJA.getString(i);
-                    proxys.add(proxy);
+                    if(proxy.equals("direct")){
+                        proxys.addEmpty();
+                    }else{
+                        proxys.add(proxy);
+                    }
                     LOG.info("add proxy:"+proxy);
                 }
             }
@@ -139,6 +147,12 @@ public class LazyConfig {
         if (confJson.has("retry")) {
             retry = confJson.getInt("retry");
             LOG.info("set retry="+retry);
+        }
+        
+        if(confJson.has("max_receive_size")){
+            maxReceiveSize=confJson.getInt("max_receive_size");
+            LOG.info("set max_receive_size="+maxReceiveSize);
+            Config.MAX_RECEIVE_SIZE=maxReceiveSize;
         }
 
     }

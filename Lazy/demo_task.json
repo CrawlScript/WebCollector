@@ -27,6 +27,7 @@
     "threads":50,
     "visit_interval":0,
     "retry_interval":0,
+    "max_receive_size":-1,
     "retry":3,
     "depth":5
         
