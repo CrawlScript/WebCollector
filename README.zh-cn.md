@@ -7,9 +7,9 @@ WebCollector是一个无须配置、便于二次开发的JAVA爬虫框架（内�
 ###爬虫内核：
 WebCollector致力于维护一个稳定、可扩的爬虫内核，便于开发者进行灵活的二次开发。内核具有很强的扩展性，用户可以在内核基础上开发自己想要的爬虫。源码中集成了Jsoup，可进行精准的网页解析。
 
+###文档地址:
+[https://github.com/CrawlScript/WebCollector-GitDoc](https://github.com/CrawlScript/WebCollector-GitDoc)
 
-###1.x：
-WebCollector 1.x版本现已转移到[http://git.oschina.net/webcollector/WebCollector-1.x](http://git.oschina.net/webcollector/WebCollector-1.x)维护，建议使用2.x版本。
 
 ###2.x：
 WebCollector 2.x版本特性：
@@ -39,8 +39,6 @@ WebCollector 2.x版本特性：
 + __webcollector-version-bin.zip__ 包含核心jar包.
 
 
-###教程：
-[WebCollector 2.x教程](https://github.com/CrawlScript/WebCollector/tree/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/example)
 
 
 
