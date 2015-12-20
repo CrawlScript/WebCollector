@@ -10,7 +10,7 @@ WebCollector is an open source web crawler framework based on Java.It provides
 [https://github.com/CrawlScript/WebCollector](https://github.com/CrawlScript/WebCollector)
 
 ##Document
-[https://github.com/CrawlScript/WebCollector-GitDoc](https://github.com/CrawlScript/WebCollector-GitDoc)
+[WebCollector-GitDoc](https://github.com/CrawlScript/WebCollector-GitDoc)
 
 
 
