@@ -64,7 +64,7 @@ public abstract class Crawler {
     }
 
     public void injectForcedSeeds() throws Exception {
-        dbManager.inject(forcedSeeds);
+        dbManager.inject(forcedSeeds,true);
     }
 
     public void start(int depth) throws Exception {
