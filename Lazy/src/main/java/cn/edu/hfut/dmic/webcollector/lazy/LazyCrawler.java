@@ -25,6 +25,7 @@ import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.net.Proxys;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.util.Config;
 import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -36,8 +37,8 @@ import org.slf4j.LoggerFactory;
  * @author hu
  */
 public class LazyCrawler extends BreadthCrawler {
-    
-    public static final Logger LOG=LoggerFactory.getLogger(LazyCrawler.class);
+
+    public static final Logger LOG = LoggerFactory.getLogger(LazyCrawler.class);
 
     protected MongoHelper mongoHelper;
     protected HashMap<String, String> headerMap;
@@ -58,9 +59,12 @@ public class LazyCrawler extends BreadthCrawler {
         this.headerMap = lazyConfig.getHeaderMap();
         this.proxys = lazyConfig.getProxys();
         this.setRetry(lazyConfig.getRetry());
+        this.setMaxRetry(lazyConfig.getMaxRetry());
         this.setVisitInterval(lazyConfig.getVisitInterval());
         this.setRetryInterval(lazyConfig.getRetryInterval());
         this.setThreads(lazyConfig.getThreads());
+
+        Config.MAX_RECEIVE_SIZE = lazyConfig.getMaxReceiveSize();
     }
 
     @Override
@@ -83,7 +87,7 @@ public class LazyCrawler extends BreadthCrawler {
             String id = page.getCrawlDatum().getKey();
             String refer = page.getMetaData("refer");
             mongoHelper.addPage(id, page.getUrl(), refer, page.getHtml());
-            
+
         }
     }
 

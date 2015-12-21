@@ -109,9 +109,15 @@ public class HttpRequest {
                 if (redirect == 0) {
                     response.setCode(code);
                 }
+                
+                if(code==HttpURLConnection.HTTP_NOT_FOUND){
+                    response.setNotFound(true);
+                    return response;
+                }
 
                 boolean needBreak = false;
                 switch (code) {
+                        
                     case HttpURLConnection.HTTP_MOVED_PERM:
                     case HttpURLConnection.HTTP_MOVED_TEMP:
                         response.setRedirect(true);

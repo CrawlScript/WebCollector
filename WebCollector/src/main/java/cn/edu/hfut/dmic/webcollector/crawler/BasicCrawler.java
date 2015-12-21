@@ -55,6 +55,11 @@ public abstract class BasicCrawler extends Crawler  implements Visitor,Requester
         this.autoParse=autoParse;
     }
 
+    @Override
+    public void notFound(Page page, CrawlDatums next){
+        
+    }
+
    
 
     @Override

@@ -25,6 +25,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
+import java.io.FileNotFoundException;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -499,11 +500,21 @@ public class Fetcher {
             crawlDatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
             crawlDatum.setHttpCode(page.getResponse().getCode());
 
-            try {
-                visitor.visit(page, next);
-            } catch (Exception ex) {
-                LOG.info("Exception when visit URL: " + url, ex);
-                return false;
+            if (!page.getResponse().isNotFound()) {
+
+                try {
+                    visitor.visit(page, next);
+                } catch (Exception ex) {
+                    LOG.info("Exception when visit URL: " + url, ex);
+                    return false;
+                }
+            } else {
+                try {
+                    visitor.notFound(page, next);
+                } catch (Exception ex) {
+                    LOG.info("Exception when not found URL: " + url, ex);
+                    return false;
+                }
             }
 
             try {
@@ -578,8 +589,14 @@ public class Fetcher {
         }
 
         if (response != null) {
-            LOG.info("fetch URL: " + url);
+            if (!response.isNotFound()) {
+                LOG.info("fetch URL: " + url);
+            } else {
+                //404应该被当作抓取成功，因为404告诉爬虫页面不存在，以后不需要重试页面
+                LOG.info("ignore URL: " + url + " (not found)");
+            }
             page = Page.createSuccessPage(crawlDatum, retryCount, response);
+
         } else {
             LOG.info("failed URL: " + url + " (" + lastException + ")");
             page = Page.createFailedPage(crawlDatum, retryCount, lastException);

@@ -39,6 +39,7 @@ public class HttpResponse {
     private Map<String, List<String>> headers = null;
     private byte[] content = null;
     private boolean redirect = false;
+    private boolean notFound=false;
     private String html = null;
 
     private URL realUrl = null;
@@ -85,6 +86,16 @@ public class HttpResponse {
     public int getCode() {
         return code;
     }
+
+    public boolean isNotFound() {
+        return notFound;
+    }
+
+    public void setNotFound(boolean notFound) {
+        this.notFound = notFound;
+    }
+    
+    
 
     public List<String> getHeader(String name) {
         if (headers == null) {

@@ -31,5 +31,7 @@ public interface Visitor {
     public abstract void afterVisit(Page page, CrawlDatums next);
 
     public abstract void fail(Page page, CrawlDatums next);
+    
+    public abstract void notFound(Page page, CrawlDatums next);
 
 }
