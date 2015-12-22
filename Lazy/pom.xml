@@ -102,5 +102,10 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.2.0-rc0</version>
         </dependency>
+        <dependency>
+            <groupId>com.chenlb.mmseg4j</groupId>
+            <artifactId>mmseg4j-core</artifactId>
+            <version>1.10.0</version>
+        </dependency>
     </dependencies>
 </project>

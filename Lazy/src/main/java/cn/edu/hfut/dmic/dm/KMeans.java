@@ -1,8 +1,6 @@
 package cn.edu.hfut.dmic.dm;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by hu on 15-12-21.
@@ -19,7 +17,7 @@ public class KMeans {
 
 
     protected int k;
-    protected int[] labels;
+    public int[] labels;
     protected int vectorLen = -1;
 
 
@@ -49,6 +47,38 @@ public class KMeans {
     int[] labelCount;
     double[][] vectorSum;
 
+    public void initCenters(){
+        centers[0]=vectors[0].clone();
+        int centersSize=1;
+        Random random=new Random();
+        for(int i=1;i<k;i++){
+
+            double[] p=new double[vectors.length];
+            double sum=0;
+            for(int row=0;row<vectors.length;row++){
+                double disSum=0;
+                for(int j=0;j<centersSize;j++){
+                    disSum+=dis(centers[j],vectors[row]);
+                }
+                sum+=disSum;
+                p[row]=sum;
+            }
+            for(int row=0;row<vectors.length;row++){
+                p[row]=p[row]/sum;
+            }
+            double r;
+            while((r=random.nextDouble())==0);
+            for(int row=0;row<vectors.length;row++){
+                if(p[row]>=r){
+                    centers[centersSize]=vectors[row].clone();
+                    centersSize++;
+                    break;
+                }
+            }
+        }
+
+    }
+
     public KMeans(double[][] vectors, int k) {
         this.vectors = vectors;
 
@@ -59,16 +89,33 @@ public class KMeans {
 
         labelCount = new int[k];
         vectorSum = new double[k][];
+        labels = new int[vectors.length];
         for (int i = 0; i < k; i++) {
             vectorSum[i] = new double[vectorLen];
-            centers[i] = vectors[i].clone();
+            //centers[i] = vectors[i].clone();
         }
-        labels = new int[vectors.length];
-
+        initCenters();
 
     }
 
-    public static double[][] convertVectors(ArrayList<double[]> vectorList) {
+    public KMeans(ArrayList<HashMap<Integer,Double>> vectorMapList,int vectorLen, int k) {
+        this(convertVectorMapList(vectorMapList,vectorLen),k);
+    }
+
+    public static double[][] convertVectorMapList(ArrayList<HashMap<Integer,Double>> vectorMapList,int vectorLen){
+        double[][] result = new double[vectorMapList.size()][vectorLen];
+        for (int row = 0; row < vectorMapList.size(); row++) {
+            for (int col = 0; col < vectorLen; col++) {
+                result[row][col] = 0;
+            }
+            for (Map.Entry<Integer, Double> entry : vectorMapList.get(row).entrySet()) {
+                result[row][entry.getKey()] = entry.getValue();
+            }
+        }
+        return result;
+    }
+
+    public static double[][] convertVectorList(ArrayList<double[]> vectorList) {
         double[][] result = new double[vectorList.size()][];
         for (int row = 0; row < vectorList.size(); row++) {
             result[row] = vectorList.get(row);
@@ -78,7 +125,7 @@ public class KMeans {
 
 
     public KMeans(ArrayList<double[]> vectorList, int k) {
-        this(convertVectors(vectorList), k);
+        this(convertVectorList(vectorList), k);
     }
 
     public void start(int round) {
@@ -89,7 +136,7 @@ public class KMeans {
 
 
     public boolean once() {
-
+        System.out.println("start once");
         for (int i = 0; i < k; i++) {
             labelCount[i] = 0;
             for (int j = 0; j < vectorLen; j++) {

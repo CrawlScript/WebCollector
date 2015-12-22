@@ -38,6 +38,7 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception {
+        //args=new String[]{"demo_task.json"};
         if (args.length == 0) {
             usage();
         }
