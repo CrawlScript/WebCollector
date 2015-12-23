@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+   
+
+    <!-- http -->
+    
+     <property>
+        <name>http.agent.name</name>
+        <value>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0</value>
+        <description> </description>
+    </property>
+    
+    <!--
+     <property>
+        <name>http.cookie</name>
+        <value></value>
+        <description></description>
+    </property>
+    -->
+    <property>
+        <name>http.content.limit</name>
+        <value>65536</value>
+        <description>
+        </description>
+    </property>
+
+
+    
+    <!-- Generator -->
+    <property>
+        <name>generator.interval</name>
+        <value>-1</value>
+        <description>爬虫更新数据的时间间隔</description>
+    </property>
+    
+    <property>
+        <name>generator.max</name>
+        <value>-1</value>
+        <description>
+        </description>
+    </property>
+    
+    <!-- fetcher -->
+     
+    
+     <property>
+        <name>fetcher.threads</name>
+        <value>40</value>
+        <description>爬虫的线程数</description>
+    </property>
+    
+    <property>
+        <name>fetcher.store.content</name>
+        <value>false</value>
+        <description>是否存储网页源码(byte数组),建议用户自己将网页存储到其他数据库中，方便管理。</description>
+    </property>
+    
+    <property>
+        <name>fetcher.request.maxinterval</name>
+        <value>60000</value>
+        <description>如果抓取线程池超过fetcher.request.maxinterval没有发送http请求，则停止抓取。用户一般不需要修改这个值。</description>
+    </property>
+    
+    <!-- parser -->
+    
+    <property>
+        <name>parser.topN</name>
+        <value>-1</value>
+        <description>
+        </description>
+    </property>
+    
+    <!-- Plugin -->
+    <property>
+        <name>plugin.request.factory.class</name>
+        <value>cn.edu.hfut.dmic.webcollectorcluster.crawler.Crawler</value>
+        <description></description>
+    </property>
+    
+    <property>
+        <name>plugin.parser.factory.class</name>
+        <value>cn.edu.hfut.dmic.webcollectorcluster.crawler.Crawler</value>
+        <description></description>
+    </property>
+    
+    <property>
+        <name>plugin.generator.factory.class</name>
+        <value>cn.edu.hfut.dmic.webcollectorcluster.crawler.Crawler</value>
+        <description></description>
+    </property>
+    
+     <property>
+        <name>plugin.fetchhandler.factory.class</name>
+        <value>cn.edu.hfut.dmic.webcollectorcluster.crawler.Crawler</value>
+        <description></description>
+    </property>
+    
+    
+
+   
+    
+     
+
+   
+
+
+</configuration>
