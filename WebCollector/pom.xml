@@ -36,7 +36,29 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>cobertura</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                    </formats>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <build>
 
         <plugins>
@@ -66,7 +88,7 @@
                             <value>target/cobertura/cobertura.ser</value>
                         </property>
                     </systemProperties>
-                    <skipTests>true</skipTests>
+                    <skipTests>false</skipTests>
                 </configuration>
             </plugin> 
             <plugin>
@@ -263,7 +285,7 @@
             <version>1.4</version>
         </dependency>
         -->
-        
+
   
     </dependencies>
     
@@ -279,5 +301,5 @@
         </developer>
     </developers>
     
-   
+
 </project>
