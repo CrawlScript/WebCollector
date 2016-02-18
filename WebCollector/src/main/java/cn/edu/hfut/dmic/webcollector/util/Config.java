@@ -32,7 +32,7 @@ public class Config {
     
      public static int TIMEOUT_CONNECT = 3000;
      public static int TIMEOUT_READ = 10000;
-     public static int MAX_RETRY=20;
+     public static int MAX_EXECUTE_COUNT=10;
      public static String DEFAULT_HTTP_METHOD="GET";
 
 }

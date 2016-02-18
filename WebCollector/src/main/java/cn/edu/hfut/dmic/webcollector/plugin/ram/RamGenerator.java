@@ -31,7 +31,7 @@ public class RamGenerator implements Generator {
 
     RamDB ramDB;
     protected int topN = -1;
-    protected int maxRetry = Config.MAX_RETRY;
+    protected int maxExecuteCount = Config.MAX_EXECUTE_COUNT;
 
     public RamGenerator(RamDB ramDB) {
         this.ramDB = ramDB;
@@ -52,9 +52,9 @@ public class RamGenerator implements Generator {
 
                 CrawlDatum datum = iterator.next().getValue();
 
-                if (datum.getStatus() == CrawlDatum.STATUS_DB_FETCHED) {
+                if (datum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS) {
                     continue;
-                } else if (datum.getRetry() >= maxRetry) {
+                } else if (datum.getExecuteCount() > maxExecuteCount) {
                     continue;
                 } else {
                     totalGenerate++;
@@ -79,9 +79,13 @@ public class RamGenerator implements Generator {
         this.topN = topN;
     }
 
+    public int getMaxExecuteCount() {
+        return maxExecuteCount;
+    }
+
     @Override
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
+    public void setMaxExecuteCount(int maxExecuteCount) {
+        this.maxExecuteCount = maxExecuteCount;
     }
 
     @Override

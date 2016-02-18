@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <name>WebCollector</name>
-    
+
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.26</version>
+    <version>2.27</version>
     <description>A java crawler for information collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
@@ -14,7 +15,7 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
     </properties>
-    
+
     <licenses>
         <license>
             <name>GPL2.0</name>
@@ -22,14 +23,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <scm>
         <url>https://github.com/CrawlScript/WebCollector</url>
         <connection>scm:git:https://github.com/CrawlScript/WebCollector.git</connection>
     </scm>
-    
-    
-    
+
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -90,7 +90,7 @@
                     </systemProperties>
                     <skipTests>false</skipTests>
                 </configuration>
-            </plugin> 
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -107,6 +107,7 @@
                             <overWriteReleases>false</overWriteReleases>
                             <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>false</excludeTransitive>
+                            <excludeScope>provided</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
@@ -144,7 +145,7 @@
                 </executions>
             </plugin>
             -->
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -161,8 +162,8 @@
                     </execution>
                 </executions>
             </plugin>
-           
-           
+
+
             <!--
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
@@ -179,23 +180,24 @@
                             </executions>
                         </plugin>
             -->
-           
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <configuration>
-                            <tasks>               
+                            <tasks>
                                 <copy todir="${project.build.directory}/bin">
                                     <fileset dir="${project.build.directory}">
-                                        <include name="*.jar" />
-                                        <include name="*.sh" />
-                                        <include name="*.bat" />
+                                        <include name="*.jar"/>
+                                        <include name="*.sh"/>
+                                        <include name="*.bat"/>
                                     </fileset>
                                 </copy>
-                                
-                                <zip basedir="${project.build.directory}/bin" destfile="../webcollector-${project.version}-bin.zip" />
+
+                                <zip basedir="${project.build.directory}/bin"
+                                     destfile="../webcollector-${project.version}-bin.zip"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -204,9 +206,9 @@
                     </execution>
                 </executions>
             </plugin>
-          
+
         </plugins>
-       
+
     </build>
 
     <dependencies>
@@ -221,25 +223,25 @@
             <artifactId>juniversalchardet</artifactId>
             <version>1.0.3</version>
         </dependency>
-        
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20140107</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.sleepycat</groupId>
             <artifactId>je</artifactId>
@@ -255,40 +257,55 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.9</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.2.2</version>
+        </dependency>
+
+
         <!-- 
-            下面这些dependency用于JS数据抓取(selenium),数据库操作(mysql和spring jdbc)
-            如果希望使用这些功能，请将下面的dependency放入自己工程的pom.xml文件，并重新构建项目
-            注意这些dependency大约有20M，国内使用最好使用开源中国的maven镜像,详细方法
+            下面这些dependency用于JS数据抓取(selenium)。
+            如果希望使用这些功能，请将 <scope>provided</scope>删除，并重新构建项目。
+            注意这些dependency大约有几十M，国内使用最好使用开源中国的maven镜像,详细方法
             参见：http://maven.oschina.net/help.html
         -->
-        <!--
-             <dependency>
+
+        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>2.44.0</version>
+            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.31</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>4.0.5.RELEASE</version>
-        </dependency>
+        <!--
+          下面这些dependency用于数据库操作(mysql和spring jdbc)。
+          如果希望使用这些功能，请解开注释，并重新构建项目。
+          注意这些dependency大约有几十M，国内使用最好使用开源中国的maven镜像,详细方法
+          参见：http://maven.oschina.net/help.html
+      -->
+        <!--
+     <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+         <version>5.1.31</version>
+     </dependency>
+     <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-jdbc</artifactId>
+         <version>4.0.5.RELEASE</version>
+     </dependency>
 
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-        -->
+     <dependency>
+         <groupId>commons-dbcp</groupId>
+         <artifactId>commons-dbcp</artifactId>
+         <version>1.4</version>
+     </dependency>
+     -->
 
-  
+
     </dependencies>
-    
+
     <developers>
         <developer>
             <id>hujun</id>
@@ -300,6 +317,6 @@
             <timezone>+8</timezone>
         </developer>
     </developers>
-    
+
 
 </project>

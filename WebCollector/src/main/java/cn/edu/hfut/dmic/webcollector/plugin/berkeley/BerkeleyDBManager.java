@@ -18,11 +18,13 @@
 package cn.edu.hfut.dmic.webcollector.plugin.berkeley;
 
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
+import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
 import cn.edu.hfut.dmic.webcollector.util.FileUtils;
 import com.sleepycat.je.Cursor;
+import com.sleepycat.je.CursorConfig;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseEntry;
 import com.sleepycat.je.Environment;
@@ -44,9 +46,33 @@ public class BerkeleyDBManager extends DBManager {
 
     Environment env;
     String crawlPath;
+    BerkeleyGenerator generator=null;
 
     public BerkeleyDBManager(String crawlPath) {
         this.crawlPath = crawlPath;
+        this.generator=new BerkeleyGenerator(crawlPath);
+    }
+
+    public void list() throws Exception {
+        if (env == null) {
+            open();
+        }
+        Cursor cursor = null;
+        Database crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+        cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
+        DatabaseEntry key = new DatabaseEntry();
+        DatabaseEntry value = new DatabaseEntry();
+
+        while (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+            try {
+                CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+                System.out.println(CrawlDatumFormater.datumToString(datum));
+            } catch (Exception ex) {
+                LOG.info("Exception when generating", ex);
+                continue;
+            }
+        }
+
     }
 
     @Override
@@ -232,6 +258,11 @@ public class BerkeleyDBManager extends DBManager {
         if (dir.exists()) {
             FileUtils.deleteDir(dir);
         }
+    }
+
+    @Override
+    public Generator getGenerator() {
+        return generator;
     }
 
 }

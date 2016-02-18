@@ -21,11 +21,9 @@ import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
 import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-import java.io.FileNotFoundException;
+
 
 import java.io.IOException;
 import java.util.Collections;
@@ -33,12 +31,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * deep web抓取器
+ * 抓取器
  *
  * @author hu
  */
@@ -48,18 +47,20 @@ public class Fetcher {
 
     public DBManager dbManager;
 
-    public Requester requester;
+    public Executor executor;
 
-    public Visitor visitor;
+    //public Requester requester;
+
+    //public Visitor visitor;
 
     private AtomicInteger activeThreads;
     private AtomicInteger spinWaiting;
     private AtomicLong lastRequestStart;
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
-    private int retry = 3;
-    private long retryInterval = 0;
-    private long visitInterval = 0;
+    //   private int retry = 3;
+//    private long retryInterval = 0;
+//    private long visitInterval = 0;
 
     /**
      *
@@ -71,8 +72,17 @@ public class Fetcher {
      */
     public static final int FETCH_FAILED = 2;
     private int threads = 50;
-    private boolean isContentStored = false;
+    //private boolean isContentStored = false;
 
+    public Executor getExecutor() {
+        return executor;
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
+    }
+
+    /*
     public Visitor getVisitor() {
         return visitor;
     }
@@ -80,6 +90,7 @@ public class Fetcher {
     public void setVisitor(Visitor visitor) {
         this.visitor = visitor;
     }
+    */
 
     /**
      *
@@ -92,7 +103,6 @@ public class Fetcher {
         public CrawlDatum datum;
 
         /**
-         *
          * @param datum
          */
         public FetchItem(CrawlDatum datum) {
@@ -123,7 +133,6 @@ public class Fetcher {
         }
 
         /**
-         *
          * @return
          */
         public int getSize() {
@@ -131,7 +140,6 @@ public class Fetcher {
         }
 
         /**
-         *
          * @param item
          */
         public synchronized void addFetchItem(FetchItem item) {
@@ -143,7 +151,6 @@ public class Fetcher {
         }
 
         /**
-         *
          * @return
          */
         public synchronized FetchItem getFetchItem() {
@@ -187,7 +194,6 @@ public class Fetcher {
         public int size;
 
         /**
-         *
          * @param queue
          * @param generator
          * @param size
@@ -208,6 +214,7 @@ public class Fetcher {
                 }
             }
         }
+
         public boolean running = true;
 
         @Override
@@ -273,16 +280,38 @@ public class Fetcher {
                         lastRequestStart.set(System.currentTimeMillis());
 
                         CrawlDatum crawlDatum = item.datum;
-                        String url = crawlDatum.getUrl();
-                        Page page = getPage(crawlDatum);
+                        //String url = crawlDatum.getUrl();
+                        //Page page = getPage(crawlDatum);
 
-                        crawlDatum.incrRetry(page.getRetry());
-                        crawlDatum.setFetchTime(System.currentTimeMillis());
+                        //crawlDatum.incrRetry(page.getRetry());
 
+//                        crawlDatum.setFetchTime(System.currentTimeMillis());
                         CrawlDatums next = new CrawlDatums();
+                        try {
+                            executor.execute(crawlDatum, next);
+                            LOG.info("done: " + crawlDatum.getKey());
+                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
+                        } catch (Exception ex) {
+                            LOG.info("failed: " + crawlDatum.getKey(), ex);
+                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_FAILED);
+                        }
+
+                        crawlDatum.incrExecuteCount(1);
+                        crawlDatum.setExecuteTime(System.currentTimeMillis());
+                        try {
+                            dbManager.wrtieFetchSegment(crawlDatum);
+                            if (crawlDatum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
+                                dbManager.wrtieParseSegment(next);
+                            }
+                        } catch (Exception ex) {
+                            LOG.info("Exception when updating db", ex);
+                        }
+
+
+
+                        /* 老代码
                         if (visit(crawlDatum, page, next)) {
                             try {
-                                /*写入fetch信息*/
                                 dbManager.wrtieFetchSegment(crawlDatum);
                                 if (page.getResponse() == null) {
                                     continue;
@@ -306,6 +335,7 @@ public class Fetcher {
                             } catch (Exception sleepEx) {
                             }
                         }
+                        */
 
                     } catch (Exception ex) {
                         LOG.info("Exception", ex);
@@ -330,8 +360,8 @@ public class Fetcher {
      * @throws IOException
      */
     public void fetchAll(Generator generator) throws Exception {
-        if (visitor == null) {
-            LOG.info("Please Specify A Visitor!");
+        if (executor == null) {
+            LOG.info("Please Specify A Executor!");
             return;
         }
 
@@ -451,32 +481,23 @@ public class Fetcher {
         this.threads = threads;
     }
 
-    /**
-     * 返回是否存储网页/文件的内容
-     *
-     * @return 是否存储网页/文件的内容
-     */
-    public boolean isIsContentStored() {
-        return isContentStored;
-    }
 
-    /**
-     * 设置是否存储网页／文件的内容
-     *
-     * @param isContentStored 是否存储网页/文件的内容
-     */
-    public void setIsContentStored(boolean isContentStored) {
-        this.isContentStored = isContentStored;
-    }
+//    public boolean isIsContentStored() {
+//        return isContentStored;
+//    }
 
-    public int getRetry() {
-        return retry;
-    }
 
-    public void setRetry(int retry) {
-        this.retry = retry;
-    }
+//    public void setIsContentStored(boolean isContentStored) {
+//        this.isContentStored = isContentStored;
+//    }
 
+    //    public int getRetry() {
+//        return retry;
+//    }
+//
+//    public void setRetry(int retry) {
+//        this.retry = retry;
+//    }
     public DBManager getDBManager() {
         return dbManager;
     }
@@ -485,6 +506,7 @@ public class Fetcher {
         this.dbManager = dbManager;
     }
 
+    /*
     public Requester getRequester() {
         return requester;
     }
@@ -492,6 +514,7 @@ public class Fetcher {
     public void setRequester(Requester requester) {
         this.requester = requester;
     }
+
 
     public boolean visit(CrawlDatum crawlDatum, Page page, CrawlDatums next) {
         String url = crawlDatum.getUrl();
@@ -605,6 +628,7 @@ public class Fetcher {
         return page;
     }
 
+
     public long getRetryInterval() {
         return retryInterval;
     }
@@ -620,5 +644,6 @@ public class Fetcher {
     public void setVisitInterval(long visitInterval) {
         this.visitInterval = visitInterval;
     }
+    */
 
 }

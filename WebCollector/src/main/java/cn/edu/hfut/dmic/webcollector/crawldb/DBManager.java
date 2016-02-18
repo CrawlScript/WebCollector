@@ -31,6 +31,8 @@ public abstract class DBManager implements Injector, SegmentWriter, DBLock {
 
     public abstract void clear() throws Exception;
 
+    public abstract Generator getGenerator();
+
     public abstract void open() throws Exception;
 
     public abstract void close() throws Exception;

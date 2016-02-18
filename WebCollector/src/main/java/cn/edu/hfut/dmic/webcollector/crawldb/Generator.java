@@ -32,7 +32,7 @@ public interface Generator {
 
     public void setTopN(int topN);
 
-    public void setMaxRetry(int maxRetry);
+    public void setMaxExecuteCount(int maxExecuteCount);
 
     public int getTotalGenerate();
 

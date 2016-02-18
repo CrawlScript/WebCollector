@@ -17,7 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.plugin.ram;
 
-import cn.edu.hfut.dmic.webcollector.crawler.BasicCrawler;
+import cn.edu.hfut.dmic.webcollector.crawler.AutoParseCrawler;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
@@ -29,7 +29,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
  * 
  * @author hu
  */
-public abstract class RamCrawler extends BasicCrawler {
+public abstract class RamCrawler extends AutoParseCrawler {
     
     public RamCrawler(){
         this(true);
@@ -39,7 +39,6 @@ public abstract class RamCrawler extends BasicCrawler {
         super(autoParse);
         RamDB ramDB = new RamDB();
         this.dbManager = new RamDBManager(ramDB);
-        this.generator = new RamGenerator(ramDB);
     }
     
     public void start() throws Exception{

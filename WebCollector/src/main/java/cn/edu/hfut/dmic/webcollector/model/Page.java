@@ -42,13 +42,13 @@ public class Page {
     public static final Logger LOG = LoggerFactory.getLogger(Page.class);
     
 
-    public static final int STATUS_FETCH_UNKNOWN = 0;
-    public static final int STATUS_FETCH_FAILED = 1;
-    public static final int STATUS_FETCH_SUCCESS = 2;
+//    public static final int STATUS_FETCH_UNKNOWN = 0;
+//    public static final int STATUS_FETCH_FAILED = 1;
+//    public static final int STATUS_FETCH_SUCCESS = 2;
     
     private CrawlDatum crawlDatum=null;
     
-    private int status = STATUS_FETCH_UNKNOWN;
+//    private int status = STATUS_FETCH_UNKNOWN;
     private HttpResponse response = null;
     private Exception exception = null;
     
@@ -56,6 +56,7 @@ public class Page {
     private Document doc = null;
     private int retry = 0;
     
+    private String charset=null;
 
     /**
      * 判断当前Page的URL是否和输入正则匹配
@@ -93,7 +94,7 @@ public class Page {
      * @return 
      */
     public Links getLinks(String cssSelector) {
-        Links links =new Links().addBySelector(doc, cssSelector);
+        Links links =new Links().addBySelector(getDoc(), cssSelector);
         return links;
     }
 
@@ -135,31 +136,9 @@ public class Page {
         return regex(regex, 0);
     }
 
-    public static Page createSuccessPage(CrawlDatum crawlDatum, int retry, HttpResponse response) {
-        return new Page(crawlDatum, STATUS_FETCH_SUCCESS, retry, response);
-    }
-
-    public static Page createFailedPage(CrawlDatum crawlDatum, int retry) {
-        return new Page(crawlDatum, STATUS_FETCH_FAILED, retry, null);
-    }
-
-    public static Page createFailedPage(CrawlDatum crawlDatum, int retry, Exception ex) {
-        return new Page(crawlDatum, STATUS_FETCH_FAILED, retry, null, ex);
-    }
-
-    Page(CrawlDatum crawlDatum, int status, int retry, HttpResponse response) {
-        this.crawlDatum=crawlDatum;
-        this.status = status;
-        this.retry = retry;
-        this.response = response;
-    }
-
-    Page(CrawlDatum crawlDatum, int status, int retry, HttpResponse response, Exception exception) {
-        this.crawlDatum=crawlDatum;
-        this.status = status;
-        this.retry = retry;
-        this.response = response;
-        this.exception = exception;
+    public Page(CrawlDatum datum,HttpResponse response){
+        this.crawlDatum=datum;
+        this.response=response;
     }
 
     /**
@@ -201,7 +180,9 @@ public class Page {
         if (getContent() == null) {
             return null;
         }
-        String charset = CharsetDetector.guessEncoding(getContent());
+        if(charset==null){
+            charset = CharsetDetector.guessEncoding(getContent());
+        }
         try {
             this.html = new String(getContent(), charset);
             return html;
@@ -225,7 +206,12 @@ public class Page {
      *
      * @return 网页解析后的DOM树
      */
+    @Deprecated
     public Document getDoc() {
+      return doc();
+    }
+
+    public Document doc(){
         if (doc != null) {
             return doc;
         }
@@ -237,7 +223,6 @@ public class Page {
             LOG.info("Exception", ex);
             return null;
         }
-
     }
 
     /**
@@ -265,13 +250,13 @@ public class Page {
         this.exception = exception;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
+//    public int getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(int status) {
+//        this.status = status;
+//    }
 
     public int getRetry() {
         return retry;
@@ -299,13 +284,32 @@ public class Page {
         this.crawlDatum.setMetaData(metaData);
     }
 
-    public void putMetaData(String key,String value){
-        this.crawlDatum.putMetaData(key, value);
+    public void meta(String key,String value){
+        this.crawlDatum.meta(key, value);
     }
     
-    public String getMetaData(String key){
-        return this.crawlDatum.getMetaData(key);
+    public String meta(String key){
+        return this.crawlDatum.meta(key);
     }
+
+    @Deprecated
+    public void setMetaData(String key,String value){
+        meta(key,value);
+    }
+
+    @Deprecated
+    public String getMetaData(String key){
+       return meta(key);
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+    
     
  
     

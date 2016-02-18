@@ -37,34 +37,29 @@ public class DemoDepthCrawler extends BreadthCrawler{
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-        System.out.println("visiting:"+page.getUrl()+"\tdepth="+page.getMetaData("depth"));
-    }
+        System.out.println("visiting:"+page.getUrl()+"\tdepth="+page.meta("depth"));
 
-    /* afterVisit方法在visit方法执行后执行，这里super.afterVisit完成根据
-       正则自动抽取链接的功能，因此这里需要保留 */
-    @Override
-    public void afterVisit(Page page, CrawlDatums next) {
-        super.afterVisit(page, next); 
-        
         //当前页面的depth为x，则从当前页面解析的后续任务的depth为x+1
         int depth;
         //如果在添加种子时忘记添加depth信息，可以通过这种方式保证程序不出错
-        if(page.getMetaData("depth")==null){
+        if(page.meta("depth")==null){
             depth=1;
         }else{
-            depth=Integer.valueOf(page.getMetaData("depth"));
+            depth=Integer.valueOf(page.meta("depth"));
         }
         depth++;
         for(CrawlDatum datum:next){
-            datum.putMetaData("depth", depth+"");
+            datum.meta("depth", depth+"");
         }
     }
+
+
     
     public static void main(String[] args) throws Exception {
         DemoDepthCrawler crawler=new DemoDepthCrawler("depth_crawler", true);
         for(int i=1;i<=5;i++){
             crawler.addSeed(new CrawlDatum("http://news.hfut.edu.cn/list-1-"+i+".html")
-                    .putMetaData("depth", "1"));
+                    .meta("depth", "1"));
         }
         /*正则规则用于控制爬虫自动解析出的链接，用户手动添加的链接，例如添加的种子、或
           在visit方法中添加到next中的链接并不会参与正则过滤*/

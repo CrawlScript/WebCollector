@@ -19,13 +19,10 @@ package cn.edu.hfut.dmic.webcollector.example;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 
 import org.json.JSONObject;
 
@@ -52,8 +49,8 @@ public class DemoPostCrawler extends BreadthCrawler {
     public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
         HttpRequest request = new HttpRequest(crawlDatum.getUrl());
         
-        request.setMethod(crawlDatum.getMetaData("method"));
-        String outputData=crawlDatum.getMetaData("outputData");
+        request.setMethod(crawlDatum.meta("method"));
+        String outputData=crawlDatum.meta("outputData");
         if(outputData!=null){
             request.setOutputData(outputData.getBytes("utf-8"));
         }
@@ -85,12 +82,12 @@ public class DemoPostCrawler extends BreadthCrawler {
 
         DemoPostCrawler crawler = new DemoPostCrawler("json_crawler", true);
         crawler.addSeed(new CrawlDatum("http://www.A.com/index.php")
-                .putMetaData("method", "POST")
-                .putMetaData("outputData", "id=a"));
+                .meta("method", "POST")
+                .meta("outputData", "id=a"));
         crawler.addSeed(new CrawlDatum("http://www.B.com/index.php")
-                .putMetaData("method", "POST"));
+                .meta("method", "POST"));
         crawler.addSeed(new CrawlDatum("http://www.C.com/index.php")
-                .putMetaData("method", "GET"));
+                .meta("method", "GET"));
 
         crawler.start(1);
     }

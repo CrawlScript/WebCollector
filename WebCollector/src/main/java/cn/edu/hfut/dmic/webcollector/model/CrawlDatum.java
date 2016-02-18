@@ -18,25 +18,27 @@
 package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * 爬取任务的数据结构
+ *
  * @author hu
  */
 public class CrawlDatum implements Serializable {
 
-    public final static int STATUS_DB_UNFETCHED = 0;
-    public final static int STATUS_DB_FETCHED = 1;
+    public final static int STATUS_DB_UNEXECUTED = 0;
+    public final static int STATUS_DB_FAILED = 1;
+    public final static int STATUS_DB_SUCCESS = 5;
 
     private String url = null;
-    private long fetchTime = System.currentTimeMillis();
+    private long executeTime = System.currentTimeMillis();
 
-    private int httpCode = -1;
-    private int status = STATUS_DB_UNFETCHED;
-    private int retry = 0;
-
+    //private int httpCode = -1;
+    private int status = STATUS_DB_UNEXECUTED;
+    private int executeCount = 0;
     /**
      * 在WebCollector 2.5之后，不再根据URL去重，而是根据key去重
      * 可以通过getKey()方法获得CrawlDatum的key,如果key为null,getKey()方法会返回URL
@@ -64,23 +66,24 @@ public class CrawlDatum implements Serializable {
             throw new Exception("length of metas must be even");
         } else {
             for (int i = 0; i < metas.length; i += 2) {
-                putMetaData(metas[i * 2], metas[i * 2 + 1]);
+                meta(metas[i * 2], metas[i * 2 + 1]);
             }
         }
     }
 
-    public int incrRetry(int count) {
-        retry = retry + count;
-        return retry;
+
+    public int incrExecuteCount(int count) {
+        executeCount+=count;
+        return executeCount;
     }
 
-    public int getHttpCode() {
-        return httpCode;
-    }
-
-    public void setHttpCode(int httpCode) {
-        this.httpCode = httpCode;
-    }
+//    public int getHttpCode() {
+//        return httpCode;
+//    }
+//
+//    public void setHttpCode(int httpCode) {
+//        this.httpCode = httpCode;
+//    }
 
     public String getUrl() {
         return url;
@@ -91,20 +94,20 @@ public class CrawlDatum implements Serializable {
         return this;
     }
 
-    public long getFetchTime() {
-        return fetchTime;
+    public long getExecuteTime() {
+        return executeTime;
     }
 
-    public void setFetchTime(long fetchTime) {
-        this.fetchTime = fetchTime;
+    public void setExecuteTime(long fetchTime) {
+        this.executeTime = fetchTime;
     }
 
-    public int getRetry() {
-        return retry;
+    public int getExecuteCount() {
+        return executeCount;
     }
 
-    public void setRetry(int retry) {
-        this.retry = retry;
+    public void setExecuteCount(int executeCount) {
+        this.executeCount = executeCount;
     }
 
     public int getStatus() {
@@ -123,14 +126,28 @@ public class CrawlDatum implements Serializable {
         this.metaData = metaData;
     }
 
-    public CrawlDatum putMetaData(String key, String value) {
+
+
+    public CrawlDatum meta(String key,String value){
         this.metaData.put(key, value);
         return this;
     }
 
-    public String getMetaData(String key) {
+    public String meta(String key){
         return this.metaData.get(key);
     }
+
+    @Deprecated
+    public CrawlDatum putMetaData(String key,String value){
+        return meta(key,value);
+    }
+
+    @Deprecated
+    public String getMetaData(String key){
+        return meta(key);
+    }
+
+
 
     public String getKey() {
         if (key == null) {
@@ -144,14 +161,12 @@ public class CrawlDatum implements Serializable {
         this.key = key;
         return this;
     }
-    
-    
-    
+
+
     @Override
-    public String toString(){
+    public String toString() {
         return CrawlDatumFormater.datumToString(this);
     }
-    
 
 
 }

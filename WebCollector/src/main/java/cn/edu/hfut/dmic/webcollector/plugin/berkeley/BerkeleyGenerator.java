@@ -45,7 +45,7 @@ public class BerkeleyGenerator implements Generator {
     Environment env=null;
     protected int totalGenerate = 0;
     protected int topN = -1;
-    protected int maxRetry = Config.MAX_RETRY;
+    protected int maxExecuteCount = Config.MAX_EXECUTE_COUNT;
     String crawlPath;
 
     public BerkeleyGenerator(String crawlPath) {
@@ -98,10 +98,10 @@ public class BerkeleyGenerator implements Generator {
 
                 try {
                     CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
-                    if (datum.getStatus() == CrawlDatum.STATUS_DB_FETCHED) {
+                    if (datum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS) {
                         continue;
                     } else {
-                        if (datum.getRetry() >= maxRetry) {
+                        if (datum.getExecuteCount()>maxExecuteCount) {
                             continue;
                         }
                         totalGenerate++;
@@ -131,13 +131,12 @@ public class BerkeleyGenerator implements Generator {
         this.topN = topN;
     }
 
-    public int getMaxRetry() {
-        return maxRetry;
+    public int getMaxExecuteCount() {
+        return maxExecuteCount;
     }
 
     @Override
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
+    public void setMaxExecuteCount(int maxExecuteCount) {
+        this.maxExecuteCount = maxExecuteCount;
     }
-
 }

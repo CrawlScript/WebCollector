@@ -18,6 +18,7 @@
 package cn.edu.hfut.dmic.webcollector.plugin.ram;
 
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
+import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import java.util.Map.Entry;
@@ -33,9 +34,11 @@ public class RamDBManager extends DBManager {
     Logger LOG = LoggerFactory.getLogger(DBManager.class);
 
     public RamDB ramDB;
+    public RamGenerator generator=null;
 
     public RamDBManager(RamDB ramDB) {
         this.ramDB = ramDB;
+        this.generator=new RamGenerator(ramDB);
     }
 
     @Override
@@ -49,6 +52,11 @@ public class RamDBManager extends DBManager {
         ramDB.fetchDB.clear();
         ramDB.linkDB.clear();
         ramDB.redirectDB.clear();
+    }
+
+    @Override
+    public Generator getGenerator() {
+        return generator;
     }
 
     @Override

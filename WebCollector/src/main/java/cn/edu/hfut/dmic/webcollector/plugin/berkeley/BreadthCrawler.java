@@ -17,9 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.plugin.berkeley;
 
-import cn.edu.hfut.dmic.webcollector.crawler.BasicCrawler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cn.edu.hfut.dmic.webcollector.crawler.AutoParseCrawler;
 
 /**
  * BreadthCrawler是基于Berkeley DB的插件,于2.20版重新设计
@@ -31,12 +29,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class BreadthCrawler extends BasicCrawler {
+public abstract class BreadthCrawler extends AutoParseCrawler {
 
       public BreadthCrawler(String crawlPath,boolean autoParse) {
         super(autoParse);
         this.dbManager=new BerkeleyDBManager(crawlPath);
-        this.generator=new BerkeleyGenerator(crawlPath);
     }
     
 }
