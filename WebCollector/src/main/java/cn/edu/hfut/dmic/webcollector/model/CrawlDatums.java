@@ -70,11 +70,17 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
         return this;
     }
 
-    public CrawlDatums putMetaData(String key, String value) {
+
+    public CrawlDatums meta(String key, String value) {
         for (CrawlDatum datum : dataList) {
-            datum.putMetaData(key, value);
+            datum.meta(key, value);
         }
         return this;
+    }
+
+    @Deprecated
+    public CrawlDatums putMetaData(String key, String value) {
+      return meta(key,value);
     }
 
     @Override
