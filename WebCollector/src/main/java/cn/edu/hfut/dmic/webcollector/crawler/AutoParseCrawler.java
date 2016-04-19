@@ -17,7 +17,6 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
-
 import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.fetcher.Visitor;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
@@ -36,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class AutoParseCrawler extends Crawler implements Executor,Visitor,Requester{
+public abstract class AutoParseCrawler extends Crawler implements Executor, Visitor, Requester {
 
     public static final Logger LOG = LoggerFactory.getLogger(AutoParseCrawler.class);
 
@@ -52,12 +51,12 @@ public abstract class AutoParseCrawler extends Crawler implements Executor,Visit
         this.autoParse = autoParse;
         this.visitor = this;
         this.requester = this;
-        this.executor=this;
+        this.executor = this;
     }
 
     @Override
     public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
-        HttpRequest request=new HttpRequest(crawlDatum);
+        HttpRequest request = new HttpRequest(crawlDatum);
         return request.getResponse();
     }
 
@@ -65,7 +64,6 @@ public abstract class AutoParseCrawler extends Crawler implements Executor,Visit
      * URL正则约束
      */
     protected RegexRule regexRule = new RegexRule();
-
 
     @Override
     public void execute(CrawlDatum datum, CrawlDatums next) throws Exception {
@@ -75,8 +73,12 @@ public abstract class AutoParseCrawler extends Crawler implements Executor,Visit
         if (autoParse && !regexRule.isEmpty()) {
             parseLink(page, next);
         }
+        afterParse(page, next);
     }
 
+    protected void afterParse(Page page, CrawlDatums next) {
+
+    }
 
     protected void parseLink(Page page, CrawlDatums next) {
         String conteType = page.getResponse().getContentType();
@@ -93,7 +95,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor,Visit
     /**
      * 添加URL正则约束
      *
-     * @param urlRegex
+     * @param urlRegex URL正则约束
      */
     public void addRegex(String urlRegex) {
         regexRule.addRule(urlRegex);
@@ -110,33 +112,44 @@ public abstract class AutoParseCrawler extends Crawler implements Executor,Visit
     /**
      * 设置是否自动抽取符合正则的链接并加入后续任务
      *
-     * @param autoParse
+     * @param autoParse 是否自动抽取符合正则的链接并加入后续任务
      */
     public void setAutoParse(boolean autoParse) {
         this.autoParse = autoParse;
     }
 
     /**
+     * 获取正则规则
      *
-     * @return
+     * @return 正则规则
      */
     public RegexRule getRegexRule() {
         return regexRule;
     }
 
     /**
+     * 设置正则规则
      *
-     * @param regexRule
+     * @param regexRule 正则规则
      */
     public void setRegexRule(RegexRule regexRule) {
         this.regexRule = regexRule;
     }
 
-
+    /**
+     * 获取Visitor
+     *
+     * @return Visitor
+     */
     public Visitor getVisitor() {
         return visitor;
     }
 
+    /**
+     * 设置Visitor
+     *
+     * @param visitor Visitor
+     */
     public void setVisitor(Visitor visitor) {
         this.visitor = visitor;
     }

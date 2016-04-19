@@ -21,9 +21,7 @@ import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
 import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
-
 
 import java.io.IOException;
 import java.util.Collections;
@@ -31,7 +29,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,14 +47,14 @@ public class Fetcher {
     public Executor executor;
 
     //public Requester requester;
-
     //public Visitor visitor;
-
     private AtomicInteger activeThreads;
+    private AtomicInteger startedThreads;
     private AtomicInteger spinWaiting;
     private AtomicLong lastRequestStart;
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
+    private long executeInterval = 0;
     //   private int retry = 3;
 //    private long retryInterval = 0;
 //    private long visitInterval = 0;
@@ -83,65 +80,40 @@ public class Fetcher {
     }
 
     /*
-    public Visitor getVisitor() {
-        return visitor;
-    }
+     public Visitor getVisitor() {
+     return visitor;
+     }
 
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
-    }
-    */
-
+     public void setVisitor(Visitor visitor) {
+     this.visitor = visitor;
+     }
+     */
     /**
      *
      */
     public static class FetchItem {
 
-        /**
-         *
-         */
         public CrawlDatum datum;
 
-        /**
-         * @param datum
-         */
         public FetchItem(CrawlDatum datum) {
             this.datum = datum;
         }
     }
 
-    /**
-     *
-     */
     public static class FetchQueue {
 
-        /**
-         *
-         */
         public AtomicInteger totalSize = new AtomicInteger(0);
 
-        /**
-         *
-         */
         public final List<FetchItem> queue = Collections.synchronizedList(new LinkedList<FetchItem>());
 
-        /**
-         *
-         */
         public void clear() {
             queue.clear();
         }
 
-        /**
-         * @return
-         */
         public int getSize() {
             return queue.size();
         }
 
-        /**
-         * @param item
-         */
         public synchronized void addFetchItem(FetchItem item) {
             if (item == null) {
                 return;
@@ -150,9 +122,6 @@ public class Fetcher {
             totalSize.incrementAndGet();
         }
 
-        /**
-         * @return
-         */
         public synchronized FetchItem getFetchItem() {
             if (queue.isEmpty()) {
                 return null;
@@ -160,9 +129,6 @@ public class Fetcher {
             return queue.remove(0);
         }
 
-        /**
-         *
-         */
         public synchronized void dump() {
             for (int i = 0; i < queue.size(); i++) {
                 FetchItem it = queue.get(i);
@@ -173,31 +139,14 @@ public class Fetcher {
 
     }
 
-    /**
-     *
-     */
     public static class QueueFeeder extends Thread {
 
-        /**
-         *
-         */
         public FetchQueue queue;
 
-        /**
-         *
-         */
         public Generator generator;
 
-        /**
-         *
-         */
         public int size;
 
-        /**
-         * @param queue
-         * @param generator
-         * @param size
-         */
         public QueueFeeder(FetchQueue queue, Generator generator, int size) {
             this.queue = queue;
             this.generator = generator;
@@ -254,6 +203,7 @@ public class Fetcher {
 
         @Override
         public void run() {
+            startedThreads.incrementAndGet();
             activeThreads.incrementAndGet();
             FetchItem item = null;
             try {
@@ -284,7 +234,6 @@ public class Fetcher {
                         //Page page = getPage(crawlDatum);
 
                         //crawlDatum.incrRetry(page.getRetry());
-
 //                        crawlDatum.setFetchTime(System.currentTimeMillis());
                         CrawlDatums next = new CrawlDatums();
                         try {
@@ -306,37 +255,40 @@ public class Fetcher {
                         } catch (Exception ex) {
                             LOG.info("Exception when updating db", ex);
                         }
-
-
-
-                        /* 老代码
-                        if (visit(crawlDatum, page, next)) {
+                        if (executeInterval > 0) {
                             try {
-                                dbManager.wrtieFetchSegment(crawlDatum);
-                                if (page.getResponse() == null) {
-                                    continue;
-                                }
-                                if (page.getResponse().isRedirect()) {
-                                    if (page.getResponse().getRealUrl() != null) {
-                                        dbManager.writeRedirectSegment(crawlDatum, page.getResponse().getRealUrl().toString());
-                                    }
-                                }
-                                if (!next.isEmpty()) {
-                                    dbManager.wrtieParseSegment(next);
-                                }
-
-                            } catch (Exception ex) {
-                                LOG.info("Exception when updating db", ex);
-                            }
-                        }
-                        if (visitInterval > 0) {
-                            try {
-                                Thread.sleep(visitInterval);
+                                Thread.sleep(executeInterval);
                             } catch (Exception sleepEx) {
                             }
                         }
-                        */
 
+                        /* 老代码
+                         if (visit(crawlDatum, page, next)) {
+                         try {
+                         dbManager.wrtieFetchSegment(crawlDatum);
+                         if (page.getResponse() == null) {
+                         continue;
+                         }
+                         if (page.getResponse().isRedirect()) {
+                         if (page.getResponse().getRealUrl() != null) {
+                         dbManager.writeRedirectSegment(crawlDatum, page.getResponse().getRealUrl().toString());
+                         }
+                         }
+                         if (!next.isEmpty()) {
+                         dbManager.wrtieParseSegment(next);
+                         }
+
+                         } catch (Exception ex) {
+                         LOG.info("Exception when updating db", ex);
+                         }
+                         }
+                         if (visitInterval > 0) {
+                         try {
+                         Thread.sleep(visitInterval);
+                         } catch (Exception sleepEx) {
+                         }
+                         }
+                         */
                     } catch (Exception ex) {
                         LOG.info("Exception", ex);
                     }
@@ -357,7 +309,7 @@ public class Fetcher {
      * 抓取当前所有任务，会阻塞到爬取完成
      *
      * @param generator 给抓取提供任务的Generator(抓取任务生成器)
-     * @throws IOException
+     * @throws IOException 异常
      */
     public void fetchAll(Generator generator) throws Exception {
         if (executor == null) {
@@ -384,6 +336,7 @@ public class Fetcher {
             lastRequestStart = new AtomicLong(System.currentTimeMillis());
 
             activeThreads = new AtomicInteger(0);
+            startedThreads = new AtomicInteger(0);
             spinWaiting = new AtomicInteger(0);
             fetchQueue = new FetchQueue();
             feeder = new QueueFeeder(fetchQueue, generator, 1000);
@@ -413,7 +366,7 @@ public class Fetcher {
                     break;
                 }
 
-            } while (activeThreads.get() > 0 && running);
+            } while (running && (startedThreads.get() != threads || activeThreads.get() > 0));
             running = false;
             long waitThreadEndStartTime = System.currentTimeMillis();
             if (activeThreads.get() > 0) {
@@ -454,7 +407,7 @@ public class Fetcher {
         }
     }
 
-    boolean running;
+    volatile boolean running;
 
     /**
      * 停止爬取
@@ -481,16 +434,12 @@ public class Fetcher {
         this.threads = threads;
     }
 
-
 //    public boolean isIsContentStored() {
 //        return isContentStored;
 //    }
-
-
 //    public void setIsContentStored(boolean isContentStored) {
 //        this.isContentStored = isContentStored;
 //    }
-
     //    public int getRetry() {
 //        return retry;
 //    }
@@ -507,143 +456,126 @@ public class Fetcher {
     }
 
     /*
-    public Requester getRequester() {
-        return requester;
+     public Requester getRequester() {
+     return requester;
+     }
+     public void setRequester(Requester requester) {
+     this.requester = requester;
+     }
+     public boolean visit(CrawlDatum crawlDatum, Page page, CrawlDatums next) {
+     String url = crawlDatum.getUrl();
+     if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
+     crawlDatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
+     crawlDatum.setHttpCode(page.getResponse().getCode());
+     if (!page.getResponse().isNotFound()) {
+     try {
+     visitor.visit(page, next);
+     } catch (Exception ex) {
+     LOG.info("Exception when visit URL: " + url, ex);
+     return false;
+     }
+     } else {
+     try {
+     visitor.notFound(page, next);
+     } catch (Exception ex) {
+     LOG.info("Exception when not found URL: " + url, ex);
+     return false;
+     }
+     }
+     try {
+     visitor.afterVisit(page, next);
+     } catch (Exception ex) {
+     LOG.info("Exception after visit URL: " + url, ex);
+     return false;
+     }
+     } else if (page.getStatus() == Page.STATUS_FETCH_FAILED) {
+     crawlDatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
+     try {
+     visitor.fail(page, next);
+     } catch (Exception ex) {
+     LOG.info("Exception when execute failed URL: " + url, ex);
+     return false;
+     }
+     }
+     return true;
+     }
+     public Page getPage(CrawlDatum crawlDatum) {
+     String url = crawlDatum.getUrl();
+     Page page;
+     HttpResponse response = null;
+     int retryIndex = 0;
+     Exception lastException = null;
+     int retryCount = 0;
+     for (; retryIndex <= retry; retryIndex++) {
+     try {
+     response = requester.getResponse(crawlDatum);//this.getHttpResponse(crawlDatum);
+     break;
+     } catch (Exception ex) {
+     String suffix = "th ";
+     switch (retryIndex + 1) {
+     case 1:
+     suffix = "st ";
+     break;
+     case 2:
+     suffix = "nd ";
+     break;
+     case 3:
+     suffix = "rd ";
+     break;
+     default:
+     suffix = "th ";
+     }
+     lastException = ex;
+     if (retryIndex < retry) {
+     StringBuilder sb = new StringBuilder();
+     sb.append("retry ").append(retryIndex + 1).append(suffix).append("URL:")
+     .append(url).append(" after ").append(retryInterval)
+     .append("ms ").append("(").append(ex.toString()).append(")");
+     String logMessage = sb.toString();
+     LOG.info(logMessage);
+     retryCount++;
+     if (retryInterval > 0) {
+     try {
+     Thread.sleep(retryInterval);
+     } catch (Exception sleepEx) {
+     }
+     }
+     }
+     }
+     }
+     if (response != null) {
+     if (!response.isNotFound()) {
+     LOG.info("fetch URL: " + url);
+     } else {
+     //404应该被当作抓取成功，因为404告诉爬虫页面不存在，以后不需要重试页面
+     LOG.info("ignore URL: " + url + " (not found)");
+     }
+     page = Page.createSuccessPage(crawlDatum, retryCount, response);
+     } else {
+     LOG.info("failed URL: " + url + " (" + lastException + ")");
+     page = Page.createFailedPage(crawlDatum, retryCount, lastException);
+     }
+     return page;
+     }
+     public long getRetryInterval() {
+     return retryInterval;
+     }
+     public void setRetryInterval(long retryInterval) {
+     this.retryInterval = retryInterval;
+     }
+     public long getVisitInterval() {
+     return visitInterval;
+     }
+     public void setVisitInterval(long visitInterval) {
+     this.visitInterval = visitInterval;
+     }
+     */
+    public long getExecuteInterval() {
+        return executeInterval;
     }
 
-    public void setRequester(Requester requester) {
-        this.requester = requester;
+    public void setExecuteInterval(long executeInterval) {
+        this.executeInterval = executeInterval;
     }
-
-
-    public boolean visit(CrawlDatum crawlDatum, Page page, CrawlDatums next) {
-        String url = crawlDatum.getUrl();
-        if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
-
-            crawlDatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
-            crawlDatum.setHttpCode(page.getResponse().getCode());
-
-            if (!page.getResponse().isNotFound()) {
-
-                try {
-                    visitor.visit(page, next);
-                } catch (Exception ex) {
-                    LOG.info("Exception when visit URL: " + url, ex);
-                    return false;
-                }
-            } else {
-                try {
-                    visitor.notFound(page, next);
-                } catch (Exception ex) {
-                    LOG.info("Exception when not found URL: " + url, ex);
-                    return false;
-                }
-            }
-
-            try {
-                visitor.afterVisit(page, next);
-            } catch (Exception ex) {
-                LOG.info("Exception after visit URL: " + url, ex);
-                return false;
-            }
-
-        } else if (page.getStatus() == Page.STATUS_FETCH_FAILED) {
-
-            crawlDatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
-
-            try {
-                visitor.fail(page, next);
-            } catch (Exception ex) {
-                LOG.info("Exception when execute failed URL: " + url, ex);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public Page getPage(CrawlDatum crawlDatum) {
-
-        String url = crawlDatum.getUrl();
-        Page page;
-        HttpResponse response = null;
-        int retryIndex = 0;
-        Exception lastException = null;
-        int retryCount = 0;
-        for (; retryIndex <= retry; retryIndex++) {
-            try {
-                response = requester.getResponse(crawlDatum);//this.getHttpResponse(crawlDatum);
-                break;
-            } catch (Exception ex) {
-
-                String suffix = "th ";
-                switch (retryIndex + 1) {
-                    case 1:
-                        suffix = "st ";
-                        break;
-                    case 2:
-                        suffix = "nd ";
-                        break;
-                    case 3:
-                        suffix = "rd ";
-                        break;
-                    default:
-                        suffix = "th ";
-                }
-
-                lastException = ex;
-
-                if (retryIndex < retry) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("retry ").append(retryIndex + 1).append(suffix).append("URL:")
-                            .append(url).append(" after ").append(retryInterval)
-                            .append("ms ").append("(").append(ex.toString()).append(")");
-                    String logMessage = sb.toString();
-                    LOG.info(logMessage);
-                    retryCount++;
-                    if (retryInterval > 0) {
-                        try {
-                            Thread.sleep(retryInterval);
-                        } catch (Exception sleepEx) {
-                        }
-                    }
-                }
-
-            }
-        }
-
-        if (response != null) {
-            if (!response.isNotFound()) {
-                LOG.info("fetch URL: " + url);
-            } else {
-                //404应该被当作抓取成功，因为404告诉爬虫页面不存在，以后不需要重试页面
-                LOG.info("ignore URL: " + url + " (not found)");
-            }
-            page = Page.createSuccessPage(crawlDatum, retryCount, response);
-
-        } else {
-            LOG.info("failed URL: " + url + " (" + lastException + ")");
-            page = Page.createFailedPage(crawlDatum, retryCount, lastException);
-        }
-
-        return page;
-    }
-
-
-    public long getRetryInterval() {
-        return retryInterval;
-    }
-
-    public void setRetryInterval(long retryInterval) {
-        this.retryInterval = retryInterval;
-    }
-
-    public long getVisitInterval() {
-        return visitInterval;
-    }
-
-    public void setVisitInterval(long visitInterval) {
-        this.visitInterval = visitInterval;
-    }
-    */
 
 }

@@ -104,8 +104,7 @@ public class CharsetDetector {
 
     /**
      * 根据字节数组，猜测可能的字符集，如果检测失败，返回utf-8
-     *
-     * @param bytes 待检测的字节数组
+     * @param content 待检测的字节数组
      * @return 可能的字符集，如果检测失败，返回utf-8
      */
     public static String guessEncoding(byte[] content) {

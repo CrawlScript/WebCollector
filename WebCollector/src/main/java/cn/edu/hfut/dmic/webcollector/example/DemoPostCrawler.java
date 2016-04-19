@@ -75,8 +75,8 @@ public class DemoPostCrawler extends BreadthCrawler {
      * 2)http://www.B.com/index.php?id=b 需要POST，不需要附带数据 3)http://www.C.com/
      * 需要GET
      *
-     * @param args
-     * @throws Exception
+     * @param args 参数
+     * @throws Exception 异常
      */
     public static void main(String[] args) throws Exception {
 

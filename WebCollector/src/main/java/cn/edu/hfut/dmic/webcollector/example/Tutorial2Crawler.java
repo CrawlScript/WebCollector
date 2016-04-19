@@ -23,7 +23,8 @@ import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
 
 
 /**
- * WebCollector 2.x版本的tutorial(version>=2.20) 2.x版本特性：
+ * WebCollector 2.x版本的tutorial(2.20以上) 
+ * 2.x版本特性：
  * 1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
  * 2）可以为每个URL设置附加信息(MetaData)，利用附加信息可以完成很多复杂业务，例如深度获取、锚文本获取、引用页面获取、POST参数传递、增量更新等。
  * 3）使用插件机制，WebCollector内置两套插件。

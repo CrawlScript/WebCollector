@@ -38,8 +38,11 @@ public class DemoDepthCrawler extends BreadthCrawler{
     @Override
     public void visit(Page page, CrawlDatums next) {
         System.out.println("visiting:"+page.getUrl()+"\tdepth="+page.meta("depth"));
+    }
 
-        //当前页面的depth为x，则从当前页面解析的后续任务的depth为x+1
+    @Override
+    protected void afterParse(Page page, CrawlDatums next) {
+  //当前页面的depth为x，则从当前页面解析的后续任务的depth为x+1
         int depth;
         //如果在添加种子时忘记添加depth信息，可以通过这种方式保证程序不出错
         if(page.meta("depth")==null){
@@ -52,7 +55,7 @@ public class DemoDepthCrawler extends BreadthCrawler{
             datum.meta("depth", depth+"");
         }
     }
-
+    
 
     
     public static void main(String[] args) throws Exception {
@@ -69,7 +72,10 @@ public class DemoDepthCrawler extends BreadthCrawler{
         crawler.addRegex("-.*\\.(jpg|png|gif).*");
         /*不要爬取包含"#"的链接*/
         crawler.addRegex("-.*#.*");
-        crawler.start(2);
+        
+        crawler.setTopN(5);
+        
+        crawler.start(3);
     }
 
 }
