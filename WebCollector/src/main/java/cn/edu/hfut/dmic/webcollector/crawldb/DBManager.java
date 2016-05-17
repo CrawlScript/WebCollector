@@ -39,17 +39,19 @@ public abstract class DBManager implements Injector, SegmentWriter, DBLock {
 
     public abstract void inject(CrawlDatum datum, boolean force) throws Exception;
 
+    public abstract void inject(CrawlDatums datums, boolean force) throws Exception;
+
     public abstract void merge() throws Exception;
 
     public void inject(CrawlDatum datum) throws Exception {
         inject(datum, false);
     }
 
-    public void inject(CrawlDatums datums, boolean force) throws Exception {
-        for (CrawlDatum datum : datums) {
-            inject(datum, force);
-        }
-    }
+//    public void inject(CrawlDatums datums, boolean force) throws Exception {
+//        for (CrawlDatum datum : datums) {
+//            inject(datum, force);
+//        }
+//    }
 
     public void inject(CrawlDatums datums) throws Exception {
         inject(datums, false);

@@ -1,0 +1,24 @@
+{
+  "task_name": "rubychina",
+  "resumable": true,
+  "mongo_ip": "127.0.0.1",
+  "mongo_port": 27017,
+  "page_db": "topics",
+  "page_collection": "webpage",
+  "topN": 5000,
+  "seeds": [
+    "https://ruby-china.org/topics?page=1"
+  ],
+  "regex_rule": [
+    "+https://ruby-china.org/topics/[0-9]+",
+    "+https://ruby-china.org/topics\\?page=[0-9]+",
+    "-.*#.*",
+    "-.*\\.(jpg|png|gif|jpeg|avi|zip|rar|exe).*"
+  ],
+  "proxys": [
+    "direct"
+  ],
+  "threads": 50,
+  "depth": 20
+}
+

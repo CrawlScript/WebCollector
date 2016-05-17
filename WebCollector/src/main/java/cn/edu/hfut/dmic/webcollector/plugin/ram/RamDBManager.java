@@ -77,6 +77,13 @@ public class RamDBManager extends DBManager {
         }
         ramDB.crawlDB.put(key, datum);
     }
+    
+    @Override
+    public void inject(CrawlDatums datums, boolean force) throws Exception {
+        for(CrawlDatum datum:datums){
+            inject(datum,force);
+        }
+    }
 
     @Override
     public void merge() throws Exception {
@@ -143,5 +150,7 @@ public class RamDBManager extends DBManager {
         String key = datum.getKey();
         ramDB.redirectDB.put(key, realUrl);
     }
+
+    
 
 }

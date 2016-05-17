@@ -51,12 +51,8 @@ public class LazyConfig {
     protected int topN = -1;
     protected Proxys proxys = null;
     protected int depth = Integer.MAX_VALUE;
-    protected long visitInterval = 0;
-    protected long retryInterval = 0;
     protected int threads = 50;
-    protected int retry = 3;
     protected int maxReceiveSize=Config.MAX_RECEIVE_SIZE;
-    protected int maxRetry=Config.MAX_RETRY;
 
     public LazyConfig(String confFileName) throws Exception {
         String jsonStr = FileUtils.readFile(confFileName, "utf-8");
@@ -131,29 +127,13 @@ public class LazyConfig {
             LOG.info("set depth="+depth);
         }
 
-        if (confJson.has("visit_interval")) {
-            visitInterval = confJson.getLong("visit_interval");
-            LOG.info("set visit_interval="+visitInterval);
-        }
-        if (confJson.has("retry_interval")) {
-            retryInterval = confJson.getLong("retry_interval");
-            LOG.info("set retry_interval="+retryInterval);
-        }
+
 
         if (confJson.has("threads")) {
             threads = confJson.getInt("threads");
             LOG.info("set threads="+threads);
         }
 
-        if (confJson.has("retry")) {
-            retry = confJson.getInt("retry");
-            LOG.info("set retry="+retry);
-        }
-        
-          if (confJson.has("max_retry")) {
-            maxRetry = confJson.getInt("max_retry");
-            LOG.info("set max_retry="+maxRetry);
-        }
         
         if(confJson.has("max_receive_size")){
             maxReceiveSize=confJson.getInt("max_receive_size");
@@ -183,13 +163,7 @@ public class LazyConfig {
         this.maxReceiveSize = maxReceiveSize;
     }
 
-    public int getMaxRetry() {
-        return maxRetry;
-    }
 
-    public void setMaxRetry(int maxRetry) {
-        this.maxRetry = maxRetry;
-    }
 
     
 
@@ -291,23 +265,6 @@ public class LazyConfig {
         this.depth = depth;
     }
 
-   
-
-    public long getVisitInterval() {
-        return visitInterval;
-    }
-
-    public void setVisitInterval(long visitInterval) {
-        this.visitInterval = visitInterval;
-    }
-
-    public long getRetryInterval() {
-        return retryInterval;
-    }
-
-    public void setRetryInterval(long retryInterval) {
-        this.retryInterval = retryInterval;
-    }
 
     public int getThreads() {
         return threads;
@@ -317,12 +274,5 @@ public class LazyConfig {
         this.threads = threads;
     }
 
-    public int getRetry() {
-        return retry;
-    }
-
-    public void setRetry(int retry) {
-        this.retry = retry;
-    }
 
 }

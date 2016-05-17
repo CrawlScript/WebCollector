@@ -18,28 +18,14 @@
 package cn.edu.hfut.dmic.webcollector.plugin.mongo;
 
 import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.*;
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
-import cn.edu.hfut.dmic.webcollector.util.FileUtils;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.UpdateOptions;
-import com.sleepycat.je.Cursor;
-import com.sleepycat.je.CursorConfig;
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseEntry;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.je.LockMode;
-import com.sleepycat.je.OperationStatus;
-import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +41,12 @@ public class MongoDBManager extends DBManager {
     String crawlID;
     MongoClient client;
     MongoDatabase database;
-    MongoGenerator generator=null;
+    MongoGenerator generator = null;
 
     public MongoDBManager(String crawlID, MongoClient client) {
         this.crawlID = crawlID;
         this.client = client;
-        this.generator=new MongoGenerator(crawlID,client);
+        this.generator = new MongoGenerator(crawlID, client);
 
     }
 
@@ -71,6 +57,13 @@ public class MongoDBManager extends DBManager {
             MongoDBUtils.updateOrInsert(crawldb, datum);
         } else {
             MongoDBUtils.insertIfNotExists(crawldb, datum);
+        }
+    }
+
+    @Override
+    public void inject(CrawlDatums datums, boolean force) throws Exception {
+        for (CrawlDatum datum : datums) {
+            inject(datum, force);
         }
     }
 
@@ -192,7 +185,7 @@ public class MongoDBManager extends DBManager {
 
     @Override
     public void clear() throws Exception {
-        database=client.getDatabase(crawlID);
+        database = client.getDatabase(crawlID);
         database.drop();
     }
 

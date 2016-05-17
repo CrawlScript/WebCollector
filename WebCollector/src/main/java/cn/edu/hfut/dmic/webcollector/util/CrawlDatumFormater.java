@@ -38,7 +38,7 @@ public class CrawlDatumFormater {
         StringBuilder sb = new StringBuilder();
         sb.append("\nKEY: ").append(datum.getKey())
                 .append("\nURL: ").append(datum.getUrl())
-                .append("\nSTATUS：");
+                .append("\nSTATUS: ");
 
         switch (datum.getStatus()) {
             case CrawlDatum.STATUS_DB_SUCCESS:

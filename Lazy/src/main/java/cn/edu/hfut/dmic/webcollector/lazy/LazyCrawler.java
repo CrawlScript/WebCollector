@@ -58,10 +58,6 @@ public class LazyCrawler extends BreadthCrawler {
         this.setTopN(lazyConfig.getTopN());
         this.headerMap = lazyConfig.getHeaderMap();
         this.proxys = lazyConfig.getProxys();
-        this.setRetry(lazyConfig.getRetry());
-        this.setMaxRetry(lazyConfig.getMaxRetry());
-        this.setVisitInterval(lazyConfig.getVisitInterval());
-        this.setRetryInterval(lazyConfig.getRetryInterval());
         this.setThreads(lazyConfig.getThreads());
 
         Config.MAX_RECEIVE_SIZE = lazyConfig.getMaxReceiveSize();
@@ -92,9 +88,8 @@ public class LazyCrawler extends BreadthCrawler {
     }
 
     @Override
-    public void afterVisit(Page page, CrawlDatums next) {
-        super.afterVisit(page, next);
-        next.putMetaData("refer", page.getUrl());
+    protected void afterParse(Page page, CrawlDatums next) {
+        super.afterParse(page, next);
+        next.meta("refer", page.getUrl());
     }
-
 }

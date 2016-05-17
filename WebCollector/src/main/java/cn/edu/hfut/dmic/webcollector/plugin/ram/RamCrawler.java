@@ -18,10 +18,6 @@
 package cn.edu.hfut.dmic.webcollector.plugin.ram;
 
 import cn.edu.hfut.dmic.webcollector.crawler.AutoParseCrawler;
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.model.Links;
-import cn.edu.hfut.dmic.webcollector.model.Page;
 
 /**
  * 基于内存的Crawler插件，适合一次性爬取，并不具有断点爬取功能

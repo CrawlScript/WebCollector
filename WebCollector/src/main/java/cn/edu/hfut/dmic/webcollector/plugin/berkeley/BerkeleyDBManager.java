@@ -46,11 +46,11 @@ public class BerkeleyDBManager extends DBManager {
 
     Environment env;
     String crawlPath;
-    BerkeleyGenerator generator=null;
+    BerkeleyGenerator generator = null;
 
     public BerkeleyDBManager(String crawlPath) {
         this.crawlPath = crawlPath;
-        this.generator=new BerkeleyGenerator(crawlPath);
+        this.generator = new BerkeleyGenerator(crawlPath);
     }
 
     public void list() throws Exception {
@@ -88,7 +88,24 @@ public class BerkeleyDBManager extends DBManager {
         }
         value = BerkeleyDBUtils.strToEntry(CrawlDatumFormater.datumToJsonStr(datum));
         database.put(null, key, value);
-        database.sync();
+        database.close();
+    }
+
+    @Override
+    public void inject(CrawlDatums datums, boolean force) throws Exception {
+        Database database = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+        for (int i = 0; i < datums.size(); i++) {
+            CrawlDatum datum = datums.get(i);
+            DatabaseEntry key = BerkeleyDBUtils.strToEntry(datum.getKey());
+            DatabaseEntry value = new DatabaseEntry();
+            if (!force) {
+                if (database.get(null, key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+                    continue;
+                }
+            }
+            value = BerkeleyDBUtils.strToEntry(CrawlDatumFormater.datumToJsonStr(datum));
+            database.put(null, key, value);
+        }
         database.close();
     }
 

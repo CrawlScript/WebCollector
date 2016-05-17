@@ -1,34 +1,27 @@
 {
-    "task_name":"rubychina",
-    "resumable":true,
-    "mongo_ip":"127.0.0.1",
-    "mongo_port":27017,
-    "page_db":"topics",
-    "page_collection":"webpage",
-    "topN":5000,
-    "seeds":[
-        "https://ruby-china.org/topics?page=1"
-    ],
-    "forced_seeds":[
-        
-    ],
-    "regex_rule":[
-        "+https://ruby-china.org/topics/[0-9]+",
-        "+https://ruby-china.org/topics\\?page=[0-9]+",
-        "-.*#.*",
-        "-.*\\.(jpg|png|gif|jpeg|avi|zip|rar|exe).*"
-    ],
-    "http_head":{
-        "User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36"
-    },
-    "proxys":[
-        "direct"
-    ],
-    "threads":50,
-    "visit_interval":0,
-    "retry_interval":0,
-    "max_receive_size":-1,
-    "retry":3,
-    "depth":20
-        
+  "task_name": "rubychina",
+  "resumable": true,
+  "mongo_ip": "127.0.0.1",
+  "mongo_port": 27017,
+  "page_db": "topics",
+  "page_collection": "webpage",
+  "topN": 5000,
+  "seeds": [
+    "https://ruby-china.org/topics?page=1"
+  ],
+  "regex_rule": [
+    "+https://ruby-china.org/topics/[0-9]+",
+    "+https://ruby-china.org/topics\\?page=[0-9]+",
+    "-.*#.*",
+    "-.*\\.(jpg|png|gif|jpeg|avi|zip|rar|exe).*"
+  ],
+  "http_head": {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36"
+  },
+  "proxys": [
+    "direct"
+  ],
+  "threads": 50,
+  "max_receive_size": -1,
+  "depth": 20
 }

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.edu.hfut.dmic.webcollector.lazy</groupId>
     <artifactId>Lazy</artifactId>
-    <version>0.11-beta</version>
+    <version>0.13-beta</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>cn.edu.hfut.dmic.webcollector</groupId>
             <artifactId>WebCollector</artifactId>
-            <version>2.26</version>
+            <version>2.30</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -104,8 +104,8 @@
         </dependency>
         <dependency>
             <groupId>com.chenlb.mmseg4j</groupId>
-            <artifactId>mmseg4j-core</artifactId>
-            <version>1.10.0</version>
+            <artifactId>mmseg4j-core-with-dic</artifactId>
+            <version>1.8.6</version>
         </dependency>
     </dependencies>
 </project>

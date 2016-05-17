@@ -77,8 +77,8 @@ public class BerkeleyGenerator implements Generator {
         }
     }
 
-    public DatabaseEntry key = new DatabaseEntry();
-    public DatabaseEntry value = new DatabaseEntry();
+    protected DatabaseEntry key = new DatabaseEntry();
+    protected DatabaseEntry value = new DatabaseEntry();
 
     @Override
     public CrawlDatum next() {

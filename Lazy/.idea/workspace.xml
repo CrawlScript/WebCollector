@@ -21,15 +21,15 @@
     <favorites_list name="Lazy" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+    <leaf>
       <file leaf-file-name="KMeans.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
               <folding>
-                <element signature="e#3590#3591#0" expanded="true" />
-                <element signature="e#3644#3645#0" expanded="true" />
+                <element signature="e#3590#3591#0" expanded="false" />
+                <element signature="e#3644#3645#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -41,24 +41,120 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#191#208#0" expanded="true" />
-                <element signature="e#560#561#0" expanded="true" />
-                <element signature="e#606#607#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#560#561#0" expanded="false" />
+                <element signature="e#606#607#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WebpageKmeans.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WebpageKmeans.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.28832117">
-              <caret line="57" column="18" selection-start-line="57" selection-start-column="18" selection-end-line="57" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="69" column="53" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#987#1013#0" expanded="true" />
-                <element signature="e#1066#1074#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LazyCrawler.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="92" column="17" selection-start-line="92" selection-start-column="17" selection-end-line="92" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#3660#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LazyConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#7695#0" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#1716#1732#0" expanded="false" />
+                <element signature="e#5293#5294#0" expanded="false" />
+                <element signature="e#5335#5336#0" expanded="false" />
+                <element signature="e#5370#5371#0" expanded="false" />
+                <element signature="e#5401#5402#0" expanded="false" />
+                <element signature="e#5449#5450#0" expanded="false" />
+                <element signature="e#5489#5490#0" expanded="false" />
+                <element signature="e#5527#5528#0" expanded="false" />
+                <element signature="e#5564#5565#0" expanded="false" />
+                <element signature="e#5621#5622#0" expanded="false" />
+                <element signature="e#5673#5674#0" expanded="false" />
+                <element signature="e#5727#5728#0" expanded="false" />
+                <element signature="e#5759#5760#0" expanded="false" />
+                <element signature="e#5810#5811#0" expanded="false" />
+                <element signature="e#5852#5853#0" expanded="false" />
+                <element signature="e#5886#5887#0" expanded="false" />
+                <element signature="e#5916#5917#0" expanded="false" />
+                <element signature="e#5962#5963#0" expanded="false" />
+                <element signature="e#6000#6001#0" expanded="false" />
+                <element signature="e#6033#6034#0" expanded="false" />
+                <element signature="e#6065#6066#0" expanded="false" />
+                <element signature="e#6112#6113#0" expanded="false" />
+                <element signature="e#6154#6155#0" expanded="false" />
+                <element signature="e#6187#6188#0" expanded="false" />
+                <element signature="e#6216#6217#0" expanded="false" />
+                <element signature="e#6260#6261#0" expanded="false" />
+                <element signature="e#6296#6297#0" expanded="false" />
+                <element signature="e#6337#6338#0" expanded="false" />
+                <element signature="e#6374#6375#0" expanded="false" />
+                <element signature="e#6434#6435#0" expanded="false" />
+                <element signature="e#6486#6487#0" expanded="false" />
+                <element signature="e#6517#6518#0" expanded="false" />
+                <element signature="e#6545#6546#0" expanded="false" />
+                <element signature="e#6586#6587#0" expanded="false" />
+                <element signature="e#6620#6621#0" expanded="false" />
+                <element signature="e#6657#6658#0" expanded="false" />
+                <element signature="e#6691#6692#0" expanded="false" />
+                <element signature="e#6744#6745#0" expanded="false" />
+                <element signature="e#6790#6791#0" expanded="false" />
+                <element signature="e#6843#6844#0" expanded="false" />
+                <element signature="e#6875#6876#0" expanded="false" />
+                <element signature="e#6942#6943#0" expanded="false" />
+                <element signature="e#6984#6985#0" expanded="false" />
+                <element signature="e#7023#7024#0" expanded="false" />
+                <element signature="e#7055#7056#0" expanded="false" />
+                <element signature="e#7108#7109#0" expanded="false" />
+                <element signature="e#7150#7151#0" expanded="false" />
+                <element signature="e#7178#7179#0" expanded="false" />
+                <element signature="e#7205#7206#0" expanded="false" />
+                <element signature="e#7242#7243#0" expanded="false" />
+                <element signature="e#7274#7275#0" expanded="false" />
+                <element signature="e#7307#7308#0" expanded="false" />
+                <element signature="e#7336#7337#0" expanded="false" />
+                <element signature="e#7380#7381#0" expanded="false" />
+                <element signature="e#7416#7417#0" expanded="false" />
+                <element signature="e#7445#7446#0" expanded="false" />
+                <element signature="e#7473#7474#0" expanded="false" />
+                <element signature="e#7512#7513#0" expanded="false" />
+                <element signature="e#7546#7547#0" expanded="false" />
+                <element signature="e#7578#7579#0" expanded="false" />
+                <element signature="e#7608#7609#0" expanded="false" />
+                <element signature="e#7651#7652#0" expanded="false" />
+                <element signature="e#7689#7690#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -67,8 +163,18 @@
       <file leaf-file-name="demo_task.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/demo_task.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.6545453">
-              <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="26" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="demo_task1.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/demo_task1.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.49861878">
+              <caret line="19" column="4" selection-start-line="0" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -79,7 +185,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
-              <folding />
+              <folding>
+                <element signature="e#0#1419#0" expanded="false" />
+                <element signature="e#1151#1152#0" expanded="false" />
+                <element signature="e#1214#1215#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -90,9 +200,8 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#436#453#0" expanded="true" />
-                <element signature="e#880#896#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#880#896#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -118,20 +227,23 @@
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/cn/edu/hfut/dmic/dm/KMeans.java" />
         <option value="$PROJECT_DIR$/src/main/java/dm/KMeans.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/cn/edu/hfut/dm/KMeans.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java" />
-        <option value="$PROJECT_DIR$/demo_task.json" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java" />
         <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/demo_task.json" />
+        <option value="$PROJECT_DIR$/demo_task1.json" />
       </list>
     </option>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="$USER_HOME$/apache/apache-maven-3.3.9" />
+        <option name="mavenHome" value="D:/apache/apache-maven-3.3.3" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -163,11 +275,13 @@
       </PATH>
     </treeState>
   </component>
+  <component name="NamedScopeManager">
+    <order />
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="65" />
-    <option name="y" value="24" />
-    <option name="width" value="1375" />
-    <option name="height" value="876" />
+    <option name="x" value="-8" />
+    <option name="width" value="1452" />
+    <option name="height" value="912" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -190,10 +304,9 @@
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
-      <manualOrder />
-      <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -212,22 +325,107 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Lazy" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dm" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="MavenSettings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../WebCollector" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="recentsLimit" value="5" />
+    <property name="FullScreen" value="false" />
+    <property name="dynamic.classpath" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\mygit\WebCollector\Lazy" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
@@ -337,15 +535,6 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="0" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="SELECTED_CLOUD_DEVICE_CONFIGURATION_ID" value="0" />
-      <option name="SELECTED_CLOUD_DEVICE_PROJECT_ID" value="" />
-      <option name="IS_VALID_CLOUD_MATRIX_SELECTION" value="false" />
-      <option name="INVALID_CLOUD_MATRIX_SELECTION_ERROR" value="" />
-      <option name="IS_VALID_CLOUD_DEVICE_SELECTION" value="false" />
-      <option name="INVALID_CLOUD_DEVICE_SELECTION_ERROR" value="" />
-      <option name="CLOUD_DEVICE_SERIAL_NUMBER" value="" />
       <method />
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -367,15 +556,6 @@
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
       <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
-      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="0" />
-      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
-      <option name="SELECTED_CLOUD_DEVICE_CONFIGURATION_ID" value="0" />
-      <option name="SELECTED_CLOUD_DEVICE_PROJECT_ID" value="" />
-      <option name="IS_VALID_CLOUD_MATRIX_SELECTION" value="false" />
-      <option name="INVALID_CLOUD_MATRIX_SELECTION_ERROR" value="" />
-      <option name="IS_VALID_CLOUD_DEVICE_SELECTION" value="false" />
-      <option name="INVALID_CLOUD_DEVICE_SELECTION_ERROR" value="" />
-      <option name="CLOUD_DEVICE_SERIAL_NUMBER" value="" />
       <method />
     </configuration>
     <configuration default="true" type="Applet" factoryName="Applet">
@@ -438,58 +618,8 @@
       <patterns />
       <method />
     </configuration>
-    <configuration default="true" type="JUnitTestDiscovery" factoryName="JUnit Test Discovery" changeList="All">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <envs />
-      <patterns />
-      <method />
-    </configuration>
     <configuration default="true" type="JarApplication" factoryName="JAR Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="SCRATCH_FILE_ID" value="0" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="ENABLE_SWING_INSPECTOR" value="false" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="VM_PARAMETERS" />
-      <option name="PROGRAM_PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <module name="Lazy" />
       <envs />
       <method />
     </configuration>
@@ -523,36 +653,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="ScalaTestRunConfiguration" factoryName="ScalaTest">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="Specs2RunConfiguration" factoryName="Specs2">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <envs />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -579,49 +679,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="TestNGTestDiscovery" factoryName="TestNG Test Discovery" changeList="All">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
-      <option name="TEST_OBJECT" value="CLASS" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="ANNOTATION_TYPE" />
-      <option name="ENV_VARIABLES" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
-      <envs />
-      <properties />
-      <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="uTestRunConfiguration" factoryName="utest">
-      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
-      <module name="" />
-      <setting name="path" value="" />
-      <setting name="package" value="" />
-      <setting name="vmparams" value="" />
-      <setting name="params" value="" />
-      <setting name="workingDirectory" value="" />
-      <setting name="searchForTest" value="Across module dependencies" />
-      <setting name="testName" value="" />
-      <setting name="testKind" value="Class" />
-      <setting name="showProgressMessages" value="true" />
-      <envs />
       <method />
     </configuration>
     <list size="4">
@@ -658,31 +715,33 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="24" width="1375" height="876" extended-state="6" />
-    <editor active="false" />
+    <frame x="-8" y="0" width="1452" height="912" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="true" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32981133" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6041397" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24981132" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988358" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13721265" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2413793" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3237858" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988358" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -710,61 +769,103 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="92" column="17" selection-start-line="92" selection-start-column="17" selection-end-line="92" selection-end-column="17" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#3660#0" expanded="false" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.012987">
-          <caret line="108" column="21" selection-start-line="108" selection-start-column="21" selection-end-line="108" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/stopwords.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.9259259">
-          <caret line="24" column="2" selection-start-line="24" selection-start-column="2" selection-end-line="24" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#436#453#0" expanded="true" />
-            <element signature="e#880#896#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#191#208#0" expanded="true" />
-            <element signature="e#560#561#0" expanded="true" />
-            <element signature="e#606#607#0" expanded="true" />
+            <element signature="e#0#7695#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1716#1732#0" expanded="false" />
+            <element signature="e#5293#5294#0" expanded="false" />
+            <element signature="e#5335#5336#0" expanded="false" />
+            <element signature="e#5370#5371#0" expanded="false" />
+            <element signature="e#5401#5402#0" expanded="false" />
+            <element signature="e#5449#5450#0" expanded="false" />
+            <element signature="e#5489#5490#0" expanded="false" />
+            <element signature="e#5527#5528#0" expanded="false" />
+            <element signature="e#5564#5565#0" expanded="false" />
+            <element signature="e#5621#5622#0" expanded="false" />
+            <element signature="e#5673#5674#0" expanded="false" />
+            <element signature="e#5727#5728#0" expanded="false" />
+            <element signature="e#5759#5760#0" expanded="false" />
+            <element signature="e#5810#5811#0" expanded="false" />
+            <element signature="e#5852#5853#0" expanded="false" />
+            <element signature="e#5886#5887#0" expanded="false" />
+            <element signature="e#5916#5917#0" expanded="false" />
+            <element signature="e#5962#5963#0" expanded="false" />
+            <element signature="e#6000#6001#0" expanded="false" />
+            <element signature="e#6033#6034#0" expanded="false" />
+            <element signature="e#6065#6066#0" expanded="false" />
+            <element signature="e#6112#6113#0" expanded="false" />
+            <element signature="e#6154#6155#0" expanded="false" />
+            <element signature="e#6187#6188#0" expanded="false" />
+            <element signature="e#6216#6217#0" expanded="false" />
+            <element signature="e#6260#6261#0" expanded="false" />
+            <element signature="e#6296#6297#0" expanded="false" />
+            <element signature="e#6337#6338#0" expanded="false" />
+            <element signature="e#6374#6375#0" expanded="false" />
+            <element signature="e#6434#6435#0" expanded="false" />
+            <element signature="e#6486#6487#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6545#6546#0" expanded="false" />
+            <element signature="e#6586#6587#0" expanded="false" />
+            <element signature="e#6620#6621#0" expanded="false" />
+            <element signature="e#6657#6658#0" expanded="false" />
+            <element signature="e#6691#6692#0" expanded="false" />
+            <element signature="e#6744#6745#0" expanded="false" />
+            <element signature="e#6790#6791#0" expanded="false" />
+            <element signature="e#6843#6844#0" expanded="false" />
+            <element signature="e#6875#6876#0" expanded="false" />
+            <element signature="e#6942#6943#0" expanded="false" />
+            <element signature="e#6984#6985#0" expanded="false" />
+            <element signature="e#7023#7024#0" expanded="false" />
+            <element signature="e#7055#7056#0" expanded="false" />
+            <element signature="e#7108#7109#0" expanded="false" />
+            <element signature="e#7150#7151#0" expanded="false" />
+            <element signature="e#7178#7179#0" expanded="false" />
+            <element signature="e#7205#7206#0" expanded="false" />
+            <element signature="e#7242#7243#0" expanded="false" />
+            <element signature="e#7274#7275#0" expanded="false" />
+            <element signature="e#7307#7308#0" expanded="false" />
+            <element signature="e#7336#7337#0" expanded="false" />
+            <element signature="e#7380#7381#0" expanded="false" />
+            <element signature="e#7416#7417#0" expanded="false" />
+            <element signature="e#7445#7446#0" expanded="false" />
+            <element signature="e#7473#7474#0" expanded="false" />
+            <element signature="e#7512#7513#0" expanded="false" />
+            <element signature="e#7546#7547#0" expanded="false" />
+            <element signature="e#7578#7579#0" expanded="false" />
+            <element signature="e#7608#7609#0" expanded="false" />
+            <element signature="e#7651#7652#0" expanded="false" />
+            <element signature="e#7689#7690#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/demo_task.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.6545453">
-          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="26" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -773,17 +874,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
-          <folding />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="jar:///usr/lib/jvm/jdk1.8.0_65/src.zip!/java/util/Random.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7239583">
-          <caret line="530" column="18" selection-start-line="530" selection-start-column="18" selection-end-line="530" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
           <folding>
-            <element signature="e#21068#21069#0" expanded="false" />
-            <element signature="e#21142#21143#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -793,21 +898,647 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
           <folding>
-            <element signature="e#3590#3591#0" expanded="true" />
-            <element signature="e#3644#3645#0" expanded="true" />
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#560#561#0" expanded="false" />
+            <element signature="e#606#607#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.28832117">
-          <caret line="57" column="18" selection-start-line="57" selection-start-column="18" selection-end-line="57" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="53" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#987#1013#0" expanded="true" />
-            <element signature="e#1066#1074#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="17" selection-start-line="92" selection-start-column="17" selection-end-line="92" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#3660#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#7695#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1716#1732#0" expanded="false" />
+            <element signature="e#5293#5294#0" expanded="false" />
+            <element signature="e#5335#5336#0" expanded="false" />
+            <element signature="e#5370#5371#0" expanded="false" />
+            <element signature="e#5401#5402#0" expanded="false" />
+            <element signature="e#5449#5450#0" expanded="false" />
+            <element signature="e#5489#5490#0" expanded="false" />
+            <element signature="e#5527#5528#0" expanded="false" />
+            <element signature="e#5564#5565#0" expanded="false" />
+            <element signature="e#5621#5622#0" expanded="false" />
+            <element signature="e#5673#5674#0" expanded="false" />
+            <element signature="e#5727#5728#0" expanded="false" />
+            <element signature="e#5759#5760#0" expanded="false" />
+            <element signature="e#5810#5811#0" expanded="false" />
+            <element signature="e#5852#5853#0" expanded="false" />
+            <element signature="e#5886#5887#0" expanded="false" />
+            <element signature="e#5916#5917#0" expanded="false" />
+            <element signature="e#5962#5963#0" expanded="false" />
+            <element signature="e#6000#6001#0" expanded="false" />
+            <element signature="e#6033#6034#0" expanded="false" />
+            <element signature="e#6065#6066#0" expanded="false" />
+            <element signature="e#6112#6113#0" expanded="false" />
+            <element signature="e#6154#6155#0" expanded="false" />
+            <element signature="e#6187#6188#0" expanded="false" />
+            <element signature="e#6216#6217#0" expanded="false" />
+            <element signature="e#6260#6261#0" expanded="false" />
+            <element signature="e#6296#6297#0" expanded="false" />
+            <element signature="e#6337#6338#0" expanded="false" />
+            <element signature="e#6374#6375#0" expanded="false" />
+            <element signature="e#6434#6435#0" expanded="false" />
+            <element signature="e#6486#6487#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6545#6546#0" expanded="false" />
+            <element signature="e#6586#6587#0" expanded="false" />
+            <element signature="e#6620#6621#0" expanded="false" />
+            <element signature="e#6657#6658#0" expanded="false" />
+            <element signature="e#6691#6692#0" expanded="false" />
+            <element signature="e#6744#6745#0" expanded="false" />
+            <element signature="e#6790#6791#0" expanded="false" />
+            <element signature="e#6843#6844#0" expanded="false" />
+            <element signature="e#6875#6876#0" expanded="false" />
+            <element signature="e#6942#6943#0" expanded="false" />
+            <element signature="e#6984#6985#0" expanded="false" />
+            <element signature="e#7023#7024#0" expanded="false" />
+            <element signature="e#7055#7056#0" expanded="false" />
+            <element signature="e#7108#7109#0" expanded="false" />
+            <element signature="e#7150#7151#0" expanded="false" />
+            <element signature="e#7178#7179#0" expanded="false" />
+            <element signature="e#7205#7206#0" expanded="false" />
+            <element signature="e#7242#7243#0" expanded="false" />
+            <element signature="e#7274#7275#0" expanded="false" />
+            <element signature="e#7307#7308#0" expanded="false" />
+            <element signature="e#7336#7337#0" expanded="false" />
+            <element signature="e#7380#7381#0" expanded="false" />
+            <element signature="e#7416#7417#0" expanded="false" />
+            <element signature="e#7445#7446#0" expanded="false" />
+            <element signature="e#7473#7474#0" expanded="false" />
+            <element signature="e#7512#7513#0" expanded="false" />
+            <element signature="e#7546#7547#0" expanded="false" />
+            <element signature="e#7578#7579#0" expanded="false" />
+            <element signature="e#7608#7609#0" expanded="false" />
+            <element signature="e#7651#7652#0" expanded="false" />
+            <element signature="e#7689#7690#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="26" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
+          <folding>
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#560#561#0" expanded="false" />
+            <element signature="e#606#607#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="53" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="17" selection-start-line="92" selection-start-column="17" selection-end-line="92" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#3660#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#7695#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1716#1732#0" expanded="false" />
+            <element signature="e#5293#5294#0" expanded="false" />
+            <element signature="e#5335#5336#0" expanded="false" />
+            <element signature="e#5370#5371#0" expanded="false" />
+            <element signature="e#5401#5402#0" expanded="false" />
+            <element signature="e#5449#5450#0" expanded="false" />
+            <element signature="e#5489#5490#0" expanded="false" />
+            <element signature="e#5527#5528#0" expanded="false" />
+            <element signature="e#5564#5565#0" expanded="false" />
+            <element signature="e#5621#5622#0" expanded="false" />
+            <element signature="e#5673#5674#0" expanded="false" />
+            <element signature="e#5727#5728#0" expanded="false" />
+            <element signature="e#5759#5760#0" expanded="false" />
+            <element signature="e#5810#5811#0" expanded="false" />
+            <element signature="e#5852#5853#0" expanded="false" />
+            <element signature="e#5886#5887#0" expanded="false" />
+            <element signature="e#5916#5917#0" expanded="false" />
+            <element signature="e#5962#5963#0" expanded="false" />
+            <element signature="e#6000#6001#0" expanded="false" />
+            <element signature="e#6033#6034#0" expanded="false" />
+            <element signature="e#6065#6066#0" expanded="false" />
+            <element signature="e#6112#6113#0" expanded="false" />
+            <element signature="e#6154#6155#0" expanded="false" />
+            <element signature="e#6187#6188#0" expanded="false" />
+            <element signature="e#6216#6217#0" expanded="false" />
+            <element signature="e#6260#6261#0" expanded="false" />
+            <element signature="e#6296#6297#0" expanded="false" />
+            <element signature="e#6337#6338#0" expanded="false" />
+            <element signature="e#6374#6375#0" expanded="false" />
+            <element signature="e#6434#6435#0" expanded="false" />
+            <element signature="e#6486#6487#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6545#6546#0" expanded="false" />
+            <element signature="e#6586#6587#0" expanded="false" />
+            <element signature="e#6620#6621#0" expanded="false" />
+            <element signature="e#6657#6658#0" expanded="false" />
+            <element signature="e#6691#6692#0" expanded="false" />
+            <element signature="e#6744#6745#0" expanded="false" />
+            <element signature="e#6790#6791#0" expanded="false" />
+            <element signature="e#6843#6844#0" expanded="false" />
+            <element signature="e#6875#6876#0" expanded="false" />
+            <element signature="e#6942#6943#0" expanded="false" />
+            <element signature="e#6984#6985#0" expanded="false" />
+            <element signature="e#7023#7024#0" expanded="false" />
+            <element signature="e#7055#7056#0" expanded="false" />
+            <element signature="e#7108#7109#0" expanded="false" />
+            <element signature="e#7150#7151#0" expanded="false" />
+            <element signature="e#7178#7179#0" expanded="false" />
+            <element signature="e#7205#7206#0" expanded="false" />
+            <element signature="e#7242#7243#0" expanded="false" />
+            <element signature="e#7274#7275#0" expanded="false" />
+            <element signature="e#7307#7308#0" expanded="false" />
+            <element signature="e#7336#7337#0" expanded="false" />
+            <element signature="e#7380#7381#0" expanded="false" />
+            <element signature="e#7416#7417#0" expanded="false" />
+            <element signature="e#7445#7446#0" expanded="false" />
+            <element signature="e#7473#7474#0" expanded="false" />
+            <element signature="e#7512#7513#0" expanded="false" />
+            <element signature="e#7546#7547#0" expanded="false" />
+            <element signature="e#7578#7579#0" expanded="false" />
+            <element signature="e#7608#7609#0" expanded="false" />
+            <element signature="e#7651#7652#0" expanded="false" />
+            <element signature="e#7689#7690#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="26" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
+          <folding>
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#560#561#0" expanded="false" />
+            <element signature="e#606#607#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="53" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
+          <folding>
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#560#561#0" expanded="false" />
+            <element signature="e#606#607#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/stopwords.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.9259259">
+          <caret line="24" column="2" selection-start-line="24" selection-start-column="2" selection-end-line="24" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WordsBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="17" selection-start-line="44" selection-start-column="17" selection-end-line="44" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#880#896#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/StopWords.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="5" selection-start-line="17" selection-start-column="5" selection-end-line="17" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#560#561#0" expanded="false" />
+            <element signature="e#606#607#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#1419#0" expanded="false" />
+            <element signature="e#1151#1152#0" expanded="false" />
+            <element signature="e#1214#1215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/KMeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
+          <folding>
+            <element signature="e#3590#3591#0" expanded="false" />
+            <element signature="e#3644#3645#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/dm/example/WebpageKmeans.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="53" selection-start-line="69" selection-start-column="53" selection-end-line="69" selection-end-column="53" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyCrawler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="17" selection-start-line="92" selection-start-column="17" selection-end-line="92" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#3660#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/lazy/LazyConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="266" column="0" selection-start-line="266" selection-start-column="0" selection-end-line="266" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#7695#0" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#1716#1732#0" expanded="false" />
+            <element signature="e#5293#5294#0" expanded="false" />
+            <element signature="e#5335#5336#0" expanded="false" />
+            <element signature="e#5370#5371#0" expanded="false" />
+            <element signature="e#5401#5402#0" expanded="false" />
+            <element signature="e#5449#5450#0" expanded="false" />
+            <element signature="e#5489#5490#0" expanded="false" />
+            <element signature="e#5527#5528#0" expanded="false" />
+            <element signature="e#5564#5565#0" expanded="false" />
+            <element signature="e#5621#5622#0" expanded="false" />
+            <element signature="e#5673#5674#0" expanded="false" />
+            <element signature="e#5727#5728#0" expanded="false" />
+            <element signature="e#5759#5760#0" expanded="false" />
+            <element signature="e#5810#5811#0" expanded="false" />
+            <element signature="e#5852#5853#0" expanded="false" />
+            <element signature="e#5886#5887#0" expanded="false" />
+            <element signature="e#5916#5917#0" expanded="false" />
+            <element signature="e#5962#5963#0" expanded="false" />
+            <element signature="e#6000#6001#0" expanded="false" />
+            <element signature="e#6033#6034#0" expanded="false" />
+            <element signature="e#6065#6066#0" expanded="false" />
+            <element signature="e#6112#6113#0" expanded="false" />
+            <element signature="e#6154#6155#0" expanded="false" />
+            <element signature="e#6187#6188#0" expanded="false" />
+            <element signature="e#6216#6217#0" expanded="false" />
+            <element signature="e#6260#6261#0" expanded="false" />
+            <element signature="e#6296#6297#0" expanded="false" />
+            <element signature="e#6337#6338#0" expanded="false" />
+            <element signature="e#6374#6375#0" expanded="false" />
+            <element signature="e#6434#6435#0" expanded="false" />
+            <element signature="e#6486#6487#0" expanded="false" />
+            <element signature="e#6517#6518#0" expanded="false" />
+            <element signature="e#6545#6546#0" expanded="false" />
+            <element signature="e#6586#6587#0" expanded="false" />
+            <element signature="e#6620#6621#0" expanded="false" />
+            <element signature="e#6657#6658#0" expanded="false" />
+            <element signature="e#6691#6692#0" expanded="false" />
+            <element signature="e#6744#6745#0" expanded="false" />
+            <element signature="e#6790#6791#0" expanded="false" />
+            <element signature="e#6843#6844#0" expanded="false" />
+            <element signature="e#6875#6876#0" expanded="false" />
+            <element signature="e#6942#6943#0" expanded="false" />
+            <element signature="e#6984#6985#0" expanded="false" />
+            <element signature="e#7023#7024#0" expanded="false" />
+            <element signature="e#7055#7056#0" expanded="false" />
+            <element signature="e#7108#7109#0" expanded="false" />
+            <element signature="e#7150#7151#0" expanded="false" />
+            <element signature="e#7178#7179#0" expanded="false" />
+            <element signature="e#7205#7206#0" expanded="false" />
+            <element signature="e#7242#7243#0" expanded="false" />
+            <element signature="e#7274#7275#0" expanded="false" />
+            <element signature="e#7307#7308#0" expanded="false" />
+            <element signature="e#7336#7337#0" expanded="false" />
+            <element signature="e#7380#7381#0" expanded="false" />
+            <element signature="e#7416#7417#0" expanded="false" />
+            <element signature="e#7445#7446#0" expanded="false" />
+            <element signature="e#7473#7474#0" expanded="false" />
+            <element signature="e#7512#7513#0" expanded="false" />
+            <element signature="e#7546#7547#0" expanded="false" />
+            <element signature="e#7578#7579#0" expanded="false" />
+            <element signature="e#7608#7609#0" expanded="false" />
+            <element signature="e#7651#7652#0" expanded="false" />
+            <element signature="e#7689#7690#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="13" selection-start-line="0" selection-start-column="0" selection-end-line="26" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/demo_task1.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49861878">
+          <caret line="19" column="4" selection-start-line="0" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
