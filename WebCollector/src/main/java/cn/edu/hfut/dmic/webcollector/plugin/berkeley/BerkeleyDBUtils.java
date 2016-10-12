@@ -38,7 +38,7 @@ public class BerkeleyDBUtils {
     public static DatabaseConfig  createDefaultDBConfig(){
         DatabaseConfig databaseConfig=new DatabaseConfig();
         databaseConfig.setAllowCreate(true);
-        databaseConfig.setDeferredWrite(true);
+//        databaseConfig.setDeferredWrite(true);
         return databaseConfig;
     }
     

@@ -22,8 +22,6 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
-
-import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -78,7 +76,7 @@ public class CrawlDatumFormater {
             for (Object keyObject : metaJSONObject.keySet()) {
                 String key = keyObject.toString();
                 String value = metaJSONObject.getString(key);
-                crawlDatum.putMetaData(key, value);
+                crawlDatum.meta(key, value);
             }
         }
         return crawlDatum;
@@ -96,45 +94,4 @@ public class CrawlDatumFormater {
         return jsonArray.toString();
     }
 
-    public static Document datumToBson(CrawlDatum datum) {
-        Document doc = new Document()
-                .append("_id", datum.getKey())
-                .append("url", datum.getUrl())
-                .append("status", datum.getStatus())
-                .append("executeTime", datum.getExecuteTime())
-                .append("executeCount", datum.getExecuteCount());
-
-        Document metaDoc = new Document();
-
-        if (!datum.getMetaData().isEmpty()) {
-            for (Entry<String, String> entry : datum.getMetaData().entrySet()) {
-                metaDoc.put(entry.getKey(), entry.getValue());
-            }
-            doc.append("meta", metaDoc);
-        }
-        return doc;
-    }
-
-    public static CrawlDatum bsonToDatum(Document doc) {
-        CrawlDatum datum = new CrawlDatum();
-        datum.setKey(doc.getString("_id"));
-        datum.setUrl(doc.getString("url"));
-        datum.setStatus(doc.getInteger("status"));
-        datum.setExecuteTime(doc.getLong("executeTime"));
-        datum.setExecuteCount(doc.getInteger("executeCount"));
-
-        if (doc.containsKey("meta")) {
-            Document metaDoc = (Document) doc.get("meta");
-            for (String key : metaDoc.keySet()) {
-                datum.putMetaData(key, metaDoc.getString(key));
-            }
-        }
-        return datum;
-    }
-
-    public static void main(String[] args) {
-        CrawlDatum datum = new CrawlDatum("http://36kr.com").putMetaData("name", "haha");
-        Document doc = datumToBson(datum);
-        System.out.println(bsonToDatum(doc));
-    }
 }

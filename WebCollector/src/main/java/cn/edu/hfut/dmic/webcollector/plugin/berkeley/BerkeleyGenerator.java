@@ -48,17 +48,17 @@ public class BerkeleyGenerator implements Generator {
     protected int maxExecuteCount = Config.MAX_EXECUTE_COUNT;
     String crawlPath;
 
-    public BerkeleyGenerator(String crawlPath) {
-        this.crawlPath = crawlPath;
-
+//    public BerkeleyGenerator(String crawlPath) {
+//        this.crawlPath = crawlPath;
+//
+//    }
+    
+      public BerkeleyGenerator(Environment env) {
+        this.env=env;
     }
 
     @Override
     public void open() throws Exception {
-        File dir = new File(crawlPath);
-        EnvironmentConfig environmentConfig = new EnvironmentConfig();
-        environmentConfig.setAllowCreate(true);
-        env = new Environment(dir, environmentConfig);
         totalGenerate = 0;
 
     }
@@ -71,9 +71,6 @@ public class BerkeleyGenerator implements Generator {
         cursor = null;
         if(crawldbDatabase!=null){
             crawldbDatabase.close();
-        }
-        if(env!=null){
-            env.close();
         }
     }
 

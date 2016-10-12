@@ -46,8 +46,6 @@ public class Fetcher {
 
     public Executor executor;
 
-    //public Requester requester;
-    //public Visitor visitor;
     private AtomicInteger activeThreads;
     private AtomicInteger startedThreads;
     private AtomicInteger spinWaiting;
@@ -55,9 +53,7 @@ public class Fetcher {
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
     private long executeInterval = 0;
-    //   private int retry = 3;
-//    private long retryInterval = 0;
-//    private long visitInterval = 0;
+
 
     /**
      *
@@ -79,15 +75,7 @@ public class Fetcher {
         this.executor = executor;
     }
 
-    /*
-     public Visitor getVisitor() {
-     return visitor;
-     }
-
-     public void setVisitor(Visitor visitor) {
-     this.visitor = visitor;
-     }
-     */
+  
     /**
      *
      */
@@ -248,9 +236,9 @@ public class Fetcher {
                         crawlDatum.incrExecuteCount(1);
                         crawlDatum.setExecuteTime(System.currentTimeMillis());
                         try {
-                            dbManager.wrtieFetchSegment(crawlDatum);
+                            dbManager.writeFetchSegment(crawlDatum);
                             if (crawlDatum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
-                                dbManager.wrtieParseSegment(next);
+                                dbManager.writeParseSegment(next);
                             }
                         } catch (Exception ex) {
                             LOG.info("Exception when updating db", ex);
@@ -262,33 +250,6 @@ public class Fetcher {
                             }
                         }
 
-                        /* 老代码
-                         if (visit(crawlDatum, page, next)) {
-                         try {
-                         dbManager.wrtieFetchSegment(crawlDatum);
-                         if (page.getResponse() == null) {
-                         continue;
-                         }
-                         if (page.getResponse().isRedirect()) {
-                         if (page.getResponse().getRealUrl() != null) {
-                         dbManager.writeRedirectSegment(crawlDatum, page.getResponse().getRealUrl().toString());
-                         }
-                         }
-                         if (!next.isEmpty()) {
-                         dbManager.wrtieParseSegment(next);
-                         }
-
-                         } catch (Exception ex) {
-                         LOG.info("Exception when updating db", ex);
-                         }
-                         }
-                         if (visitInterval > 0) {
-                         try {
-                         Thread.sleep(visitInterval);
-                         } catch (Exception sleepEx) {
-                         }
-                         }
-                         */
                     } catch (Exception ex) {
                         LOG.info("Exception", ex);
                     }
@@ -316,17 +277,10 @@ public class Fetcher {
             LOG.info("Please Specify A Executor!");
             return;
         }
+        
+         dbManager.merge();
 
         try {
-            if (dbManager.isLocked()) {
-                dbManager.merge();
-                dbManager.unlock();
-            }
-        } catch (Exception ex) {
-            LOG.info("Exception when merging history");
-        }
-        try {
-            dbManager.lock();
             generator.open();
             LOG.info("open generator:" + generator.getClass().getName());
             dbManager.initSegmentWriter();
@@ -402,8 +356,6 @@ public class Fetcher {
             LOG.info("close generator:" + generator.getClass().getName());
             dbManager.closeSegmentWriter();
             LOG.info("close segmentwriter:" + dbManager.getClass().getName());
-            dbManager.merge();
-            dbManager.unlock();
         }
     }
 
@@ -434,19 +386,6 @@ public class Fetcher {
         this.threads = threads;
     }
 
-//    public boolean isIsContentStored() {
-//        return isContentStored;
-//    }
-//    public void setIsContentStored(boolean isContentStored) {
-//        this.isContentStored = isContentStored;
-//    }
-    //    public int getRetry() {
-//        return retry;
-//    }
-//
-//    public void setRetry(int retry) {
-//        this.retry = retry;
-//    }
     public DBManager getDBManager() {
         return dbManager;
     }
@@ -455,121 +394,6 @@ public class Fetcher {
         this.dbManager = dbManager;
     }
 
-    /*
-     public Requester getRequester() {
-     return requester;
-     }
-     public void setRequester(Requester requester) {
-     this.requester = requester;
-     }
-     public boolean visit(CrawlDatum crawlDatum, Page page, CrawlDatums next) {
-     String url = crawlDatum.getUrl();
-     if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
-     crawlDatum.setStatus(CrawlDatum.STATUS_DB_FETCHED);
-     crawlDatum.setHttpCode(page.getResponse().getCode());
-     if (!page.getResponse().isNotFound()) {
-     try {
-     visitor.visit(page, next);
-     } catch (Exception ex) {
-     LOG.info("Exception when visit URL: " + url, ex);
-     return false;
-     }
-     } else {
-     try {
-     visitor.notFound(page, next);
-     } catch (Exception ex) {
-     LOG.info("Exception when not found URL: " + url, ex);
-     return false;
-     }
-     }
-     try {
-     visitor.afterVisit(page, next);
-     } catch (Exception ex) {
-     LOG.info("Exception after visit URL: " + url, ex);
-     return false;
-     }
-     } else if (page.getStatus() == Page.STATUS_FETCH_FAILED) {
-     crawlDatum.setStatus(CrawlDatum.STATUS_DB_UNFETCHED);
-     try {
-     visitor.fail(page, next);
-     } catch (Exception ex) {
-     LOG.info("Exception when execute failed URL: " + url, ex);
-     return false;
-     }
-     }
-     return true;
-     }
-     public Page getPage(CrawlDatum crawlDatum) {
-     String url = crawlDatum.getUrl();
-     Page page;
-     HttpResponse response = null;
-     int retryIndex = 0;
-     Exception lastException = null;
-     int retryCount = 0;
-     for (; retryIndex <= retry; retryIndex++) {
-     try {
-     response = requester.getResponse(crawlDatum);//this.getHttpResponse(crawlDatum);
-     break;
-     } catch (Exception ex) {
-     String suffix = "th ";
-     switch (retryIndex + 1) {
-     case 1:
-     suffix = "st ";
-     break;
-     case 2:
-     suffix = "nd ";
-     break;
-     case 3:
-     suffix = "rd ";
-     break;
-     default:
-     suffix = "th ";
-     }
-     lastException = ex;
-     if (retryIndex < retry) {
-     StringBuilder sb = new StringBuilder();
-     sb.append("retry ").append(retryIndex + 1).append(suffix).append("URL:")
-     .append(url).append(" after ").append(retryInterval)
-     .append("ms ").append("(").append(ex.toString()).append(")");
-     String logMessage = sb.toString();
-     LOG.info(logMessage);
-     retryCount++;
-     if (retryInterval > 0) {
-     try {
-     Thread.sleep(retryInterval);
-     } catch (Exception sleepEx) {
-     }
-     }
-     }
-     }
-     }
-     if (response != null) {
-     if (!response.isNotFound()) {
-     LOG.info("fetch URL: " + url);
-     } else {
-     //404应该被当作抓取成功，因为404告诉爬虫页面不存在，以后不需要重试页面
-     LOG.info("ignore URL: " + url + " (not found)");
-     }
-     page = Page.createSuccessPage(crawlDatum, retryCount, response);
-     } else {
-     LOG.info("failed URL: " + url + " (" + lastException + ")");
-     page = Page.createFailedPage(crawlDatum, retryCount, lastException);
-     }
-     return page;
-     }
-     public long getRetryInterval() {
-     return retryInterval;
-     }
-     public void setRetryInterval(long retryInterval) {
-     this.retryInterval = retryInterval;
-     }
-     public long getVisitInterval() {
-     return visitInterval;
-     }
-     public void setVisitInterval(long visitInterval) {
-     this.visitInterval = visitInterval;
-     }
-     */
     public long getExecuteInterval() {
         return executeInterval;
     }

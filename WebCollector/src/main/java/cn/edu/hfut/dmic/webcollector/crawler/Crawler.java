@@ -83,12 +83,6 @@ public class Crawler {
      */
     public void start(int depth) throws Exception {
 
-        boolean needInject = true;
-
-        if (resumable && dbManager.isDBExists()) {
-            needInject = false;
-        }
-
         if (!resumable) {
             if (dbManager.isDBExists()) {
                 dbManager.clear();
@@ -98,14 +92,13 @@ public class Crawler {
                 LOG.info("error:Please add at least one seed");
                 return;
             }
-
         }
         dbManager.open();
 
-        if (needInject) {
+        if(!seeds.isEmpty()){
             inject();
         }
-
+        
         if (!forcedSeeds.isEmpty()) {
             injectForcedSeeds();
         }

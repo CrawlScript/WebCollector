@@ -23,6 +23,7 @@ import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BerkeleyDBManager;
+import java.util.List;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebElement;
@@ -42,24 +43,28 @@ public class DemoSelenium {
         logger.setLevel(Level.OFF);
     }
 
-
     public static void main(String[] args) throws Exception {
-        Executor executor=new Executor() {
+        Executor executor = new Executor() {
             @Override
             public void execute(CrawlDatum datum, CrawlDatums next) throws Exception {
+                
                 HtmlUnitDriver driver = new HtmlUnitDriver();
                 driver.setJavascriptEnabled(true);
+                
                 driver.get(datum.getUrl());
-                WebElement element=driver.findElementByCssSelector("span#outlink1");
-                System.out.println("反链数:"+element.getText());
+                
+                List<WebElement> elementList = driver.findElementsByCssSelector("h3.vrTitle a");
+                for(WebElement element:elementList){
+                    System.out.println("title:"+element.getText());
+                }
             }
         };
 
         //创建一个基于伯克利DB的DBManager
-        DBManager manager=new BerkeleyDBManager("crawl");
+        DBManager manager = new BerkeleyDBManager("crawl");
         //创建一个Crawler需要有DBManager和Executor
-        Crawler crawler= new Crawler(manager,executor);
-        crawler.addSeed("http://seo.chinaz.com/?host=www.tuicool.com");
+        Crawler crawler = new Crawler(manager, executor);
+        crawler.addSeed("https://www.sogou.com/web?query=%E6%B7%98%E5%AE%9D");
         crawler.start(1);
     }
 

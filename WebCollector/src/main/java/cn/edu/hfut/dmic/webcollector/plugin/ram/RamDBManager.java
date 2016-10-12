@@ -117,12 +117,12 @@ public class RamDBManager extends DBManager {
     }
 
     @Override
-    public void wrtieFetchSegment(CrawlDatum fetchDatum) throws Exception {
+    public void writeFetchSegment(CrawlDatum fetchDatum) throws Exception {
         ramDB.fetchDB.put(fetchDatum.getKey(), fetchDatum);
     }
 
     @Override
-    public void wrtieParseSegment(CrawlDatums parseDatums) throws Exception {
+    public void writeParseSegment(CrawlDatums parseDatums) throws Exception {
         for (CrawlDatum datum : parseDatums) {
             ramDB.linkDB.put(datum.getKey(), datum);
         }
@@ -131,26 +131,5 @@ public class RamDBManager extends DBManager {
     @Override
     public void closeSegmentWriter() throws Exception {
     }
-
-    @Override
-    public void lock() throws Exception {
-    }
-
-    @Override
-    public boolean isLocked() throws Exception {
-        return false;
-    }
-
-    @Override
-    public void unlock() throws Exception {
-    }
-
-    @Override
-    public void writeRedirectSegment(CrawlDatum datum, String realUrl) throws Exception {
-        String key = datum.getKey();
-        ramDB.redirectDB.put(key, realUrl);
-    }
-
-    
-
+ 
 }

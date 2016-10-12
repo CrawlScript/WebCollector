@@ -29,11 +29,9 @@ public interface SegmentWriter {
 
     public void initSegmentWriter() throws Exception;
 
-    public void wrtieFetchSegment(CrawlDatum fetchDatum) throws Exception;
+    public void writeFetchSegment(CrawlDatum fetchDatum) throws Exception;
 
-    public void writeRedirectSegment(CrawlDatum datum, String realUrl) throws Exception;
-
-    public void wrtieParseSegment(CrawlDatums parseDatums) throws Exception;
+    public void writeParseSegment(CrawlDatums parseDatums) throws Exception;
 
     public void closeSegmentWriter() throws Exception;
 
