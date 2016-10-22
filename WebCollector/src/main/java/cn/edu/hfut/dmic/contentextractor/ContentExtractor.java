@@ -17,13 +17,6 @@
  */
 package cn.edu.hfut.dmic.contentextractor;
 
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -34,6 +27,15 @@ import org.jsoup.select.NodeVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
+
 /**
  * ContentExtractor could extract content,title,time from news webpage
  *
@@ -42,6 +44,8 @@ import org.slf4j.LoggerFactory;
 public class ContentExtractor {
 
     public static final Logger LOG = LoggerFactory.getLogger(ContentExtractor.class);
+    private static final Pattern TIME_PATTERN = Pattern.compile("[^0-9]+([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-3][0-9])[^0-9]{1,5}([0-2][0-9]):([0-5][0-9])");
+    private static final Pattern DATE_PATTERN = Pattern.compile("[^0-9]+([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-3][0-9])");
 
     protected Document doc;
 
@@ -197,8 +201,6 @@ public class ContentExtractor {
     }
 
     protected String getTime(Element contentElement) throws Exception {
-        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-2]?[1-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
-        Pattern pattern = Pattern.compile(regex);
         Element current = contentElement;
         for (int i = 0; i < 2; i++) {
             if (current != null && current != doc.body()) {
@@ -213,8 +215,8 @@ public class ContentExtractor {
                 break;
             }
             String currentHtml = current.outerHtml();
-            Matcher matcher = pattern.matcher(currentHtml);
-            if (matcher.find()) {
+            Matcher matcher = TIME_PATTERN.matcher(currentHtml);
+            if (matcher.find() && matcher.groupCount() >= 6) {
                 return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3) + " " + matcher.group(4) + ":" + matcher.group(5) + ":" + matcher.group(6);
             }
             if (current != doc.body()) {
@@ -231,8 +233,6 @@ public class ContentExtractor {
     }
 
     protected String getDate(Element contentElement) throws Exception {
-        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})";
-        Pattern pattern = Pattern.compile(regex);
         Element current = contentElement;
         for (int i = 0; i < 2; i++) {
             if (current != null && current != doc.body()) {
@@ -247,8 +247,8 @@ public class ContentExtractor {
                 break;
             }
             String currentHtml = current.outerHtml();
-            Matcher matcher = pattern.matcher(currentHtml);
-            if (matcher.find()) {
+            Matcher matcher = DATE_PATTERN.matcher(currentHtml);
+            if (matcher.find() && matcher.groupCount() >= 3) {
                 return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3);
             }
             if (current != doc.body()) {
@@ -507,14 +507,14 @@ public class ContentExtractor {
     }
 
     public static void main(String[] args) throws Exception {
-
-        News news = ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html");
+        String url = "https://www.huxiu.com/article/167883.html";
+        News news = ContentExtractor.getNewsByUrl(url);
         System.out.println(news.getUrl());
         System.out.println(news.getTitle());
         System.out.println(news.getTime());
         System.out.println(news.getContent());
         //System.out.println(news.getContentElement());
-
+        System.out.println(ContentExtractor.getNewsByUrl("http://www.huxiu.com/article/121959/1.html").getTime());
         //System.out.println(news);
     }
 
