@@ -1,8 +1,4 @@
-/WebCollector/target/
-/WebCollector/.idea
-/WebCollectorExample/
-/WebCollectorExample/target/
-/Lazy/target/
-/Lazy/.idea
-/WebCollector-Hadoop/target/
-/JSRule/target/
+WebCollectorExample
+target
+.idea
+*.iml
