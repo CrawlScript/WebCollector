@@ -79,9 +79,14 @@ public class HttpRequest {
         this(crawlDatum);
         this.proxy = proxy;
     }
-
+    
+    @Deprecated
     public HttpResponse getResponse() throws Exception {
-        URL url = new URL(crawlDatum.getUrl());
+        return response();
+    }
+
+    public HttpResponse response() throws Exception {
+        URL url = new URL(crawlDatum.url());
         HttpResponse response = new HttpResponse(url);
         int code = -1;
         int maxRedirect = Math.max(0, MAX_REDIRECT);
@@ -107,7 +112,7 @@ public class HttpRequest {
                 code = con.getResponseCode();
                 /*只记录第一次返回的code*/
                 if (redirect == 0) {
-                    response.setCode(code);
+                    response.code(code);
                 }
                 
                 if(code==HttpURLConnection.HTTP_NOT_FOUND){
@@ -167,8 +172,8 @@ public class HttpRequest {
                 bos.write(buf, 0, read);
             }
 
-            response.setContent(bos.toByteArray());
-            response.setHeaders(con.getHeaderFields());
+            response.content(bos.toByteArray());
+            response.headers(con.getHeaderFields());
             bos.close();
 
             return response;

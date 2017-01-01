@@ -95,7 +95,7 @@ public class DemoBingCrawler extends RamCrawler {
                         .meta("rank", rank + "")
                         .meta("pageType", "outlink")
                         .meta("depth", (depth + 1) + "")
-                        .meta("referer", page.getUrl());
+                        .meta("referer", page.url());
                 next.add(datum);
             }
 

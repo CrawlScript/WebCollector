@@ -40,8 +40,25 @@ import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
  */
 public class TutorialCrawler extends BreadthCrawler {
 
+    /*
+        该例子利用正则控制爬虫的遍历，
+        另一种常用遍历方法可参考DemoTypeCrawler
+    */
+    
     public TutorialCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
+        
+        addSeed("http://blog.csdn.net/.*");
+        addRegex("http://blog.csdn.net/.*/article/details/.*");
+        
+        //需要抓取图片时设置为true，并加入图片的正则规则
+        //setParseImg(true);
+        
+        //设置每个线程的抓取间隔（毫秒）
+        //setExecuteInterval(1000);
+        
+        //设置线程数
+        setThreads(30);
     }
 
     /*
@@ -64,16 +81,7 @@ public class TutorialCrawler extends BreadthCrawler {
     }
 
     public static void main(String[] args) throws Exception {
-        TutorialCrawler crawler = new TutorialCrawler("crawler", true);
-        crawler.addSeed("http://blog.csdn.net/.*");
-        crawler.addRegex("http://blog.csdn.net/.*/article/details/.*");
-        
-        /*可以设置每个线程visit的间隔，这里是毫秒*/
-        //crawler.setVisitInterval(1000);
-        /*可以设置http请求重试的间隔，这里是毫秒*/
-        //crawler.setRetryInterval(1000);
-        
-        crawler.setThreads(30);
+        TutorialCrawler crawler = new TutorialCrawler("crawl", true);
         crawler.start(2);
     }
 

@@ -120,7 +120,7 @@ public class Fetcher {
         public synchronized void dump() {
             for (int i = 0; i < queue.size(); i++) {
                 FetchItem it = queue.get(i);
-                LOG.info("  " + i + ". " + it.datum.getUrl());
+                LOG.info("  " + i + ". " + it.datum.url());
             }
 
         }
@@ -226,10 +226,10 @@ public class Fetcher {
                         CrawlDatums next = new CrawlDatums();
                         try {
                             executor.execute(crawlDatum, next);
-                            LOG.info("done: " + crawlDatum.getKey());
+                            LOG.info("done: " + crawlDatum.key());
                             crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
                         } catch (Exception ex) {
-                            LOG.info("failed: " + crawlDatum.getKey(), ex);
+                            LOG.info("failed: " + crawlDatum.key(), ex);
                             crawlDatum.setStatus(CrawlDatum.STATUS_DB_FAILED);
                         }
 

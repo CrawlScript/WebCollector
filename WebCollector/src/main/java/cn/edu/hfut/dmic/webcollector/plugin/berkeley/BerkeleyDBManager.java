@@ -77,7 +77,7 @@ public class BerkeleyDBManager extends DBManager {
     @Override
     public void inject(CrawlDatum datum, boolean force) throws Exception {
         Database database = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
-        DatabaseEntry key = BerkeleyDBUtils.strToEntry(datum.getKey());
+        DatabaseEntry key = BerkeleyDBUtils.strToEntry(datum.key());
         DatabaseEntry value = new DatabaseEntry();
         if (!force) {
             if (database.get(null, key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
@@ -95,7 +95,7 @@ public class BerkeleyDBManager extends DBManager {
         Database database = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
         for (int i = 0; i < datums.size(); i++) {
             CrawlDatum datum = datums.get(i);
-            DatabaseEntry key = BerkeleyDBUtils.strToEntry(datum.getKey());
+            DatabaseEntry key = BerkeleyDBUtils.strToEntry(datum.key());
             DatabaseEntry value = new DatabaseEntry();
             if (!force) {
                 if (database.get(null, key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {

@@ -43,7 +43,7 @@ public class BerkeleyDBUtils {
     }
     
     public static void writeDatum(Database database,CrawlDatum datum) throws Exception{
-        String key=datum.getKey();
+        String key=datum.key();
         String value=CrawlDatumFormater.datumToJsonStr(datum);
         put(database,key,value);
     }

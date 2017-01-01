@@ -34,8 +34,8 @@ public class CrawlDatumFormater {
 
     public static String datumToString(CrawlDatum datum) {
         StringBuilder sb = new StringBuilder();
-        sb.append("\nKEY: ").append(datum.getKey())
-                .append("\nURL: ").append(datum.getUrl())
+        sb.append("\nKEY: ").append(datum.key())
+                .append("\nURL: ").append(datum.url())
                 .append("\nSTATUS: ");
 
         switch (datum.getStatus()) {
@@ -66,8 +66,8 @@ public class CrawlDatumFormater {
     public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String str) {
         JSONArray jsonArray = new JSONArray(str);
         CrawlDatum crawlDatum = new CrawlDatum();
-        crawlDatum.setKey(crawlDatumKey);
-        crawlDatum.setUrl(jsonArray.getString(0));
+        crawlDatum.key(crawlDatumKey);
+        crawlDatum.url(jsonArray.getString(0));
         crawlDatum.setStatus(jsonArray.getInt(1));
         crawlDatum.setExecuteTime(jsonArray.getLong(2));
         crawlDatum.setExecuteCount(jsonArray.getInt(3));
@@ -84,7 +84,7 @@ public class CrawlDatumFormater {
 
     public static String datumToJsonStr(CrawlDatum datum) {
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(datum.getUrl());
+        jsonArray.put(datum.url());
         jsonArray.put(datum.getStatus());
         jsonArray.put(datum.getExecuteTime());
         jsonArray.put(datum.getExecuteCount());

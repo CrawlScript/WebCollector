@@ -42,7 +42,7 @@ public class FileSystemOutput {
 
     public void output(Page page) {
         try {
-            URL _URL = new URL(page.getUrl());
+            URL _URL = new URL(page.url());
             String query = "";
             if (_URL.getQuery() != null) {
                 query = "_" + _URL.getQuery();

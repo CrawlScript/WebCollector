@@ -57,6 +57,54 @@ public class FileUtils {
         fos.close();
     }
 
+    public static void write(String fileName, String contentStr, String charset) throws FileNotFoundException, IOException {
+        File file = new File(fileName);
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        byte[] content = contentStr.getBytes(charset);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+
+    public static void write(File file, String contentStr, String charset) throws FileNotFoundException, IOException {
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        byte[] content = contentStr.getBytes(charset);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+    
+    
+    public static void write(String fileName, byte[] content) throws FileNotFoundException, IOException {
+        File file = new File(fileName);
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+
+
+    public static void write(File file, byte[] content) throws FileNotFoundException, IOException {
+
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(content);
+        fos.close();
+    }
+
+    @Deprecated
     public static void writeFile(String fileName, String contentStr, String charset) throws FileNotFoundException, IOException {
         byte[] content = contentStr.getBytes(charset);
         FileOutputStream fos = new FileOutputStream(fileName);
@@ -64,6 +112,7 @@ public class FileUtils {
         fos.close();
     }
 
+    @Deprecated
     public static void writeFile(File file, String contentStr, String charset) throws FileNotFoundException, IOException {
         byte[] content = contentStr.getBytes(charset);
         FileOutputStream fos = new FileOutputStream(file);
@@ -71,64 +120,41 @@ public class FileUtils {
         fos.close();
     }
 
+    @Deprecated
     public static void writeFileWithParent(String fileName, String contentStr, String charset) throws FileNotFoundException, IOException {
-        File file = new File(fileName);
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        byte[] content = contentStr.getBytes(charset);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
+        write(fileName, contentStr, charset);
     }
 
+    @Deprecated
     public static void writeFileWithParent(File file, String contentStr, String charset) throws FileNotFoundException, IOException {
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        byte[] content = contentStr.getBytes(charset);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
+        write(file, contentStr, charset);
     }
 
+    @Deprecated
     public static void writeFile(String fileName, byte[] content) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(fileName);
         fos.write(content);
         fos.close();
     }
 
+    @Deprecated
     public static void writeFile(File file, byte[] content) throws FileNotFoundException, IOException {
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(content);
         fos.close();
     }
 
+    @Deprecated
     public static void writeFileWithParent(String fileName, byte[] content) throws FileNotFoundException, IOException {
-        File file = new File(fileName);
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
+        write(fileName, content);
     }
 
+    @Deprecated
     public static void writeFileWithParent(File file, byte[] content) throws FileNotFoundException, IOException {
-
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
-        }
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
+        write(file,content);
     }
-
-    public static byte[] readFile(File file) throws IOException {
+    
+     public static byte[] read(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
         byte[] buf = new byte[2048];
         int read;
@@ -141,12 +167,12 @@ public class FileUtils {
         return bos.toByteArray();
     }
 
-    public static byte[] readFile(String fileName) throws IOException {
+    public static byte[] read(String fileName) throws IOException {
         File file = new File(fileName);
-        return readFile(file);
+        return read(file);
     }
 
-    public static String readFile(File file, String charset) throws Exception {
+    public static String read(File file, String charset) throws Exception {
         FileInputStream fis = new FileInputStream(file);
         byte[] buf = new byte[2048];
         int read;
@@ -159,6 +185,44 @@ public class FileUtils {
         return new String(bos.toByteArray(), charset);
     }
 
+    public static String read(String fileName, String charset) throws Exception {
+        File file = new File(fileName);
+        return read(file, charset);
+    }
+    
+
+    @Deprecated
+    public static byte[] readFile(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        byte[] buf = new byte[2048];
+        int read;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((read = fis.read(buf)) != -1) {
+            bos.write(buf, 0, read);
+        }
+
+        fis.close();
+        return bos.toByteArray();
+    }
+    @Deprecated
+    public static byte[] readFile(String fileName) throws IOException {
+        File file = new File(fileName);
+        return readFile(file);
+    }
+    @Deprecated
+    public static String readFile(File file, String charset) throws Exception {
+        FileInputStream fis = new FileInputStream(file);
+        byte[] buf = new byte[2048];
+        int read;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while ((read = fis.read(buf)) != -1) {
+            bos.write(buf, 0, read);
+        }
+
+        fis.close();
+        return new String(bos.toByteArray(), charset);
+    }
+    @Deprecated
     public static String readFile(String fileName, String charset) throws Exception {
         File file = new File(fileName);
         return readFile(file, charset);

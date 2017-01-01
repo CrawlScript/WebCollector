@@ -43,6 +43,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
      * 是否自动抽取符合正则的链接并加入后续任务
      */
     protected boolean autoParse = true;
+    protected boolean parseImg = false;
 
     protected Visitor visitor;
     protected Requester requester;
@@ -57,7 +58,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
     @Override
     public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
         HttpRequest request = new HttpRequest(crawlDatum);
-        return request.getResponse();
+        return request.response();
     }
 
     /**
@@ -81,11 +82,11 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
     }
 
     protected void parseLink(Page page, CrawlDatums next) {
-        String conteType = page.getResponse().getContentType();
+        String conteType = page.contentType();
         if (conteType != null && conteType.contains("text/html")) {
-            Document doc = page.getDoc();
+            Document doc = page.doc();
             if (doc != null) {
-                Links links = new Links().addByRegex(doc, regexRule);
+                Links links = new Links().addByRegex(doc, regexRule,parseImg);
                 next.add(links);
             }
         }
@@ -161,4 +162,14 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
     public void setRequester(Requester requester) {
         this.requester = requester;
     }
+
+    public boolean isParseImg() {
+        return parseImg;
+    }
+
+    public void setParseImg(boolean parseImg) {
+        this.parseImg = parseImg;
+    }
+    
+    
 }

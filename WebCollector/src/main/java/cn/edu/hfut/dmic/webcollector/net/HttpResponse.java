@@ -48,28 +48,30 @@ public class HttpResponse {
         this.url = url;
     }
 
+    
+    public URL url() {
+        return url;
+    }
+
+    public void url(URL url) {
+        this.url = url;
+    }
+    
+    @Deprecated
     public URL getUrl() {
         return url;
     }
 
+    @Deprecated
     public void setUrl(URL url) {
         this.url = url;
     }
-
-    public String getHtml(String charset) {
-        if (content == null) {
-            return null;
-        }
-        try {
-            String html = new String(content, charset);
-            return html;
-        } catch (Exception ex) {
-            LOG.info("Exception", ex);
-            return null;
-        }
-    }
-
-    public String getHtmlByCharsetDetect() {
+    
+    /**
+     * 通过猜测编码的方式获取html源码字符串
+     * @return 
+     */
+    public String decode() {
         if (content == null) {
             return null;
         }
@@ -83,8 +85,44 @@ public class HttpResponse {
         }
     }
 
+    public String decode(String charset) {
+        if (content == null) {
+            return null;
+        }
+        try {
+            String html = new String(content, charset);
+            return html;
+        } catch (Exception ex) {
+            LOG.info("Exception", ex);
+            return null;
+        }
+    }
+    
+    @Deprecated
+    public String getHtml(String charset) {
+      return decode(charset);
+    }
+
+    @Deprecated
+    public String getHtmlByCharsetDetect() {
+        return decode();
+    }
+    
+     public int code() {
+        return code;
+    }
+    
+    public void code(int code) {
+        this.code = code;
+    }
+    
+    @Deprecated
     public int getCode() {
         return code;
+    }
+    @Deprecated
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public boolean isNotFound() {
@@ -97,35 +135,54 @@ public class HttpResponse {
     
     
 
-    public List<String> getHeader(String name) {
+    public List<String> header(String name) {
         if (headers == null) {
             return null;
         }
         return headers.get(name);
     }
+    
 
-    public byte[] getContent() {
+    @Deprecated
+    public List<String> getHeader(String name) {
+        return header(name);
+    }
+
+    public void headers(Map<String, List<String>> headers) {
+        this.headers = headers;
+    }
+    
+    @Deprecated
+    public void setHeaders(Map<String, List<String>> headers) {
+        this.headers = headers;
+    }
+    
+     public Map<String, List<String>> headers() {
+        return headers;
+    }
+    @Deprecated
+     public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
+    
+    
+    public byte[] content() {
         return content;
     }
 
+    public void content(byte[] content) {
+        this.content = content;
+    }
+    
+    @Deprecated
+    public byte[] getContent() {
+        return content;
+    }
+    @Deprecated
     public void setContent(byte[] content) {
         this.content = content;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public Map<String, List<String>> getHeaders() {
-        if (headers == null) {
-            return null;
-        }
-        return headers;
-    }
-
-    public void setHeaders(Map<String, List<String>> headers) {
-        this.headers = headers;
-    }
 
     public void setHeader(String key, List<String> values) {
         if (headers == null) {
@@ -139,7 +196,7 @@ public class HttpResponse {
             headers = new HashMap<String, List<String>>();
             addHeader(key, value);
         } else {
-            List<String> header = getHeader(key);
+            List<String> header = header(key);
             if (header != null) {
                 header.add(value);
             } else {
@@ -150,11 +207,12 @@ public class HttpResponse {
         }
 
     }
-
-    public String getContentType() {
+    
+    
+    public String contentType() {
         try {
             String contentType;
-            List<String> contentTypeList = getHeader("Content-Type");
+            List<String> contentTypeList = header("Content-Type");
             if (contentTypeList == null) {
                 contentType = null;
             } else {
@@ -167,6 +225,11 @@ public class HttpResponse {
         }
     }
 
+    @Deprecated
+    public String getContentType() {
+       return contentType();
+    }
+
     public boolean isRedirect() {
         return redirect;
     }
@@ -174,6 +237,7 @@ public class HttpResponse {
     public void setRedirect(boolean redirect) {
         this.redirect = redirect;
     }
+    
 
     public URL getRealUrl() {
         if (realUrl == null) {

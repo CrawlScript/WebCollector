@@ -20,7 +20,6 @@ package cn.edu.hfut.dmic.webcollector.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * 用于存储多个CrawlDatum的数据结构
@@ -34,6 +33,12 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
     public CrawlDatums() {
     }
 
+    
+
+    public CrawlDatums(Links links, String type) {
+        add(links, type);
+    }
+    
     public CrawlDatums(Links links) {
         add(links);
     }
@@ -53,6 +58,11 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
         return this;
     }
 
+    public CrawlDatums add(String url, String type) {
+        CrawlDatum datum = new CrawlDatum(url).type(type);
+        return add(datum);
+    }
+
     public CrawlDatums add(String url) {
         CrawlDatum datum = new CrawlDatum(url);
         return add(datum);
@@ -63,13 +73,19 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
         return this;
     }
 
+    public CrawlDatums add(Links links, String type) {
+        for (String link : links) {
+            add(link, type);
+        }
+        return this;
+    }
+
     public CrawlDatums add(Links links) {
         for (String link : links) {
             add(link);
         }
         return this;
     }
-
 
     public CrawlDatums meta(String key, String value) {
         for (CrawlDatum datum : dataList) {
@@ -80,7 +96,7 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
 
     @Deprecated
     public CrawlDatums putMetaData(String key, String value) {
-      return meta(key,value);
+        return meta(key, value);
     }
 
     @Override
@@ -116,8 +132,15 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
     public int indexOf(CrawlDatum datum) {
         return dataList.indexOf(datum);
     }
-    
-     @Override
+
+    public CrawlDatums type(String type) {
+        for (CrawlDatum datum : this) {
+            datum.type(type);
+        }
+        return this;
+    }
+
+    @Override
     public String toString() {
         return dataList.toString();
     }

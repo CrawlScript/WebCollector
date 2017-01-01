@@ -59,6 +59,19 @@ public class CrawlDatum implements Serializable {
     public CrawlDatum(String url) {
         this.url = url;
     }
+    
+     public CrawlDatum(String url,String type) {
+        this.url = url;
+        type(type);
+    }
+     
+    public boolean matchType(String type){
+        if(type==null){
+            return type()==null;
+        }else{
+            return type.equals(type());
+        }
+    }
 
     public CrawlDatum(String url, String[] metas) throws Exception {
         this(url);
@@ -76,22 +89,41 @@ public class CrawlDatum implements Serializable {
         executeCount+=count;
         return executeCount;
     }
-
-//    public int getHttpCode() {
-//        return httpCode;
-//    }
-//
-//    public void setHttpCode(int httpCode) {
-//        this.httpCode = httpCode;
-//    }
-
-    public String getUrl() {
-        return url;
+    
+    public static final String META_KEY_TYPE="s_t";
+    
+    public String type(){
+        return meta(META_KEY_TYPE);
+    }
+    
+    public CrawlDatum type(String type){
+        return meta(META_KEY_TYPE, type);
     }
 
-    public CrawlDatum setUrl(String url) {
+
+    public String url() {
+        return url;
+    }
+    
+    public CrawlDatum url(String url) {
         this.url = url;
         return this;
+    }
+
+    /**
+     * @deprecated 已废弃，使用url()代替
+     */
+    @Deprecated
+    public String getUrl() {
+        return url();
+    }
+
+    /**
+     * @deprecated 使用url(String url)代替
+     */
+   @Deprecated
+    public CrawlDatum setUrl(String url) {
+        return url(url);
     }
 
     public long getExecuteTime() {
@@ -147,19 +179,36 @@ public class CrawlDatum implements Serializable {
         return meta(key);
     }
 
-
-
-    public String getKey() {
+    
+     public String key() {
         if (key == null) {
-            return getUrl();
+            return url;
         } else {
             return key;
         }
     }
-
-    public CrawlDatum setKey(String key) {
+     
+     public CrawlDatum key(String key) {
         this.key = key;
         return this;
+    }
+
+
+     /**
+      * 
+      * @deprecated 使用key()代替
+      */
+    @Deprecated
+    public String getKey() {
+       return key();
+    }
+
+    /**
+     * @deprecated 使用key(String key)代替
+     */
+    @Deprecated
+    public CrawlDatum setKey(String key) {
+        return key(key);
     }
 
 

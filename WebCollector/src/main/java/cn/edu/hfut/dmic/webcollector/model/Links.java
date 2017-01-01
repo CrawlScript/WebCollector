@@ -122,11 +122,24 @@ public class Links implements Iterable<String> {
     }
 
     public Links addByRegex(Document doc, RegexRule regexRule) {
+        return addByRegex(doc, regexRule, true);
+    }
+
+    public Links addByRegex(Document doc, RegexRule regexRule, boolean parseImg) {
         Elements as = doc.select("a[href]");
         for (Element a : as) {
             String href = a.attr("abs:href");
             if (regexRule.satisfy(href)) {
                 this.add(href);
+            }
+        }
+        if (parseImg) {
+            Elements imgs = doc.select("img[src]");
+            for (Element img : imgs) {
+                String src = img.attr("abs:src");
+                if (regexRule.satisfy(src)) {
+                    this.add(src);
+                }
             }
         }
         return this;
@@ -165,6 +178,5 @@ public class Links implements Iterable<String> {
     public String toString() {
         return dataList.toString();
     }
-    
-    
+
 }

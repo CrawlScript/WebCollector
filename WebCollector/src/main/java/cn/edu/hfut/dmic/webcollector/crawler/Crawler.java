@@ -36,18 +36,19 @@ public class Crawler {
 
     public static final Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
-    public Crawler(){
+    public Crawler() {
 
     }
 
     /**
      * 根据任务管理器和执行器构造爬虫
+     *
      * @param dbManager 任务管理器
      * @param executor 执行器
      */
-    public Crawler(DBManager dbManager, Executor executor){
-        this.dbManager=dbManager;
-        this.executor=executor;
+    public Crawler(DBManager dbManager, Executor executor) {
+        this.dbManager = dbManager;
+        this.executor = executor;
     }
 
     protected int status;
@@ -67,7 +68,6 @@ public class Crawler {
     protected Executor executor = null;
     protected DBManager dbManager;
 
-
     protected void inject() throws Exception {
         dbManager.inject(seeds);
     }
@@ -78,6 +78,7 @@ public class Crawler {
 
     /**
      * 开始爬取，迭代次数为depth
+     *
      * @param depth 迭代次数
      * @throws Exception 异常
      */
@@ -95,10 +96,10 @@ public class Crawler {
         }
         dbManager.open();
 
-        if(!seeds.isEmpty()){
+        if (!seeds.isEmpty()) {
             inject();
         }
-        
+
         if (!forcedSeeds.isEmpty()) {
             injectForcedSeeds();
         }
@@ -146,9 +147,10 @@ public class Crawler {
 
     /**
      * 添加种子任务
+     *
      * @param datum 种子任务
      * @param force 如果添加的种子是已爬取的任务，当force为true时，会强制注入种子，当force为false时，会忽略该种子
-     */    
+     */
     public void addSeed(CrawlDatum datum, boolean force) {
         if (force) {
             forcedSeeds.add(datum);
@@ -156,9 +158,10 @@ public class Crawler {
             seeds.add(datum);
         }
     }
-    
+
     /**
-     * 等同于 addSeed(datum, false) 
+     * 等同于 addSeed(datum, false)
+     *
      * @param datum 种子任务
      */
     public void addSeed(CrawlDatum datum) {
@@ -167,6 +170,7 @@ public class Crawler {
 
     /**
      * 添加种子集合
+     *
      * @param datums 种子集合
      * @param force 如果添加的种子是已爬取的任务，当force为true时，会强制注入种子，当force为false时，会忽略该种子
      */
@@ -178,6 +182,7 @@ public class Crawler {
 
     /**
      * 等同于 addSeed(datums,false)
+     *
      * @param datums 种子任务集合
      */
     public void addSeed(CrawlDatums datums) {
@@ -186,6 +191,20 @@ public class Crawler {
 
     /**
      * 与addSeed(CrawlDatums datums, boolean force) 类似
+     *
+     * @param links 种子URL集合
+     * @param type 种子的type标识信息
+     * @param force 是否强制注入
+     */
+    public void addSeed(Links links, String type, boolean force) {
+        for (String url : links) {
+            addSeed(url, type, force);
+        }
+    }
+
+    /**
+     * 与addSeed(CrawlDatums datums, boolean force) 类似
+     *
      * @param links 种子URL集合
      * @param force 是否强制注入
      */
@@ -197,6 +216,17 @@ public class Crawler {
 
     /**
      * 与addSeed(CrawlDatums datums)类似
+     *
+     * @param links 种子URL集合
+     * @param type 种子的type标识信息
+     */
+    public void addSeed(Links links, String type) {
+        addSeed(links, type, false);
+    }
+
+    /**
+     * 与addSeed(CrawlDatums datums)类似
+     *
      * @param links 种子URL集合
      */
     public void addSeed(Links links) {
@@ -205,6 +235,19 @@ public class Crawler {
 
     /**
      * 与addSeed(CrawlDatum datum, boolean force)类似
+     *
+     * @param url 种子URL
+     * @param type 种子的type标识信息
+     * @param force 是否强制注入
+     */
+    public void addSeed(String url, String type, boolean force) {
+        CrawlDatum datum = new CrawlDatum(url).type(type);
+        addSeed(datum, force);
+    }
+
+    /**
+     * 与addSeed(CrawlDatum datum, boolean force)类似
+     *
      * @param url 种子URL
      * @param force 是否强制注入
      */
@@ -215,6 +258,17 @@ public class Crawler {
 
     /**
      * 与addSeed(CrawlDatum datum)类似
+     *
+     * @param type 种子的type标识信息
+     * @param url 种子URL
+     */
+    public void addSeed(String url, String type) {
+        addSeed(url, type, false);
+    }
+
+    /**
+     * 与addSeed(CrawlDatum datum)类似
+     *
      * @param url 种子URL
      */
     public void addSeed(String url) {
@@ -223,6 +277,7 @@ public class Crawler {
 
     /**
      * 返回是否断点爬取
+     *
      * @return 是否断点爬取
      */
     public boolean isResumable() {
@@ -231,7 +286,8 @@ public class Crawler {
 
     /**
      * 设置是否断点爬取
-     * @param resumable 是否断点爬取 
+     *
+     * @param resumable 是否断点爬取
      */
     public void setResumable(boolean resumable) {
         this.resumable = resumable;
@@ -239,6 +295,7 @@ public class Crawler {
 
     /**
      * 返回线程数
+     *
      * @return 线程数
      */
     public int getThreads() {
@@ -247,6 +304,7 @@ public class Crawler {
 
     /**
      * 设置线程数
+     *
      * @param threads 线程数
      */
     public void setThreads(int threads) {
@@ -258,9 +316,9 @@ public class Crawler {
     }
 
     /**
-     * 设置每个爬取任务的最大执行次数，爬取或解析失败都会导致执行失败。
-     * 当一个任务执行失败时，爬虫会在后面的迭代中重新执行该任务，
+     * 设置每个爬取任务的最大执行次数，爬取或解析失败都会导致执行失败。 当一个任务执行失败时，爬虫会在后面的迭代中重新执行该任务，
      * 当该任务执行失败的次数超过最大执行次数时，任务生成器会忽略该任务
+     *
      * @param maxExecuteCount 每个爬取任务的最大执行次数
      */
     public void setMaxExecuteCount(int maxExecuteCount) {
@@ -269,6 +327,7 @@ public class Crawler {
 
     /**
      * 获取每个爬取任务的最大执行次数
+     *
      * @return 每个爬取任务的最大执行次数
      */
     public Executor getExecutor() {
@@ -277,15 +336,16 @@ public class Crawler {
 
     /**
      * 设置执行器
-     * @param executor 执行器 
+     *
+     * @param executor 执行器
      */
     public void setExecutor(Executor executor) {
         this.executor = executor;
     }
 
-
     /**
      * 返回每次迭代爬取的网页数量上限
+     *
      * @return 每次迭代爬取的网页数量上限
      */
     public int getTopN() {
@@ -294,6 +354,7 @@ public class Crawler {
 
     /**
      * 设置每次迭代爬取的网页数量上限
+     *
      * @param topN 每次迭代爬取的网页数量上限
      */
     public void setTopN(int topN) {
@@ -302,6 +363,7 @@ public class Crawler {
 
     /**
      * 获取执行间隔
+     *
      * @return 执行间隔
      */
     public long getExecuteInterval() {
@@ -310,6 +372,7 @@ public class Crawler {
 
     /**
      * 设置执行间隔
+     *
      * @param executeInterval 执行间隔
      */
     public void setExecuteInterval(long executeInterval) {
@@ -318,6 +381,7 @@ public class Crawler {
 
     /**
      * 返回任务管理器
+     *
      * @return 任务管理器
      */
     public DBManager getDBManager() {
@@ -326,11 +390,11 @@ public class Crawler {
 
     /**
      * 设置任务管理器
-     * @param dbManager 任务管理器 
+     *
+     * @param dbManager 任务管理器
      */
     public void setDBManager(DBManager dbManager) {
         this.dbManager = dbManager;
     }
-
 
 }

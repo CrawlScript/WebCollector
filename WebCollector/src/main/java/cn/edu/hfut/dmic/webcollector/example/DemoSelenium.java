@@ -51,7 +51,7 @@ public class DemoSelenium {
                 HtmlUnitDriver driver = new HtmlUnitDriver();
                 driver.setJavascriptEnabled(true);
                 
-                driver.get(datum.getUrl());
+                driver.get(datum.url());
                 
                 List<WebElement> elementList = driver.findElementsByCssSelector("h3.vrTitle a");
                 for(WebElement element:elementList){

@@ -18,8 +18,9 @@
 package cn.edu.hfut.dmic.webcollector.plugin.ram;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import java.util.HashMap;
 
-import java.util.concurrent.ConcurrentHashMap;
+
 
 
 /**
@@ -28,8 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RamDB {
     
-    protected ConcurrentHashMap<String, CrawlDatum> crawlDB = new ConcurrentHashMap<String, CrawlDatum>();
-    protected ConcurrentHashMap<String, CrawlDatum> fetchDB = new ConcurrentHashMap<String, CrawlDatum>();
-    protected ConcurrentHashMap<String, CrawlDatum> linkDB = new ConcurrentHashMap<String, CrawlDatum>();
-    protected ConcurrentHashMap<String, String> redirectDB = new ConcurrentHashMap<String, String>();
+    protected HashMap<String, CrawlDatum> crawlDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, CrawlDatum> fetchDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, CrawlDatum> linkDB = new HashMap<String, CrawlDatum>();
+    protected HashMap<String, String> redirectDB = new HashMap<String, String>();
 }

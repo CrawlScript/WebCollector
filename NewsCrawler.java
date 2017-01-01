@@ -31,17 +31,16 @@ public class NewsCrawler extends BreadthCrawler {
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-        String url = page.getUrl();
         /*if page is news page*/
         if (page.matchUrl("http://news.hfut.edu.cn/show-.*html")) {
             /*we use jsoup to parse page*/
-            Document doc = page.getDoc();
+            //Document doc = page.doc();
 
             /*extract title and content of news by css selector*/
             String title = page.select("div[id=Article]>h2").first().text();
             String content = page.select("div#artibody", 0).text();
 
-            System.out.println("URL:\n" + url);
+            System.out.println("URL:\n" + page.url());
             System.out.println("title:\n" + title);
             System.out.println("content:\n" + content);
 

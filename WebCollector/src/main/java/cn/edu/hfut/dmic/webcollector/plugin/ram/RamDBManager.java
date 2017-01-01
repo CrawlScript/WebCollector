@@ -69,7 +69,7 @@ public class RamDBManager extends DBManager {
 
     @Override
     public void inject(CrawlDatum datum, boolean force) throws Exception {
-        String key = datum.getKey();
+        String key = datum.key();
         if (!force) {
             if (ramDB.crawlDB.containsKey(key)) {
                 return;
@@ -117,14 +117,14 @@ public class RamDBManager extends DBManager {
     }
 
     @Override
-    public void writeFetchSegment(CrawlDatum fetchDatum) throws Exception {
-        ramDB.fetchDB.put(fetchDatum.getKey(), fetchDatum);
+    public synchronized void writeFetchSegment(CrawlDatum fetchDatum) throws Exception {
+        ramDB.fetchDB.put(fetchDatum.key(), fetchDatum);
     }
 
     @Override
-    public void writeParseSegment(CrawlDatums parseDatums) throws Exception {
+    public synchronized void writeParseSegment(CrawlDatums parseDatums) throws Exception {
         for (CrawlDatum datum : parseDatums) {
-            ramDB.linkDB.put(datum.getKey(), datum);
+            ramDB.linkDB.put(datum.key(), datum);
         }
     }
 
