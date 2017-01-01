@@ -64,14 +64,17 @@ public class DemoMetaCrawler extends RamCrawler {
         
         String type=page.meta("type");
         //如果是列表页，抽取内容页链接，放入后续任务中
-        if(type.equals("list")){
+        if(type.equals("taglist")){
             //可以确定抽取到的链接都指向内容页
             //因此为这些链接添加附加信息（meta）：type=content
-            next.add(page.getLinks("div.title.media-heading>a")).meta("type", "content");
+            next.add(page.getLinks("table.tagCol td>a")).meta("type", "booklist");
+        }else if(type.equals("booklist")){
+            next.add(page.getLinks("div.info>h2>a")).meta("type", "content");
         }else if(type.equals("content")){
-            String title=page.select("h1.media-heading").first().text();
-            String author=page.select("div.media-body a.user-name").first().text();
-            System.out.println("title:"+title+"\tauthor"+author);
+            //处理内容页，抽取书名和豆瓣评分
+            String title=page.select("h1>span").first().text();
+            String score=page.select("strong.ll.rating_num").first().text();
+            System.out.println("title:"+title+"\tscore:"+score);
         }
  
     }
@@ -81,7 +84,7 @@ public class DemoMetaCrawler extends RamCrawler {
         //meta是CrawlDatum的附加信息，爬虫内核并不使用meta信息
         //在解析页面时，往往需要知道当前页面的类型（例如是列表页还是内容页）或一些附加信息（例如页号）
         //然而根据当前页面的信息（内容和URL）并不一定能够轻易得到这些信息
-        //例如当在解析页面 http://ruby-china.org/topics?page=5 时，需要知道该页是目录页还是内容页
+        //例如当在解析页面 https://book.douban.com/tag/ 时，需要知道该页是目录页还是内容页
         //虽然用正则可以解决这个问题，但是较为麻烦
         //当我们将一个新链接（CrawlDatum）提交给爬虫时，链接指向页面的类型有时是确定的（例如在很多任务中，种子页面就是列表页）
         //如果在提交CrawlDatum时，直接将链接的类型信息（type）存放到meta中，那么在解析页面时，
@@ -95,7 +98,7 @@ public class DemoMetaCrawler extends RamCrawler {
         /*可以设置http请求重试的间隔，这里是毫秒*/
         //crawler.setRetryInterval(1000);
         crawler.setThreads(30);
-        crawler.start(2);
+        crawler.start(3);
     }
 
 }
