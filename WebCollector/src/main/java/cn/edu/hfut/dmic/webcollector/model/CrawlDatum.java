@@ -29,7 +29,9 @@ import java.util.HashMap;
  */
 public class CrawlDatum implements Serializable {
 
-    public final static int STATUS_DB_UNEXECUTED = 0;
+    /**  */
+	private static final long serialVersionUID = 1L;
+	public final static int STATUS_DB_UNEXECUTED = 0;
     public final static int STATUS_DB_FAILED = 1;
     public final static int STATUS_DB_SUCCESS = 5;
 
