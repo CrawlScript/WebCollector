@@ -63,26 +63,28 @@ public class Page {
 
     /**
      * 判断当前Page(CrawlDatum)的type是否为type
+     *
      * @param type
      * @return 是否相等
      */
     public boolean matchType(String type) {
         return crawlDatum.matchType(type);
     }
-    
+
     /**
      * 判断当前Page的Http响应头的Content-Type是否符合正则
+     *
      * @param contentTypeRegex
-     * @return 
+     * @return
      */
-    public boolean matchContentType(String contentTypeRegex){
-        if(contentTypeRegex==null){
-            return contentType()==null;
+    public boolean matchContentType(String contentTypeRegex) {
+        if (contentTypeRegex == null) {
+            return contentType() == null;
         }
         return Pattern.matches(contentTypeRegex, contentType());
     }
-    
-     /**
+
+    /**
      * 获取网页中满足指定css选择器的所有元素的指定属性的集合
      * 例如通过getAttrs("img[src]","abs:src")可获取网页中所有图片的链接
      *
@@ -112,21 +114,39 @@ public class Page {
      */
     @Deprecated
     public ArrayList<String> getAttrs(String cssSelector, String attrName) {
-      return attrs(cssSelector, attrName);
+        return attrs(cssSelector, attrName);
     }
 
     /**
+     * use Links links(String cssSelector) instead
      * 获取满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接 例如我们想抽取id为content的div中的所有超链接，这里
      * 就要将cssSelector定义为div[id=content] a
      *
      * @param cssSelector
      * @return
      */
+    @Deprecated
     public Links getLinks(String cssSelector) {
         Links links = new Links().addBySelector(doc(), cssSelector);
         return links;
     }
     
+        /**
+     * 获取满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接 例如我们想抽取id为content的div中的所有超链接，这里
+     * 就要将cssSelector定义为div[id=content] a
+     *
+     * @param cssSelector
+     * @return
+     */
+    public Links links(String cssSelector) {
+        Links links = new Links().addBySelector(doc(), cssSelector);
+        return links;
+    }
+    
+    public Links links() {
+        Links links = new Links().addAllFromDocument(doc());
+        return links;
+    }
 
     public Elements select(String cssSelector) {
         return this.doc().select(cssSelector);
@@ -231,8 +251,8 @@ public class Page {
         if (html != null) {
             return html;
         }
-        
-        if((html=response.getHtml())!=null){
+
+        if ((html = response.getHtml()) != null) {
             return html;
         }
 
@@ -242,7 +262,7 @@ public class Page {
         if (charset == null) {
             charset = CharsetDetector.guessEncoding(content());
         }
-        html=response.decode(charset);
+        html = response.decode(charset);
         return html;
     }
 
@@ -295,7 +315,7 @@ public class Page {
     public void setDoc(Document doc) {
         this.doc = doc;
     }
-    
+
     public HttpResponse response() {
         return response;
     }
@@ -303,6 +323,7 @@ public class Page {
     public void response(HttpResponse response) {
         this.response = response;
     }
+
     @Deprecated
     public HttpResponse getResponse() {
         return response;
@@ -321,15 +342,14 @@ public class Page {
         this.exception = exception;
     }
 
-    
     public CrawlDatum crawlDatum() {
         return crawlDatum;
     }
-    
+
     public void crawlDatum(CrawlDatum crawlDatum) {
         this.crawlDatum = crawlDatum;
     }
-    
+
     @Deprecated
     public CrawlDatum getCrawlDatum() {
         return crawlDatum;
@@ -339,8 +359,6 @@ public class Page {
     public void setCrawlDatum(CrawlDatum crawlDatum) {
         this.crawlDatum = crawlDatum;
     }
-    
-
 
     @Deprecated
     public HashMap<String, String> getMetaData() {
@@ -369,7 +387,7 @@ public class Page {
     public String getMetaData(String key) {
         return meta(key);
     }
-    
+
     public String charset() {
         if (charset == null) {
             charset = CharsetDetector.guessEncoding(content());
@@ -390,14 +408,13 @@ public class Page {
     public void setCharset(String charset) {
         charset(charset);
     }
-    
-    public String key(){
+
+    public String key() {
         return crawlDatum.key();
     }
-    
+
     public int code() {
         return response.code();
     }
-
 
 }

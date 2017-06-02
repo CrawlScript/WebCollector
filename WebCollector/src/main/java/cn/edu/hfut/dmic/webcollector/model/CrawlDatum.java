@@ -21,6 +21,7 @@ import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 /**
  * 爬取任务的数据结构
@@ -72,6 +73,17 @@ public class CrawlDatum implements Serializable {
             return type.equals(type());
         }
     }
+    
+        /**
+     * 判断当前Page的URL是否和输入正则匹配
+     *
+     * @param urlRegex
+     * @return
+     */
+    public boolean matchUrl(String urlRegex) {
+        return Pattern.matches(urlRegex, url());
+    }
+
 
     public CrawlDatum(String url, String[] metas) throws Exception {
         this(url);

@@ -24,6 +24,7 @@ import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
+import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.Config;
 
 import org.slf4j.Logger;
@@ -66,6 +67,7 @@ public class Crawler {
     protected int maxExecuteCount = -1;
 
     protected Executor executor = null;
+    protected NextFilter nextFilter = null;
     protected DBManager dbManager;
 
     protected void inject() throws Exception {
@@ -83,6 +85,8 @@ public class Crawler {
      * @throws Exception 异常
      */
     public void start(int depth) throws Exception {
+
+        LOG.info(this.toString());
 
         if (!resumable) {
             if (dbManager.isDBExists()) {
@@ -121,6 +125,7 @@ public class Crawler {
             fetcher = new Fetcher();
             fetcher.setDBManager(dbManager);
             fetcher.setExecutor(executor);
+            fetcher.setNextFilter(nextFilter);
             fetcher.setThreads(threads);
             fetcher.setExecuteInterval(executeInterval);
             fetcher.fetchAll(generator);
@@ -395,6 +400,30 @@ public class Crawler {
      */
     public void setDBManager(DBManager dbManager) {
         this.dbManager = dbManager;
+    }
+
+    public NextFilter getNextFilter() {
+        return nextFilter;
+    }
+
+    public void setNextFilter(NextFilter nextFilter) {
+        this.nextFilter = nextFilter;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Crawler Details:\n")
+                .append("\tCrawler: ").append(getClass()).append("\n")
+                .append("\tExecutor: ").append(executor.getClass()).append("\n")
+                .append("\tDBManager: ").append(dbManager.getClass()).append("\n")
+                .append("\tNextFilter: ");
+        if (nextFilter == null) {
+            sb.append("null");
+        } else {
+            sb.append(nextFilter.getClass());
+        }
+        return sb.toString();
     }
 
 }

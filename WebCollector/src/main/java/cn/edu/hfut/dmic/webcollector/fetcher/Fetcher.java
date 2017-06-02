@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
 import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
+import cn.edu.hfut.dmic.webcollector.crawler.NextFilter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.util.Config;
@@ -45,6 +46,7 @@ public class Fetcher {
     public DBManager dbManager;
 
     public Executor executor;
+    public NextFilter nextFilter = null;
 
     private AtomicInteger activeThreads;
     private AtomicInteger startedThreads;
@@ -53,7 +55,6 @@ public class Fetcher {
     private QueueFeeder feeder;
     private FetchQueue fetchQueue;
     private long executeInterval = 0;
-
 
     /**
      *
@@ -75,7 +76,6 @@ public class Fetcher {
         this.executor = executor;
     }
 
-  
     /**
      *
      */
@@ -226,6 +226,15 @@ public class Fetcher {
                         CrawlDatums next = new CrawlDatums();
                         try {
                             executor.execute(crawlDatum, next);
+                            if (nextFilter != null) {
+                                for (int i = 0; i < next.size(); i++) {
+                                    CrawlDatum filterResult = nextFilter.filter(next.get(i), crawlDatum);
+                                    if (filterResult == null) {
+                                        next.remove(i);
+                                        i--;
+                                    }
+                                }
+                            }
                             LOG.info("done: " + crawlDatum.key());
                             crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
                         } catch (Exception ex) {
@@ -277,8 +286,8 @@ public class Fetcher {
             LOG.info("Please Specify A Executor!");
             return;
         }
-        
-         dbManager.merge();
+
+        dbManager.merge();
 
         try {
             generator.open();
@@ -401,5 +410,15 @@ public class Fetcher {
     public void setExecuteInterval(long executeInterval) {
         this.executeInterval = executeInterval;
     }
+
+    public NextFilter getNextFilter() {
+        return nextFilter;
+    }
+
+    public void setNextFilter(NextFilter nextFilter) {
+        this.nextFilter = nextFilter;
+    }
+    
+    
 
 }

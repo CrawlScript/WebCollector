@@ -60,9 +60,9 @@ public class DemoTypeCrawler extends RamCrawler {
         if(page.matchType("taglist")){
             //如果是列表页，抽取内容页链接
             //将内容页链接的type设置为content，并添加到后续任务中
-             next.add(page.getLinks("table.tagCol td>a"),"booklist");
+             next.add(page.links("table.tagCol td>a"),"booklist");
         }else if(page.matchType("booklist")){
-            next.add(page.getLinks("div.info>h2>a"),"content");
+            next.add(page.links("div.info>h2>a"),"content");
         }else if(page.matchType("content")){
             //处理内容页，抽取书名和豆瓣评分
             String title=page.select("h1>span").first().text();

@@ -48,7 +48,7 @@ public class TutorialCrawler extends BreadthCrawler {
     public TutorialCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         
-        addSeed("http://blog.csdn.net/.*");
+        addSeed("http://blog.csdn.net/");
         addRegex("http://blog.csdn.net/.*/article/details/.*");
         
         //需要抓取图片时设置为true，并加入图片的正则规则
