@@ -227,13 +227,14 @@ public class Fetcher {
                         try {
                             executor.execute(crawlDatum, next);
                             if (nextFilter != null) {
+                                CrawlDatums filteredNext = new CrawlDatums();
                                 for (int i = 0; i < next.size(); i++) {
                                     CrawlDatum filterResult = nextFilter.filter(next.get(i), crawlDatum);
-                                    if (filterResult == null) {
-                                        next.remove(i);
-                                        i--;
+                                    if (filterResult != null) {
+                                        filteredNext.add(filterResult);
                                     }
                                 }
+                                next = filteredNext;
                             }
                             LOG.info("done: " + crawlDatum.key());
                             crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
