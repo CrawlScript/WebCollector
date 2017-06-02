@@ -17,7 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.example;
 
-import cn.edu.hfut.dmic.webcollector.crawler.NextFilter;
+import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;

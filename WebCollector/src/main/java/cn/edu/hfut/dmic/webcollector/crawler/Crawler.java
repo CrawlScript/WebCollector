@@ -17,6 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
+import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
 import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;

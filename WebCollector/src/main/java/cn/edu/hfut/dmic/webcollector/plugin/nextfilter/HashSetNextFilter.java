@@ -17,7 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.plugin.nextfilter;
 
-import cn.edu.hfut.dmic.webcollector.crawler.NextFilter;
+import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.util.HashSet;
 

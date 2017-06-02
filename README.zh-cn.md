@@ -23,6 +23,16 @@ WebCollector 2.x版本特性：
  * 8）使用slf4j作为日志门面，可对接多种日志
 
 
+###Maven
+
+```xml
+<dependency>
+    <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+    <artifactId>WebCollector</artifactId>
+    <version>2.52</version>
+</dependency>
+```
+
 
 ###Jar包
 可在[WebCollector的github主页](https://github.com/CrawlScript/WebCollector)下载所需jar包.
@@ -31,15 +41,6 @@ WebCollector 2.x版本特性：
 
 
 
-
-###__通过捐款支持WebCollector__
-
-
-维护WebCollector及教程需要花费较大的时间和精力，如果你喜欢WebCollector的话，欢迎通过捐款的方式，支持开发者的工作，非常感谢！
-
-你可以使用支付宝钱包扫描下方的二维码进行捐款， 或者通过向支付宝帐号 __hujunxianligong@126.com__转帐进行捐款。
-
-<img src="http://img.blog.csdn.net/20160216133214332" width="200px"></img>
 
 
 
