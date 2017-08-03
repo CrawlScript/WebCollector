@@ -55,7 +55,7 @@ public class CrawlDatumFormater {
 
         int metaIndex = 0;
 
-        for (Entry<String, String> entry : datum.getMetaData().entrySet()) {
+        for (Entry<String, String> entry : datum.meta().entrySet()) {
             sb.append("\nMETA").append("[").append(metaIndex++).append("]:(")
                     .append(entry.getKey()).append(",").append(entry.getValue()).append(")");
         }
@@ -88,8 +88,8 @@ public class CrawlDatumFormater {
         jsonArray.put(datum.getStatus());
         jsonArray.put(datum.getExecuteTime());
         jsonArray.put(datum.getExecuteCount());
-        if (!datum.getMetaData().isEmpty()) {
-            jsonArray.put(new JSONObject(datum.getMetaData()));
+        if (!datum.meta().isEmpty()) {
+            jsonArray.put(new JSONObject(datum.meta()));
         }
         return jsonArray.toString();
     }

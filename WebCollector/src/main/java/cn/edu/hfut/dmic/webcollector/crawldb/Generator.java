@@ -17,25 +17,96 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawldb;
 
+
+import cn.edu.hfut.dmic.webcollector.conf.Configuration;
+import cn.edu.hfut.dmic.webcollector.conf.DefaultConfigured;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 抓取任务生成器
  *
  * @author hu
  */
-public interface Generator {
+public abstract class Generator extends DefaultConfigured{
 
-    public CrawlDatum next();
-    
-    public void open() throws Exception;
+    public static final Logger LOG = LoggerFactory.getLogger(Generator.class);
 
-    public void setTopN(int topN);
 
-    public void setMaxExecuteCount(int maxExecuteCount);
+    protected GeneratorFilter filter = null;
+    protected int topN = 0;
 
-    public int getTotalGenerate();
+    protected int totalGenerate;
+    protected int maxExecuteCount;
 
-    public void close() throws Exception;
+    public Generator() {
+        this.totalGenerate = 0;
+        this.maxExecuteCount = getConf().getOrDefault(Configuration.KEY_MAX_EXECUTE_COUNT, Integer.MAX_VALUE);
+    }
 
+    /**
+     * return null if there is no CrawlDatum to generate
+     * @return
+     */
+    public CrawlDatum next(){
+        if(topN > 0 && totalGenerate >= topN){
+            return null;
+        }
+        CrawlDatum datum;
+        while (true) {
+            try {
+                datum = nextWithoutFilter();
+                if (datum == null) {
+                    return datum;
+                }
+                if(filter == null || (datum = filter.filter(datum))!=null){
+                    if (datum.getExecuteCount() > maxExecuteCount) {
+                        continue;
+                    }
+                    totalGenerate += 1;
+                    return datum;
+                }
+
+            } catch (Exception e) {
+                LOG.info("Exception when generating", e);
+                return null;
+            }
+
+        }
+    }
+
+    public abstract CrawlDatum nextWithoutFilter() throws Exception;
+
+
+    public int getTopN() {
+        return topN;
+    }
+
+    public void setTopN(int topN) {
+        this.topN = topN;
+    }
+
+
+    public int getMaxExecuteCount() {
+        return maxExecuteCount;
+    }
+
+    public void setMaxExecuteCount(int maxExecuteCount) {
+        this.maxExecuteCount = maxExecuteCount;
+    }
+
+    public int getTotalGenerate(){
+        return totalGenerate;
+    }
+
+    public abstract void close() throws Exception;
+
+    public GeneratorFilter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(GeneratorFilter filter) {
+        this.filter = filter;
+    }
 }

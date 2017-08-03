@@ -105,7 +105,7 @@ public class DemoBingCrawler extends RamCrawler {
             String referer=page.meta("referer");
 
             String line = String.format("第%s页第%s个结果:%s(%s字节)\tdepth=%s\treferer=%s",
-                    pageNum, rank + 1, page.doc().title(),page.getContent().length,depth,referer);
+                    pageNum, rank + 1, page.doc().title(),page.content().length,depth,referer);
             System.out.println(line);
 
         }

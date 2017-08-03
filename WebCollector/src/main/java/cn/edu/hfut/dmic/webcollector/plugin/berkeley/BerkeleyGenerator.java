@@ -28,48 +28,48 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import com.sleepycat.je.LockMode;
 import com.sleepycat.je.OperationStatus;
+
 import java.io.File;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author hu
  */
-public class BerkeleyGenerator implements Generator {
+public class BerkeleyGenerator extends Generator {
 
     public static final Logger LOG = LoggerFactory.getLogger(BerkeleyGenerator.class);
 
     Cursor cursor = null;
     Database crawldbDatabase = null;
-    Environment env=null;
-    protected int totalGenerate = 0;
-    protected int topN = -1;
-    protected int maxExecuteCount = Config.MAX_EXECUTE_COUNT;
-    String crawlPath;
+    Environment env = null;
 
-//    public BerkeleyGenerator(String crawlPath) {
-//        this.crawlPath = crawlPath;
-//
-//    }
-    
-      public BerkeleyGenerator(Environment env) {
-        this.env=env;
+
+    public BerkeleyGenerator(Environment env) {
+        this.env = env;
+        crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+        cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
     }
 
-    @Override
-    public void open() throws Exception {
-        totalGenerate = 0;
 
+    @Override
+    public CrawlDatum nextWithoutFilter() throws Exception {
+        if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+            CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+            return datum;
+        }else{
+            return null;
+        }
     }
 
     public void close() throws Exception {
 
-        if(cursor!=null){
+        if (cursor != null) {
             cursor.close();
         }
-        cursor = null;
-        if(crawldbDatabase!=null){
+//        cursor = null;
+        if (crawldbDatabase != null) {
             crawldbDatabase.close();
         }
     }
@@ -77,63 +77,47 @@ public class BerkeleyGenerator implements Generator {
     protected DatabaseEntry key = new DatabaseEntry();
     protected DatabaseEntry value = new DatabaseEntry();
 
-    @Override
-    public CrawlDatum next() {
-        if (topN >= 0) {
-            if (totalGenerate >= topN) {
-                return null;
-            }
-        }
+//    @Override
+//    public CrawlDatum next() {
+//
+//
+//
+//
+//        while (true) {
+//            if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
+//
+//                try {
+//                    CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+//                    if (datum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS) {
+//                        continue;
+//                    } else {
+//                        if (datum.getExecuteCount() > maxExecuteCount) {
+//                            continue;
+//                        }
+//                        totalGenerate++;
+//                        return datum;
+//                    }
+//                } catch (Exception ex) {
+//                    LOG.info("Exception when generating", ex);
+//                    continue;
+//                }
+//            } else {
+//                return null;
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public CrawlDatum nextWithoutFilter() {
+//        if (cursor == null) {
+//            crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
+//            cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
+//        }
+//
+//        if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS){
+//            CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+//        }
+//    }
 
-        if (cursor == null) {
-            crawldbDatabase = env.openDatabase(null, "crawldb", BerkeleyDBUtils.defaultDBConfig);
-            cursor = crawldbDatabase.openCursor(null, CursorConfig.DEFAULT);
-        }
-
-        while (true) {
-            if (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
-
-                try {
-                    CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
-                    if (datum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS) {
-                        continue;
-                    } else {
-                        if (datum.getExecuteCount()>maxExecuteCount) {
-                            continue;
-                        }
-                        totalGenerate++;
-                        return datum;
-                    }
-                } catch (Exception ex) {
-                    LOG.info("Exception when generating", ex);
-                    continue;
-                }
-            } else {
-                return null;
-            }
-        }
-    }
-
-    @Override
-    public int getTotalGenerate() {
-        return totalGenerate;
-    }
-
-    public int getTopN() {
-        return topN;
-    }
-
-    @Override
-    public void setTopN(int topN) {
-        this.topN = topN;
-    }
-
-    public int getMaxExecuteCount() {
-        return maxExecuteCount;
-    }
-
-    @Override
-    public void setMaxExecuteCount(int maxExecuteCount) {
-        this.maxExecuteCount = maxExecuteCount;
-    }
+   
 }

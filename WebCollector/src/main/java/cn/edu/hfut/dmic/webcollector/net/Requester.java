@@ -18,11 +18,12 @@
 package cn.edu.hfut.dmic.webcollector.net;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.model.Page;
 
 /**
  *
  * @author hu
  */
 public interface Requester {
-     public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception;
+     public Page getResponse(CrawlDatum crawlDatum) throws Exception;
 }

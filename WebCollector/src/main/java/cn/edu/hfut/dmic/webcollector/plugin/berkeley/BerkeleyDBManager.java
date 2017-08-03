@@ -217,11 +217,13 @@ public class BerkeleyDBManager extends DBManager {
     }
 
     @Override
-    public Generator getGenerator() {
-        if(generator==null){
-             generator = new BerkeleyGenerator(env);
-        }
-        return generator;
+    public Generator createGenerator() {
+        return new BerkeleyGenerator(env);
+
+//        if(generator==null){
+//             generator = new BerkeleyGenerator(env);
+//        }
+//        return generator;
     }
 
 }

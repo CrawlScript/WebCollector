@@ -18,10 +18,11 @@
 package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Iterator;
-import org.jsoup.nodes.Document;
+import java.util.LinkedList;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -32,13 +33,13 @@ import org.jsoup.select.Elements;
  */
 public class Links implements Iterable<String> {
 
-    protected ArrayList<String> dataList = new ArrayList<String>();
+    protected LinkedList<String> dataList = new LinkedList<String>();
 
     public Links() {
 
     }
 
-    public Links(Links links) {
+    public Links(Iterable<String> links) {
         add(links);
     }
 
@@ -46,12 +47,16 @@ public class Links implements Iterable<String> {
         add(urls);
     }
 
+    public CrawlDatums toCrawlDatums(){
+        return new CrawlDatums(this);
+    }
+
     public Links add(String url) {
         dataList.add(url);
         return this;
     }
 
-    public Links add(Links links) {
+    public Links add(Iterable<String> links) {
         for (String url : links) {
             dataList.add(url);
         }
@@ -69,11 +74,11 @@ public class Links implements Iterable<String> {
     }
 
     public Links filterByRegex(RegexRule regexRule) {
-        for (int i = 0; i < size(); i++) {
-            String url = get(i);
+        Iterator<String> ite = iterator();
+        while(ite.hasNext()){
+            String url = ite.next();
             if (!regexRule.satisfy(url)) {
-                remove(i);
-                i--;
+                ite.remove();
             }
         }
         return this;
@@ -85,65 +90,79 @@ public class Links implements Iterable<String> {
         return filterByRegex(regexRule);
     }
 
-    public Links addAllFromDocument(Document doc) {
-        addBySelector(doc, "a");
+    public Links addFromElement(Element ele) {
+        addFromElement(ele,false);
         return this;
     }
 
+    public Links addFromElement(Element ele, boolean parseImg) {
+        add(ele.select("a[href]").eachAttr("abs:href"));
+        if(parseImg){
+            add(ele.select("img[src]").eachAttr("abs:src"));
+        }
+        return this;
+    }
+
+
+
     /**
-     * 添加doc中，满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接
+     * 添加ele中，满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接
      * 例如我们想抽取id为content的div中的所有超链接，这里 就要将cssSelector定义为div[id=content] a
      *
-     * @param doc 网页Document
-     * @param cssSelector CSS选择器
+
      */
-    public Links addBySelector(Document doc, String cssSelector) {
-        Elements as = doc.select(cssSelector);
+    public Links addBySelector(Element ele, String cssSelector, boolean parseSrc) {
+        Elements as = ele.select(cssSelector);
         for (Element a : as) {
             if (a.hasAttr("href")) {
                 String href = a.attr("abs:href");
                 this.add(href);
             }
-        }
-        return this;
-    }
-
-    public Links addByRegex(Document doc, String rule) {
-        RegexRule regexRule = new RegexRule();
-        regexRule.addRule(rule);
-        Elements as = doc.select("a[href]");
-        for (Element a : as) {
-            String href = a.attr("abs:href");
-            if (regexRule.satisfy(href)) {
-                this.add(href);
-            }
-        }
-        return this;
-    }
-
-    public Links addByRegex(Document doc, RegexRule regexRule) {
-        return addByRegex(doc, regexRule, true);
-    }
-
-    public Links addByRegex(Document doc, RegexRule regexRule, boolean parseImg) {
-        Elements as = doc.select("a[href]");
-        for (Element a : as) {
-            String href = a.attr("abs:href");
-            if (regexRule.satisfy(href)) {
-                this.add(href);
-            }
-        }
-        if (parseImg) {
-            Elements imgs = doc.select("img[src]");
-            for (Element img : imgs) {
-                String src = img.attr("abs:src");
-                if (regexRule.satisfy(src)) {
+            if(parseSrc){
+                if(a.hasAttr("src")){
+                    String src = a.attr("abs:src");
                     this.add(src);
                 }
             }
         }
         return this;
     }
+    public Links addBySelector(Element ele, String cssSelector){
+        return addBySelector(ele ,cssSelector,false);
+    }
+
+    public Links addByRegex(Element ele, RegexRule regexRule, boolean parseSrc) {
+        for(String href: ele.select("a[href]").eachAttr("abs:href")){
+            if (regexRule.satisfy(href)) {
+                this.add(href);
+            }
+        }
+        if(parseSrc) {
+            for (String src : ele.select("*[src]").eachAttr("abs:src")){
+                if(regexRule.satisfy(src)){
+                    this.add(src);
+                }
+            }
+        }
+        return this;
+    }
+
+    public Links addByRegex(Element ele, RegexRule regexRule) {
+        return addByRegex(ele, regexRule, false);
+    }
+
+    public Links addByRegex(Element ele, String regex, boolean parseSrc) {
+        RegexRule regexRule = new RegexRule(regex);
+        return addByRegex(ele, regexRule, parseSrc);
+    }
+    public Links addByRegex(Element ele, String regex) {
+        RegexRule regexRule = new RegexRule(regex);
+        return addByRegex(ele,regexRule,false);
+    }
+
+
+
+
 
     public String get(int index) {
         return dataList.get(index);

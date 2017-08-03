@@ -73,7 +73,7 @@ public class DemoDepthCrawler extends BreadthCrawler{
         /*不要爬取包含"#"的链接*/
         crawler.addRegex("-.*#.*");
         
-        crawler.setTopN(5);
+        crawler.getConf().setTopN(5);
         
         crawler.start(3);
     }

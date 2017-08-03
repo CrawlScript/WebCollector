@@ -60,7 +60,7 @@ public class DemoPostCrawler extends BreadthCrawler {
     }
 
     @Override
-    public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
+    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
         HttpRequest request = new HttpRequest(crawlDatum.url());
 
         request.setMethod(crawlDatum.meta("method"));
@@ -68,7 +68,7 @@ public class DemoPostCrawler extends BreadthCrawler {
         if (outputData != null) {
             request.setOutputData(outputData.getBytes("utf-8"));
         }
-        return request.response();
+        return request.responsePage();
         /*
         //通过下面方式可以设置Cookie、User-Agent等http请求头信息
         request.setCookie("xxxxxxxxxxxxxx");

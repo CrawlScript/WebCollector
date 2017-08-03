@@ -17,9 +17,12 @@
  */
 package cn.edu.hfut.dmic.webcollector.util;
 
-import java.sql.SQLException;
-import org.apache.commons.dbcp.BasicDataSource;
+import java.beans.PropertyVetoException;
+
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 /**
  *
@@ -27,30 +30,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
  */
 public class MysqlHelper {
 
-    BasicDataSource dataSource = null;
+    DataSource dataSource;
     public JdbcTemplate template;
 
-    public MysqlHelper(String url, String username, String password, int initialSize, int maxActive) {
-        dataSource = new BasicDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
-        dataSource.setInitialSize(initialSize);
-        dataSource.setMaxActive(maxActive);
+    public MysqlHelper(String url, String username, String password, int initialSize, int maxPoolSize) throws PropertyVetoException {
+        dataSource = createDataSource(url,username,password,initialSize,maxPoolSize);
         template = new JdbcTemplate(dataSource);
-    }
-    
+     }
 
-    public BasicDataSource getDataSource() {
+    public DataSource createDataSource(String url, String username, String password, int initialSize, int maxPoolSize) throws PropertyVetoException {
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        dataSource.setDriverClass("com.mysql.jdbc.Driver");
+        dataSource.setJdbcUrl(url);
+        dataSource.setUser(username);
+        dataSource.setPassword(password);
+        dataSource.setInitialPoolSize(initialSize);
+        dataSource.setMaxPoolSize(maxPoolSize);
+        dataSource.setTestConnectionOnCheckout(true);
         return dataSource;
     }
-
-    public void setDataSource(BasicDataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-    
-    
 
     public JdbcTemplate getTemplate() {
         return template;
@@ -59,13 +57,12 @@ public class MysqlHelper {
     public void setTemplate(JdbcTemplate template) {
         this.template = template;
     }
-    
-    
 
-    public void close() throws SQLException {
-        if (dataSource != null) {
-            dataSource.close();
-        }
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 }

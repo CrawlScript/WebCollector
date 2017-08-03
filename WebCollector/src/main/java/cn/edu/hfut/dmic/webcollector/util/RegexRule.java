@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.util;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -30,13 +31,17 @@ public class RegexRule {
     public RegexRule(){
         
     }
-    public RegexRule(String rule){
-        addRule(rule);
+    public RegexRule(String regex){
+        addRule(regex);
     }
-    
-    public RegexRule(ArrayList<String> rules){
-        for (String rule : rules) {
-            addRule(rule);
+    public RegexRule(String... regexes){
+        for(String regex:regexes){
+            addRule(regex);
+        }
+    }
+    public RegexRule(List<String> regexList){
+        for (String regex : regexList) {
+            addRule(regex);
         }
     }
     

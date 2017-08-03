@@ -17,24 +17,24 @@
  */
 package cn.edu.hfut.dmic.webcollector.crawler;
 
+import cn.edu.hfut.dmic.webcollector.conf.DefaultConfigured;
+import cn.edu.hfut.dmic.webcollector.crawldb.GeneratorFilter;
+import cn.edu.hfut.dmic.webcollector.crawldb.StatusGeneratorFilter;
 import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
 import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.fetcher.Fetcher;
 import cn.edu.hfut.dmic.webcollector.crawldb.DBManager;
-import cn.edu.hfut.dmic.webcollector.crawldb.Generator;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.model.Links;
-import cn.edu.hfut.dmic.webcollector.net.Requester;
-import cn.edu.hfut.dmic.webcollector.util.Config;
 
+import cn.edu.hfut.dmic.webcollector.util.ConfigurationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author hu
  */
-public class Crawler {
+public class Crawler extends DefaultConfigured {
 
     public static final Logger LOG = LoggerFactory.getLogger(Crawler.class);
 
@@ -59,8 +59,6 @@ public class Crawler {
     protected boolean resumable = false;
     protected int threads = 50;
 
-    protected int topN = -1;
-    protected long executeInterval = 0;
 
     protected CrawlDatums seeds = new CrawlDatums();
     protected CrawlDatums forcedSeeds = new CrawlDatums();
@@ -70,14 +68,19 @@ public class Crawler {
     protected Executor executor = null;
     protected NextFilter nextFilter = null;
     protected DBManager dbManager;
-
+    protected GeneratorFilter generatorFilter = new StatusGeneratorFilter();
     protected void inject() throws Exception {
         dbManager.inject(seeds);
     }
 
-    public void injectForcedSeeds() throws Exception {
+    protected void injectForcedSeeds() throws Exception {
         dbManager.inject(forcedSeeds, true);
     }
+
+
+    protected void registerOtherConfigurations(){
+    }
+
 
     /**
      * 开始爬取，迭代次数为depth
@@ -88,6 +91,13 @@ public class Crawler {
     public void start(int depth) throws Exception {
 
         LOG.info(this.toString());
+
+        //register dbmanager conf
+        ConfigurationUtils.setTo(this, dbManager);
+        ConfigurationUtils.setTo(this, executor);
+
+        registerOtherConfigurations();
+
 
         if (!resumable) {
             if (dbManager.isDBExists()) {
@@ -109,13 +119,6 @@ public class Crawler {
             injectForcedSeeds();
         }
 
-        Generator generator = dbManager.getGenerator();
-        if (maxExecuteCount >= 0) {
-            generator.setMaxExecuteCount(maxExecuteCount);
-        } else {
-            generator.setMaxExecuteCount(Config.MAX_EXECUTE_COUNT);
-        }
-        generator.setTopN(topN);
         status = RUNNING;
         for (int i = 0; i < depth; i++) {
             if (status == STOPED) {
@@ -124,15 +127,17 @@ public class Crawler {
             LOG.info("start depth " + (i + 1));
             long startTime = System.currentTimeMillis();
             fetcher = new Fetcher();
+            //register fetcher conf
+            ConfigurationUtils.setTo(this,fetcher);
+
             fetcher.setDBManager(dbManager);
             fetcher.setExecutor(executor);
             fetcher.setNextFilter(nextFilter);
             fetcher.setThreads(threads);
-            fetcher.setExecuteInterval(executeInterval);
-            fetcher.fetchAll(generator);
+            int totalGenerate = fetcher.fetchAll(generatorFilter);
+
             long endTime = System.currentTimeMillis();
             long costTime = (endTime - startTime) / 1000;
-            int totalGenerate = generator.getTotalGenerate();
 
             LOG.info("depth " + (i + 1) + " finish: \n\ttotal urls:\t" + totalGenerate + "\n\ttotal time:\t" + costTime + " seconds");
             if (totalGenerate == 0) {
@@ -141,6 +146,11 @@ public class Crawler {
 
         }
         dbManager.close();
+        afterStop();
+    }
+
+    public void afterStop(){
+
     }
 
     /**
@@ -158,21 +168,19 @@ public class Crawler {
      * @param force 如果添加的种子是已爬取的任务，当force为true时，会强制注入种子，当force为false时，会忽略该种子
      */
     public void addSeed(CrawlDatum datum, boolean force) {
-        if (force) {
-            forcedSeeds.add(datum);
-        } else {
-            seeds.add(datum);
-        }
+        addSeedAndReturn(datum,force);
     }
 
     /**
-     * 等同于 addSeed(datum, false)
-     *
-     * @param datum 种子任务
-     */
+         * 等同于 addSeed(datum, false)
+         *
+         * @param datum 种子任务
+         */
     public void addSeed(CrawlDatum datum) {
-        addSeed(datum, false);
+        addSeedAndReturn(datum);
     }
+
+
 
     /**
      * 添加种子集合
@@ -181,9 +189,7 @@ public class Crawler {
      * @param force 如果添加的种子是已爬取的任务，当force为true时，会强制注入种子，当force为false时，会忽略该种子
      */
     public void addSeed(CrawlDatums datums, boolean force) {
-        for (CrawlDatum datum : datums) {
-            addSeed(datum, force);
-        }
+        addSeedAndReturn(datums,force);
     }
 
     /**
@@ -192,7 +198,7 @@ public class Crawler {
      * @param datums 种子任务集合
      */
     public void addSeed(CrawlDatums datums) {
-        addSeed(datums, false);
+        addSeedAndReturn(datums);
     }
 
     /**
@@ -202,10 +208,8 @@ public class Crawler {
      * @param type 种子的type标识信息
      * @param force 是否强制注入
      */
-    public void addSeed(Links links, String type, boolean force) {
-        for (String url : links) {
-            addSeed(url, type, force);
-        }
+    public void addSeed(Iterable<String> links, String type, boolean force) {
+        addSeedAndReturn(links, force).type(type);
     }
 
     /**
@@ -214,10 +218,18 @@ public class Crawler {
      * @param links 种子URL集合
      * @param force 是否强制注入
      */
-    public void addSeed(Links links, boolean force) {
-        for (String url : links) {
-            addSeed(url, force);
-        }
+    public void addSeed(Iterable<String> links, boolean force) {
+        addSeedAndReturn(links,force);
+    }
+
+
+    /**
+     * 与addSeed(CrawlDatums datums)类似
+     *
+     * @param links 种子URL集合
+     */
+    public void addSeed(Iterable<String> links) {
+        addSeedAndReturn(links);
     }
 
     /**
@@ -226,18 +238,10 @@ public class Crawler {
      * @param links 种子URL集合
      * @param type 种子的type标识信息
      */
-    public void addSeed(Links links, String type) {
-        addSeed(links, type, false);
+    public void addSeed(Iterable<String> links, String type) {
+        addSeedAndReturn(links).type(type);
     }
 
-    /**
-     * 与addSeed(CrawlDatums datums)类似
-     *
-     * @param links 种子URL集合
-     */
-    public void addSeed(Links links) {
-        addSeed(links, false);
-    }
 
     /**
      * 与addSeed(CrawlDatum datum, boolean force)类似
@@ -247,8 +251,7 @@ public class Crawler {
      * @param force 是否强制注入
      */
     public void addSeed(String url, String type, boolean force) {
-        CrawlDatum datum = new CrawlDatum(url).type(type);
-        addSeed(datum, force);
+        addSeedAndReturn(url,force).type(type);
     }
 
     /**
@@ -258,9 +261,11 @@ public class Crawler {
      * @param force 是否强制注入
      */
     public void addSeed(String url, boolean force) {
-        CrawlDatum datum = new CrawlDatum(url);
-        addSeed(datum, force);
+        addSeedAndReturn(url,force);
     }
+
+
+
 
     /**
      * 与addSeed(CrawlDatum datum)类似
@@ -269,7 +274,7 @@ public class Crawler {
      * @param url 种子URL
      */
     public void addSeed(String url, String type) {
-        addSeed(url, type, false);
+        addSeedAndReturn(url).type(type);
     }
 
     /**
@@ -278,7 +283,60 @@ public class Crawler {
      * @param url 种子URL
      */
     public void addSeed(String url) {
-        addSeed(url, false);
+        addSeedAndReturn(url);
+    }
+
+    public CrawlDatum addSeedAndReturn(CrawlDatum datum, boolean force) {
+        if (force) {
+            forcedSeeds.add(datum);
+        } else {
+            seeds.add(datum);
+        }
+        return datum;
+    }
+
+    public CrawlDatum addSeedAndReturn(CrawlDatum datum) {
+        return addSeedAndReturn(datum,false);
+    }
+
+    public CrawlDatum addSeedAndReturn(String url, boolean force) {
+        CrawlDatum datum = new CrawlDatum(url);
+        return addSeedAndReturn(datum,force);
+    }
+
+    public CrawlDatum addSeedAndReturn(String url) {
+        return addSeedAndReturn(url,false);
+    }
+
+    public CrawlDatums addSeedAndReturn(Iterable<String> links, boolean force) {
+        CrawlDatums datums = new CrawlDatums(links);
+        return addSeedAndReturn(datums,force);
+    }
+
+    public CrawlDatums addSeedAndReturn(Iterable<String> links) {
+        return addSeedAndReturn(links,false);
+    }
+
+    public CrawlDatums addSeedAndReturn(CrawlDatums datums, boolean force) {
+        if (force) {
+            forcedSeeds.add(datums);
+        } else {
+            seeds.add(datums);
+        }
+        return datums;
+    }
+
+    public CrawlDatums addSeedAndReturn(CrawlDatums datums) {
+        return addSeedAndReturn(datums,false);
+    }
+
+
+    public GeneratorFilter getGeneratorFilter() {
+        return generatorFilter;
+    }
+
+    public void setGeneratorFilter(GeneratorFilter generatorFilter) {
+        this.generatorFilter = generatorFilter;
     }
 
     /**
@@ -354,36 +412,26 @@ public class Crawler {
      *
      * @return 每次迭代爬取的网页数量上限
      */
-    public int getTopN() {
-        return topN;
-    }
+
 
     /**
      * 设置每次迭代爬取的网页数量上限
      *
      * @param topN 每次迭代爬取的网页数量上限
      */
-    public void setTopN(int topN) {
-        this.topN = topN;
-    }
+
 
     /**
      * 获取执行间隔
      *
      * @return 执行间隔
      */
-    public long getExecuteInterval() {
-        return executeInterval;
-    }
 
     /**
      * 设置执行间隔
      *
      * @param executeInterval 执行间隔
      */
-    public void setExecuteInterval(long executeInterval) {
-        this.executeInterval = executeInterval;
-    }
 
     /**
      * 返回任务管理器

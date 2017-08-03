@@ -55,9 +55,10 @@ public class RamDBManager extends DBManager {
     }
 
     @Override
-    public Generator getGenerator() {
-        return generator;
+    public Generator createGenerator() {
+        return new RamGenerator(ramDB);
     }
+
 
     @Override
     public void open() throws Exception {

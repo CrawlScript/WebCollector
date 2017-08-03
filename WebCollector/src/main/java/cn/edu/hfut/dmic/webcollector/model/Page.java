@@ -17,14 +17,17 @@
  */
 package cn.edu.hfut.dmic.webcollector.model;
 
-import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.edu.hfut.dmic.webcollector.util.ListUtils;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,13 +46,19 @@ public class Page {
 
     private CrawlDatum crawlDatum = null;
 
-    private HttpResponse response = null;
+    private String contentType;
+    private Integer code = null;
+
+
     private Exception exception = null;
 
     private String html = null;
     private Document doc = null;
 
     private String charset = null;
+    private byte[] content = null;
+
+    private Object obj = null;
 
     /**
      * 判断当前Page的URL是否和输入正则匹配
@@ -84,9 +93,34 @@ public class Page {
         return Pattern.matches(contentTypeRegex, contentType());
     }
 
+    public JSONObject jsonObject(){
+        return new JSONObject(html());
+    }
+
+    public JSONArray jsonArray(){
+        return new JSONArray(html());
+    }
+
+    public JSONObject regexJSONObject(String regex){
+        return new JSONObject(regex(regex));
+    }
+
+    public JSONObject regexJSONObject(String regex, int group){
+        return new JSONObject(regex(regex, group));
+    }
+
+    public JSONArray regexJSONArray(String regex){
+        return new JSONArray(regex(regex));
+    }
+
+    public JSONArray regexJSONArray(String regex, int group){
+        return new JSONArray(regex(regex, group));
+    }
+
+
     /**
      * 获取网页中满足指定css选择器的所有元素的指定属性的集合
-     * 例如通过getAttrs("img[src]","abs:src")可获取网页中所有图片的链接
+     * 例如通过attrs("img[src]","abs:src")可获取网页中所有图片的链接
      *
      * @param cssSelector
      * @param attrName
@@ -105,31 +139,27 @@ public class Page {
 
     /**
      * 获取网页中满足指定css选择器的所有元素的指定属性的集合
-     * 例如通过getAttrs("img[src]","abs:src")可获取网页中所有图片的链接
+     * 例如通过attr("img[src]","abs:src")可获取网页中第一个图片的链接
      *
      * @param cssSelector
      * @param attrName
-     * @deprecated 已废弃，使用attrs代替
      * @return
      */
-    @Deprecated
-    public ArrayList<String> getAttrs(String cssSelector, String attrName) {
-        return attrs(cssSelector, attrName);
+    public String attr(String cssSelector, String attrName) {
+        return select(cssSelector).attr(attrName);
     }
 
-    /**
-     * use Links links(String cssSelector) instead
-     * 获取满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接 例如我们想抽取id为content的div中的所有超链接，这里
-     * 就要将cssSelector定义为div[id=content] a
-     *
-     * @param cssSelector
-     * @return
-     */
-    @Deprecated
-    public Links getLinks(String cssSelector) {
-        Links links = new Links().addBySelector(doc(), cssSelector);
+
+    public Links links(boolean parseImg) {
+        Links links = new Links().addFromElement(doc(),parseImg);
         return links;
     }
+
+    public Links links() {
+        return links(false);
+    }
+
+
     
         /**
      * 获取满足选择器的元素中的链接 选择器cssSelector必须定位到具体的超链接 例如我们想抽取id为content的div中的所有超链接，这里
@@ -138,15 +168,99 @@ public class Page {
      * @param cssSelector
      * @return
      */
+    public Links links(String cssSelector, boolean parseSrc) {
+        Links links = new Links().addBySelector(doc(), cssSelector,parseSrc);
+        return links;
+    }
     public Links links(String cssSelector) {
-        Links links = new Links().addBySelector(doc(), cssSelector);
-        return links;
+        return links(cssSelector,false);
     }
-    
-    public Links links() {
-        Links links = new Links().addAllFromDocument(doc());
-        return links;
+
+
+
+
+    public Links regexLinks(RegexRule regexRule, boolean parseSrc) {
+        return new Links().addByRegex(doc(), regexRule, parseSrc);
     }
+    public Links regexLinks(String regex, boolean parseSrc){
+        return new Links().addByRegex(doc(),regex,parseSrc);
+    }
+
+    public Links regexLinks(RegexRule regexRule) {
+        return regexLinks(regexRule, false);
+    }
+    public Links regexLinks(String regex){
+        return regexLinks(regex,false);
+    }
+
+
+    public ArrayList<String> selectTextList(String cssSelector){
+        ArrayList<String> result = new ArrayList<String>();
+        Elements eles = select(cssSelector);
+        for(Element ele:eles){
+            result.add(ele.text());
+        }
+        return result;
+    }
+
+    public String selectText(String cssSelector, int index){
+        return ListUtils.getByIndex(selectTextList(cssSelector),index);
+    }
+    public String selectText(String cssSelector) {
+        return select(cssSelector).first().text();
+    }
+
+    public ArrayList<Integer> selectIntList(String cssSelector){
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        for(String text:selectTextList(cssSelector)){
+            result.add(Integer.valueOf(text.trim()));
+        }
+        return result;
+    }
+
+    public int selectInt(String cssSelector, int index){
+        String text = selectText(cssSelector,index).trim();
+        return Integer.valueOf(text);
+    }
+
+    public int selectInt(String cssSelector){
+        return selectInt(cssSelector,0);
+    }
+
+    public ArrayList<Double> selectDoubleList(String cssSelector){
+        ArrayList<Double> result = new ArrayList<Double>();
+        for(String text:selectTextList(cssSelector)){
+            result.add(Double.valueOf(text.trim()));
+        }
+        return result;
+    }
+
+    public double selectDouble(String cssSelector, int index){
+        String text = selectText(cssSelector,index).trim();
+        return Double.valueOf(text);
+    }
+
+    public double selectDouble(String cssSelector){
+        return selectDouble(cssSelector,0);
+    }
+
+    public ArrayList<Long> selectLongList(String cssSelector){
+        ArrayList<Long> result = new ArrayList<Long>();
+        for(String text:selectTextList(cssSelector)){
+            result.add(Long.valueOf(text.trim()));
+        }
+        return result;
+    }
+
+    public long selectLong(String cssSelector, int index){
+        String text = selectText(cssSelector,index).trim();
+        return Long.valueOf(text);
+    }
+
+    public long selectLong(String cssSelector){
+        return selectLong(cssSelector,0);
+    }
+
 
     public Elements select(String cssSelector) {
         return this.doc().select(cssSelector);
@@ -178,6 +292,17 @@ public class Page {
         return matcher.group(group);
     }
 
+    public String regexAndFormat(String regex, String format){
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(html());
+        matcher.find();
+        String[] strs = new String[matcher.groupCount()];
+        for(int i=0;i<matcher.groupCount();i++){
+            strs[i] = matcher.group(i+1);
+        }
+        return String.format(format, strs);
+    }
+
     public String regex(String regex, String defaultResult) {
         return regex(regex, 0, defaultResult);
     }
@@ -186,20 +311,18 @@ public class Page {
         return regex(regex, 0);
     }
 
-    public Page(CrawlDatum datum, HttpResponse response) {
+    public Page(CrawlDatum datum,
+                Integer code,
+                String contentType,
+                byte[] content){
+
         this.crawlDatum = datum;
-        this.response = response;
+        this.code = code;
+        this.contentType = contentType;
+        this.content = content;
     }
 
-    /**
-     * 返回网页/文件的内容
-     *
-     * @return 网页/文件的内容
-     */
-    @Deprecated
-    public byte[] getContent() {
-        return content();
-    }
+
 
     /**
      * 返回网页/文件的内容
@@ -207,21 +330,13 @@ public class Page {
      * @return 网页/文件的内容
      */
     public byte[] content() {
-        if (response == null) {
-            return null;
-        }
-        return response.content();
+        return content;
     }
 
-    /**
-     * 返回网页的url 已废弃，使用url()方法代替
-     *
-     * @return 网页的url
-     */
-    @Deprecated
-    public String getUrl() {
-        return url();
+    public void content(byte[] content){
+        this.content = content;
     }
+
 
     /**
      * 返回网页的url
@@ -232,15 +347,6 @@ public class Page {
         return crawlDatum.url();
     }
 
-    /**
-     * 返回网页的源码字符串 已废弃，使用html()方法代替
-     *
-     * @return 网页的源码字符串
-     */
-    @Deprecated
-    public String getHtml() {
-        return html();
-    }
 
     /**
      * 返回网页的源码字符串
@@ -252,17 +358,18 @@ public class Page {
             return html;
         }
 
-        if ((html = response.getHtml()) != null) {
-            return html;
-        }
-
-        if (content() == null) {
+        if (content == null) {
             return null;
         }
         if (charset == null) {
             charset = CharsetDetector.guessEncoding(content());
         }
-        html = response.decode(charset);
+        try {
+            html = new String(content, charset);
+        } catch (UnsupportedEncodingException e) {
+            LOG.info("Exception when decoding "+ key(),e);
+            return null;
+        }
         return html;
     }
 
@@ -271,8 +378,14 @@ public class Page {
      *
      * @param html 网页的源码字符串
      */
-    public void setHtml(String html) {
+    public void html(String html) {
         this.html = html;
+    }
+
+
+
+    public String contentType() {
+        return contentType;
     }
 
     /**
@@ -280,19 +393,6 @@ public class Page {
      *
      * @return 网页解析后的DOM树
      */
-    @Deprecated
-    public Document getDoc() {
-        return doc();
-    }
-
-    public List<String> header(String name) {
-        return response.header(name);
-    }
-
-    public String contentType() {
-        return response.contentType();
-    }
-
     public Document doc() {
         if (doc != null) {
             return doc;
@@ -312,27 +412,11 @@ public class Page {
      *
      * @param doc 网页解析后的DOM树
      */
-    public void setDoc(Document doc) {
+    public void doc(Document doc){
         this.doc = doc;
     }
 
-    public HttpResponse response() {
-        return response;
-    }
 
-    public void response(HttpResponse response) {
-        this.response = response;
-    }
-
-    @Deprecated
-    public HttpResponse getResponse() {
-        return response;
-    }
-
-    @Deprecated
-    public void setResponse(HttpResponse response) {
-        this.response = response;
-    }
 
     public Exception getException() {
         return exception;
@@ -350,24 +434,15 @@ public class Page {
         this.crawlDatum = crawlDatum;
     }
 
-    @Deprecated
-    public CrawlDatum getCrawlDatum() {
-        return crawlDatum;
+
+
+
+    public HashMap<String, String> meta() {
+        return crawlDatum.meta();
     }
 
-    @Deprecated
-    public void setCrawlDatum(CrawlDatum crawlDatum) {
-        this.crawlDatum = crawlDatum;
-    }
-
-    @Deprecated
-    public HashMap<String, String> getMetaData() {
-        return crawlDatum.getMetaData();
-    }
-
-    @Deprecated
-    public void setMetaData(HashMap<String, String> metaData) {
-        this.crawlDatum.setMetaData(metaData);
+    public void meta(HashMap<String, String> metaData) {
+        this.crawlDatum.meta(metaData);
     }
 
     public void meta(String key, String value) {
@@ -378,15 +453,6 @@ public class Page {
         return this.crawlDatum.meta(key);
     }
 
-    @Deprecated
-    public void setMetaData(String key, String value) {
-        meta(key, value);
-    }
-
-    @Deprecated
-    public String getMetaData(String key) {
-        return meta(key);
-    }
 
     public String charset() {
         if (charset == null) {
@@ -399,22 +465,25 @@ public class Page {
         this.charset = charset;
     }
 
-    @Deprecated
-    public String getCharset() {
-        return charset();
-    }
-
-    @Deprecated
-    public void setCharset(String charset) {
-        charset(charset);
-    }
 
     public String key() {
         return crawlDatum.key();
     }
 
-    public int code() {
-        return response.code();
+    public void code(int code){
+        this.code = code;
     }
 
+    public int code() {
+        return code;
+    }
+
+
+    public <T> T obj() {
+        return (T)obj;
+    }
+
+    public void obj(Object obj) {
+        this.obj = obj;
+    }
 }

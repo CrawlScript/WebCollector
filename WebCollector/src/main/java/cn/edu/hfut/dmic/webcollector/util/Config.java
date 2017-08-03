@@ -31,9 +31,12 @@ public class Config {
     /*最大连续重定向次数*/
     public static int MAX_REDIRECT = 2;
 
-    public static int TIMEOUT_CONNECT = 3000;
-    public static int TIMEOUT_READ = 10000;
+    public static long TIMEOUT_CONNECT = 3000;
+    public static long TIMEOUT_READ = 10000;
     public static int MAX_EXECUTE_COUNT = 10;
-    public static String DEFAULT_HTTP_METHOD = "GET";
+//    public static String DEFAULT_HTTP_METHOD = "GET";
+    public static int TOP_N = 0;
+
+    public static long EXECUTE_INTERVAL = 0;
 
 }

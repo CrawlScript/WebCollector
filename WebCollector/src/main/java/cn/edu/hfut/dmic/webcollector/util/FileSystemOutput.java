@@ -64,7 +64,7 @@ public class FileSystemOutput {
             path += query;
             File domain_path = new File(root, _URL.getHost());
             File f = new File(domain_path, path);
-            FileUtils.writeFileWithParent(f, page.getContent());
+            FileUtils.write(f, page.content());
             LOG.info("output " + f.getAbsolutePath());
         } catch (Exception ex) {
             LOG.info("Exception", ex);

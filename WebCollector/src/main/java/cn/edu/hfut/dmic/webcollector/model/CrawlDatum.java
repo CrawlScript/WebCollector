@@ -162,11 +162,11 @@ public class CrawlDatum implements Serializable {
         this.status = status;
     }
 
-    public HashMap<String, String> getMetaData() {
+    public HashMap<String, String> meta() {
         return metaData;
     }
 
-    public void setMetaData(HashMap<String, String> metaData) {
+    public void meta(HashMap<String, String> metaData) {
         this.metaData = metaData;
     }
 
@@ -191,6 +191,9 @@ public class CrawlDatum implements Serializable {
         return meta(key);
     }
 
+    public String briefInfo(){
+        return String.format("CrawlDatum: %s (URL: %s)",key(),url());
+    }
     
      public String key() {
         if (key == null) {
@@ -206,22 +209,7 @@ public class CrawlDatum implements Serializable {
     }
 
 
-     /**
-      * 
-      * @deprecated 使用key()代替
-      */
-    @Deprecated
-    public String getKey() {
-       return key();
-    }
 
-    /**
-     * @deprecated 使用key(String key)代替
-     */
-    @Deprecated
-    public CrawlDatum setKey(String key) {
-        return key(key);
-    }
 
 
     @Override

@@ -27,75 +27,31 @@ import java.util.Map.Entry;
  *
  * @author hu
  */
-public class RamGenerator implements Generator {
+public class RamGenerator extends Generator {
 
     RamDB ramDB;
-    protected int topN = -1;
-    protected int maxExecuteCount = Config.MAX_EXECUTE_COUNT;
 
     public RamGenerator(RamDB ramDB) {
         this.ramDB = ramDB;
-    }
-    public int totalGenerate = 0;
-    Iterator<Entry<String, CrawlDatum>> iterator;
-
-    @Override
-    public CrawlDatum next() {
-        if (topN >= 0) {
-            if (totalGenerate >= topN) {
-                return null;
-            }
-        }
-
-        while (true) {
-            if (iterator.hasNext()) {
-
-                CrawlDatum datum = iterator.next().getValue();
-
-                if (datum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS) {
-                    continue;
-                } else if (datum.getExecuteCount() > maxExecuteCount) {
-                    continue;
-                } else {
-                    totalGenerate++;
-                    return datum;
-                }
-
-            } else {
-                return null;
-            }
-
-        }
-    }
-
-    @Override
-    public void open() throws Exception {
-        totalGenerate = 0;
         iterator = ramDB.crawlDB.entrySet().iterator();
     }
 
-    @Override
-    public void setTopN(int topN) {
-        this.topN = topN;
-    }
-
-    public int getMaxExecuteCount() {
-        return maxExecuteCount;
-    }
+    Iterator<Entry<String, CrawlDatum>> iterator;
 
     @Override
-    public void setMaxExecuteCount(int maxExecuteCount) {
-        this.maxExecuteCount = maxExecuteCount;
-    }
-
-    @Override
-    public int getTotalGenerate() {
-        return totalGenerate;
+    public CrawlDatum nextWithoutFilter() throws Exception {
+        if(iterator.hasNext()){
+            CrawlDatum datum = iterator.next().getValue();
+            return datum;
+        }else{
+            return null;
+        }
     }
 
     @Override
     public void close() throws Exception {
 
     }
+
 
 }

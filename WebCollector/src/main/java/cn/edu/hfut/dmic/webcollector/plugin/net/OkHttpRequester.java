@@ -1,0 +1,111 @@
+package cn.edu.hfut.dmic.webcollector.plugin.net;
+
+import cn.edu.hfut.dmic.webcollector.conf.DefaultConfigured;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.net.Requester;
+import okhttp3.*;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
+
+public class OkHttpRequester extends DefaultConfigured implements Requester{
+
+
+
+    protected OkHttpClient client;
+
+    protected HashSet<Integer> successCodeSet;
+
+    public OkHttpRequester addSuccessCode(int successCode){
+        successCodeSet.add(successCode);
+        return this;
+    }
+    public OkHttpRequester removeSuccessCode(int successCode){
+        successCodeSet.remove(successCode);
+        return this;
+    }
+
+
+    protected HashSet<Integer> createSuccessCodeSet(){
+        HashSet<Integer> result = new HashSet<Integer>();
+        result.add(200);
+        result.add(301);
+        result.add(302);
+        result.add(404);
+        return result;
+    }
+
+
+
+    public OkHttpClient.Builder createOkHttpClientBuilder(){
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .followRedirects(false)
+                .followSslRedirects(false)
+                .connectTimeout(getConf().getConnectTimeout(), TimeUnit.MILLISECONDS)
+                .readTimeout(getConf().getReadTimeout(), TimeUnit.MILLISECONDS);
+        return builder;
+
+    }
+
+    public Request.Builder createRequestBuilder(CrawlDatum crawlDatum){
+        Request.Builder builder = new Request.Builder()
+                .header("User-Agent",getConf().getDefaultUserAgent())
+                .url(crawlDatum.url());
+        return builder;
+    }
+
+    public OkHttpRequester() {
+        successCodeSet = createSuccessCodeSet();
+        client = createOkHttpClientBuilder().build();
+    }
+
+    @Override
+    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
+        Request  request = createRequestBuilder(crawlDatum).build();
+        Response response = client.newCall(request).execute();
+
+        String contentType = null;
+        byte[] content = null;
+        String charset = null;
+
+        ResponseBody responseBody = response.body();
+        int code = response.code();
+        if(!successCodeSet.contains(code)){
+//            throw new IOException(String.format("Server returned HTTP response code: %d for URL: %s (CrawlDatum: %s)", code,crawlDatum.url(), crawlDatum.key()));
+            throw new IOException(String.format("Server returned HTTP response code: %d for %s", code, crawlDatum.briefInfo()));
+
+        }
+        if(responseBody != null){
+            content = responseBody.bytes();
+            MediaType mediaType = responseBody.contentType();
+            if(mediaType!=null){
+                contentType = mediaType.toString();
+                Charset responseCharset = mediaType.charset();
+                if(responseCharset!=null){
+                    charset = responseCharset.name();
+                }
+            }
+        }
+
+        Page page = new Page(
+                crawlDatum,
+                code,
+                contentType,
+                content
+                );
+        page.charset(charset);
+        page.obj(response);
+        return page;
+    }
+
+    public HashSet<Integer> getSuccessCodeSet() {
+        return successCodeSet;
+    }
+
+    public void setSuccessCodeSet(HashSet<Integer> successCodeSet) {
+        this.successCodeSet = successCodeSet;
+    }
+}

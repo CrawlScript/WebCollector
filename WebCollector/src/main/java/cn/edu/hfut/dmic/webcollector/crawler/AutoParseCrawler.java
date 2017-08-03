@@ -26,6 +26,7 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.net.Requester;
+import cn.edu.hfut.dmic.webcollector.util.ConfigurationUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class AutoParseCrawler extends Crawler implements Executor, Visitor, Requester {
+public abstract class AutoParseCrawler extends Crawler implements Executor, Visitor, Requester{
 
     public static final Logger LOG = LoggerFactory.getLogger(AutoParseCrawler.class);
 
@@ -50,15 +51,22 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
 
     public AutoParseCrawler(boolean autoParse) {
         this.autoParse = autoParse;
-        this.visitor = this;
         this.requester = this;
+        this.visitor = this;
         this.executor = this;
     }
 
     @Override
-    public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
+    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
         HttpRequest request = new HttpRequest(crawlDatum);
-        return request.response();
+        return request.responsePage();
+    }
+
+    @Override
+    protected void registerOtherConfigurations() {
+        super.registerOtherConfigurations();
+        ConfigurationUtils.setTo(this, requester);
+        ConfigurationUtils.setTo(this, visitor);
     }
 
     /**
@@ -68,8 +76,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
 
     @Override
     public void execute(CrawlDatum datum, CrawlDatums next) throws Exception {
-        HttpResponse response = requester.getResponse(datum);
-        Page page = new Page(datum, response);
+        Page page = requester.getResponse(datum);
         visitor.visit(page, next);
         if (autoParse && !regexRule.isEmpty()) {
             parseLink(page, next);

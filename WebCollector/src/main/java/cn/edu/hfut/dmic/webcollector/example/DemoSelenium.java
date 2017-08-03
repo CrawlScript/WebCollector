@@ -24,8 +24,8 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BerkeleyDBManager;
 import java.util.List;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Level;
+//import org.apache.log4j.Logger;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
@@ -37,11 +37,11 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
  */
 public class DemoSelenium {
 
-    static {
-        //禁用Selenium的日志
-        Logger logger = Logger.getLogger("com.gargoylesoftware.htmlunit");
-        logger.setLevel(Level.OFF);
-    }
+//    static {
+//        //禁用Selenium的日志
+//        Logger logger = Logger.getLogger("com.gargoylesoftware.htmlunit");
+//        logger.setLevel(Level.OFF);
+//    }
 
     public static void main(String[] args) throws Exception {
         Executor executor = new Executor() {

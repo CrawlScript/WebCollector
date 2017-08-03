@@ -104,55 +104,7 @@ public class FileUtils {
         fos.close();
     }
 
-    @Deprecated
-    public static void writeFile(String fileName, String contentStr, String charset) throws FileNotFoundException, IOException {
-        byte[] content = contentStr.getBytes(charset);
-        FileOutputStream fos = new FileOutputStream(fileName);
-        fos.write(content);
-        fos.close();
-    }
 
-    @Deprecated
-    public static void writeFile(File file, String contentStr, String charset) throws FileNotFoundException, IOException {
-        byte[] content = contentStr.getBytes(charset);
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
-    }
-
-    @Deprecated
-    public static void writeFileWithParent(String fileName, String contentStr, String charset) throws FileNotFoundException, IOException {
-        write(fileName, contentStr, charset);
-    }
-
-    @Deprecated
-    public static void writeFileWithParent(File file, String contentStr, String charset) throws FileNotFoundException, IOException {
-        write(file, contentStr, charset);
-    }
-
-    @Deprecated
-    public static void writeFile(String fileName, byte[] content) throws FileNotFoundException, IOException {
-        FileOutputStream fos = new FileOutputStream(fileName);
-        fos.write(content);
-        fos.close();
-    }
-
-    @Deprecated
-    public static void writeFile(File file, byte[] content) throws FileNotFoundException, IOException {
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(content);
-        fos.close();
-    }
-
-    @Deprecated
-    public static void writeFileWithParent(String fileName, byte[] content) throws FileNotFoundException, IOException {
-        write(fileName, content);
-    }
-
-    @Deprecated
-    public static void writeFileWithParent(File file, byte[] content) throws FileNotFoundException, IOException {
-        write(file,content);
-    }
     
      public static byte[] read(File file) throws IOException {
         FileInputStream fis = new FileInputStream(file);
@@ -191,41 +143,5 @@ public class FileUtils {
     }
     
 
-    @Deprecated
-    public static byte[] readFile(File file) throws IOException {
-        FileInputStream fis = new FileInputStream(file);
-        byte[] buf = new byte[2048];
-        int read;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((read = fis.read(buf)) != -1) {
-            bos.write(buf, 0, read);
-        }
-
-        fis.close();
-        return bos.toByteArray();
-    }
-    @Deprecated
-    public static byte[] readFile(String fileName) throws IOException {
-        File file = new File(fileName);
-        return readFile(file);
-    }
-    @Deprecated
-    public static String readFile(File file, String charset) throws Exception {
-        FileInputStream fis = new FileInputStream(file);
-        byte[] buf = new byte[2048];
-        int read;
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        while ((read = fis.read(buf)) != -1) {
-            bos.write(buf, 0, read);
-        }
-
-        fis.close();
-        return new String(bos.toByteArray(), charset);
-    }
-    @Deprecated
-    public static String readFile(String fileName, String charset) throws Exception {
-        File file = new File(fileName);
-        return readFile(file, charset);
-    }
 
 }
