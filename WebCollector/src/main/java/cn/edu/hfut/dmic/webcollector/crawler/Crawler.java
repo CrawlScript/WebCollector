@@ -93,8 +93,7 @@ public class Crawler extends DefaultConfigured {
         LOG.info(this.toString());
 
         //register dbmanager conf
-        ConfigurationUtils.setTo(this, dbManager);
-        ConfigurationUtils.setTo(this, executor);
+        ConfigurationUtils.setTo(this, dbManager, executor, nextFilter);
 
         registerOtherConfigurations();
 

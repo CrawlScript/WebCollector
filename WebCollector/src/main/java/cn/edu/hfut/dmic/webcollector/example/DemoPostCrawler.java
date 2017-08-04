@@ -21,10 +21,10 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
-import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
+import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
 
 /**
  * 本教程演示了如何自定义http请求
@@ -80,8 +80,8 @@ public class DemoPostCrawler extends BreadthCrawler {
     @Override
     public void visit(Page page, CrawlDatums next) {
         String jsonStr = page.html();
-        JSONObject json = new JSONObject(jsonStr);
-        System.out.println("JSON信息：" + json);
+        JsonObject jsonObject = GsonUtils.parse(jsonStr).getAsJsonObject();
+        System.out.println("JSON信息：" + jsonObject);
     }
 
     /**

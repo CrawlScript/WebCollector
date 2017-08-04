@@ -11,11 +11,14 @@ public class ConfigurationUtils {
 //        }
 //    }
 
-    public static void setTo(Configured from, Object target){
-        if(target instanceof Configured){
-            Configured configuredTarget = (Configured) target;
-            configuredTarget.setConf(from.getConf());
+    public static void setTo(Configured from, Object... targets){
+        for(Object target:targets){
+            if(target instanceof Configured){
+                Configured configuredTarget = (Configured) target;
+                configuredTarget.setConf(from.getConf());
+            }
         }
+
     }
 
 }

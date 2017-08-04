@@ -20,14 +20,14 @@ package cn.edu.hfut.dmic.webcollector.model;
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
 import cn.edu.hfut.dmic.webcollector.util.ListUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public class Page {
+public class Page implements MetaGetter, MetaSetter<Page>{
 
     public static final Logger LOG = LoggerFactory.getLogger(Page.class);
 
@@ -93,28 +93,28 @@ public class Page {
         return Pattern.matches(contentTypeRegex, contentType());
     }
 
-    public JSONObject jsonObject(){
-        return new JSONObject(html());
+    public JsonObject jsonObject(){
+        return GsonUtils.parse(html()).getAsJsonObject();
     }
 
-    public JSONArray jsonArray(){
-        return new JSONArray(html());
+    public JsonArray jsonArray(){
+        return GsonUtils.parse(html()).getAsJsonArray();
     }
 
-    public JSONObject regexJSONObject(String regex){
-        return new JSONObject(regex(regex));
+    public JsonObject regexJSONObject(String regex){
+        return GsonUtils.parse(regex(regex)).getAsJsonObject();
     }
 
-    public JSONObject regexJSONObject(String regex, int group){
-        return new JSONObject(regex(regex, group));
+    public JsonObject regexJSONObject(String regex, int group){
+        return GsonUtils.parse(regex(regex, group)).getAsJsonObject();
     }
 
-    public JSONArray regexJSONArray(String regex){
-        return new JSONArray(regex(regex));
+    public JsonArray regexJSONArray(String regex){
+        return GsonUtils.parse(regex(regex)).getAsJsonArray();
     }
 
-    public JSONArray regexJSONArray(String regex, int group){
-        return new JSONArray(regex(regex, group));
+    public JsonArray regexJSONArray(String regex, int group){
+        return GsonUtils.parse(regex(regex, group)).getAsJsonArray();
     }
 
 
@@ -437,21 +437,44 @@ public class Page {
 
 
 
-    public HashMap<String, String> meta() {
+    public JsonObject meta() {
         return crawlDatum.meta();
     }
 
-    public void meta(HashMap<String, String> metaData) {
-        this.crawlDatum.meta(metaData);
-    }
-
-    public void meta(String key, String value) {
-        this.crawlDatum.meta(key, value);
-    }
-
+    @Override
     public String meta(String key) {
-        return this.crawlDatum.meta(key);
+        return crawlDatum.meta(key);
     }
+
+    @Override
+    public int metaAsInt(String key) {
+        return crawlDatum.metaAsInt(key);
+    }
+
+    @Override
+    public boolean metaAsBoolean(String key) {
+        return crawlDatum.metaAsBoolean(key);
+    }
+
+    @Override
+    public double metaAsDouble(String key) {
+        return crawlDatum.metaAsDouble(key);
+    }
+
+    @Override
+    public long metaAsLong(String key) {
+        return crawlDatum.metaAsLong(key);
+    }
+
+//    public void meta(HashMap<String, String> metaData) {
+//        this.crawlDatum.meta(metaData);
+//    }
+//
+//    public void meta(String key, String value) {
+//        this.crawlDatum.meta(key, value);
+//    }
+
+
 
 
     public String charset() {
@@ -485,5 +508,41 @@ public class Page {
 
     public void obj(Object obj) {
         this.obj = obj;
+    }
+
+    @Override
+    public Page meta(JsonObject metaData) {
+        crawlDatum.meta(metaData);
+        return this;
+    }
+
+    @Override
+    public Page meta(String key, String value) {
+        crawlDatum.meta(key,value);
+        return this;
+    }
+
+    @Override
+    public Page meta(String key, int value) {
+        crawlDatum.meta(key,value);
+        return this;
+    }
+
+    @Override
+    public Page meta(String key, boolean value) {
+        crawlDatum.meta(key,value);
+        return this;
+    }
+
+    @Override
+    public Page meta(String key, double value) {
+        crawlDatum.meta(key,value);
+        return this;
+    }
+
+    @Override
+    public Page meta(String key, long value) {
+        crawlDatum.meta(key,value);
+        return this;
     }
 }

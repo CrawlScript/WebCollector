@@ -39,9 +39,7 @@ public abstract class DBManager extends DefaultConfigured implements Injector, S
         Generator generator = createGenerator();
         generator.setFilter(generatorFilter);
 
-        ConfigurationUtils.setTo(this, generator);
-        ConfigurationUtils.setTo(this, generatorFilter);
-
+        ConfigurationUtils.setTo(this, generator, generatorFilter);
         return generator;
     }
 

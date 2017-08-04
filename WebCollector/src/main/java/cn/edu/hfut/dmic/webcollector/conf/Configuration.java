@@ -31,6 +31,21 @@ public class Configuration{
         return this;
     }
 
+    public String getString(String key){
+        return get(key);
+    }
+    public Boolean getBoolean(String key){ return get(key); }
+    public Integer getInteger(String key){
+        return get(key);
+    }
+    public Long getLong(String key){
+        return get(key);
+    }
+    public Double getDouble(String key){
+        return get(key);
+    }
+
+
     public <T> T get(String key){
         return (T)data.get(key);
     }

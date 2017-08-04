@@ -22,8 +22,12 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map.Entry;
-import org.json.JSONArray;
-import org.json.JSONObject;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 
 /**
  * @author hu
@@ -55,42 +59,44 @@ public class CrawlDatumFormater {
 
         int metaIndex = 0;
 
-        for (Entry<String, String> entry : datum.meta().entrySet()) {
+
+        for(Entry<String, JsonElement> entry: datum.meta().entrySet()){
             sb.append("\nMETA").append("[").append(metaIndex++).append("]:(")
                     .append(entry.getKey()).append(",").append(entry.getValue()).append(")");
         }
+
+
         sb.append("\n");
         return sb.toString();
     }
 
-    public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String str) {
-        JSONArray jsonArray = new JSONArray(str);
+    public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String jsonStr) {
+        JsonArray jsonArray = GsonUtils.parse(jsonStr).getAsJsonArray();
+
         CrawlDatum crawlDatum = new CrawlDatum();
         crawlDatum.key(crawlDatumKey);
-        crawlDatum.url(jsonArray.getString(0));
-        crawlDatum.setStatus(jsonArray.getInt(1));
-        crawlDatum.setExecuteTime(jsonArray.getLong(2));
-        crawlDatum.setExecuteCount(jsonArray.getInt(3));
-        if (jsonArray.length() == 5) {
-            JSONObject metaJSONObject = jsonArray.getJSONObject(4);
-            for (Object keyObject : metaJSONObject.keySet()) {
-                String key = keyObject.toString();
-                String value = metaJSONObject.getString(key);
-                crawlDatum.meta(key, value);
-            }
+        crawlDatum.url(jsonArray.get(0).getAsString());
+        crawlDatum.setStatus(jsonArray.get(1).getAsInt());
+        crawlDatum.setExecuteTime(jsonArray.get(2).getAsLong());
+        crawlDatum.setExecuteCount(jsonArray.get(3).getAsInt());
+        if (jsonArray.size() == 5) {
+            JsonObject metaJsonObject = jsonArray.get(4).getAsJsonObject();
+            crawlDatum.meta(metaJsonObject);
         }
         return crawlDatum;
     }
 
     public static String datumToJsonStr(CrawlDatum datum) {
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(datum.url());
-        jsonArray.put(datum.getStatus());
-        jsonArray.put(datum.getExecuteTime());
-        jsonArray.put(datum.getExecuteCount());
-        if (!datum.meta().isEmpty()) {
-            jsonArray.put(new JSONObject(datum.meta()));
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(datum.url());
+        jsonArray.add(datum.getStatus());
+        jsonArray.add(datum.getExecuteTime());
+        jsonArray.add(datum.getExecuteCount());
+        if (datum.meta().size() > 0) {
+            jsonArray.add(datum.meta());
         }
+
         return jsonArray.toString();
     }
 

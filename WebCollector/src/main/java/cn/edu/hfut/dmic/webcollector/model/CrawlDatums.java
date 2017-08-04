@@ -17,6 +17,8 @@
  */
 package cn.edu.hfut.dmic.webcollector.model;
 
+import com.google.gson.JsonObject;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +28,7 @@ import java.util.LinkedList;
  *
  * @author hu
  */
-public class CrawlDatums implements Iterable<CrawlDatum> {
+public class CrawlDatums implements Iterable<CrawlDatum>, MetaSetter<CrawlDatums> {
 
     protected LinkedList<CrawlDatum> dataList = new LinkedList<CrawlDatum>();
 
@@ -112,12 +114,54 @@ public class CrawlDatums implements Iterable<CrawlDatum> {
 //        return add(datum);
 //    }
 
+    @Override
+    public CrawlDatums meta(JsonObject metaData) {
+        for(CrawlDatum datum:dataList){
+            datum.meta(metaData);
+        }
+        return this;
+    }
+
+    @Override
     public CrawlDatums meta(String key, String value) {
         for (CrawlDatum datum : dataList) {
             datum.meta(key, value);
         }
         return this;
     }
+
+    @Override
+    public CrawlDatums meta(String key, int value) {
+        for (CrawlDatum datum : dataList) {
+            datum.meta(key, value);
+        }
+        return this;
+    }
+
+    @Override
+    public CrawlDatums meta(String key, boolean value) {
+        for (CrawlDatum datum : dataList) {
+            datum.meta(key, value);
+        }
+        return this;
+    }
+
+    @Override
+    public CrawlDatums meta(String key, double value) {
+        for (CrawlDatum datum : dataList) {
+            datum.meta(key, value);
+        }
+        return this;
+    }
+
+    @Override
+    public CrawlDatums meta(String key, long value) {
+        for (CrawlDatum datum : dataList) {
+            datum.meta(key, value);
+        }
+        return this;
+    }
+
 
     @Override
     public Iterator<CrawlDatum> iterator() {
