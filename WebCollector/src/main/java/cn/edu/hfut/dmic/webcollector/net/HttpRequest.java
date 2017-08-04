@@ -56,8 +56,8 @@ public class HttpRequest{
     protected boolean doinput = true;
     protected boolean dooutput = true;
     protected boolean followRedirects = false;
-    protected int timeoutForConnect = defaultConf.getConnectTimeout().intValue();
-    protected int timeoutForRead = defaultConf.getReadTimeout().intValue();
+    protected int timeoutForConnect = defaultConf.getConnectTimeout();
+    protected int timeoutForRead = defaultConf.getReadTimeout();
     protected byte[] outputData=null;
     protected String userAgent = defaultConf.getDefaultUserAgent();
     Proxy proxy = null;
@@ -208,6 +208,7 @@ public class HttpRequest{
 
         con.setDoInput(doinput);
         con.setDoOutput(dooutput);
+
 
         con.setConnectTimeout(timeoutForConnect);
         con.setReadTimeout(timeoutForRead);

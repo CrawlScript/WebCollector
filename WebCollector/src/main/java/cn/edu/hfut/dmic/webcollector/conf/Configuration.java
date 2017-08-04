@@ -89,39 +89,39 @@ public class Configuration{
         return get(KEY_MAX_EXECUTE_COUNT);
     }
 
-    public Configuration setConnectTimeout(Long connectTimeOut){
+    public Configuration setConnectTimeout(Integer connectTimeOut){
         return set(KEY_CONNECT_TIMEOUT, connectTimeOut);
     }
-    public Long getConnectTimeout(){
+    public Integer getConnectTimeout(){
         return get(KEY_CONNECT_TIMEOUT);
     }
 
-    public Configuration setReadTimeout(Long connectTimeOut){
+    public Configuration setReadTimeout(Integer connectTimeOut){
         return set(KEY_READ_TIMEOUT, connectTimeOut);
     }
-    public Long getReadTimeout(){
+    public Integer getReadTimeout(){
         return get(KEY_READ_TIMEOUT);
     }
 
-    public Long getExecuteInterval(){
+    public Integer getExecuteInterval(){
         return get(KEY_EXECUTE_INTERVAL);
     }
-    public Configuration setExecuteInterval(Long executeInterval){
+    public Configuration setExecuteInterval(Integer executeInterval){
         return set(KEY_EXECUTE_INTERVAL, executeInterval);
     }
 
-    public Long getThreadKiller(){
+    public Integer getThreadKiller(){
         return get(KEY_THREAD_KILLER);
     }
 
-    public Configuration setThreadKiller(Long threadKiller){
+    public Configuration setThreadKiller(Integer threadKiller){
         return set(KEY_THREAD_KILLER, threadKiller);
     }
 
-    public Long getWaitThreadEndTime(){
+    public Integer getWaitThreadEndTime(){
         return get(KEY_WAIT_THREAD_END_TIME);
     }
-    public Configuration setWaitThreadEndTime(Long waitThreadEndTime){
+    public Configuration setWaitThreadEndTime(Integer waitThreadEndTime){
         return set(KEY_WAIT_THREAD_END_TIME, waitThreadEndTime);
     }
 
