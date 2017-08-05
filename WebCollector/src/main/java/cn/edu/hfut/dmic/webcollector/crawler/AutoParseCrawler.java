@@ -69,6 +69,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
         ConfigurationUtils.setTo(this, visitor);
     }
 
+
     /**
      * URL正则约束
      */

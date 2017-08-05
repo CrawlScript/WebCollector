@@ -6,7 +6,7 @@
 
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.55</version>
+    <version>2.60-alpha</version>
     <description>A java crawler for information collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
@@ -209,6 +209,13 @@
     </build>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.avro/avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
