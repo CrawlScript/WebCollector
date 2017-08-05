@@ -234,7 +234,7 @@ AutoParseCrawler is also an Executor plugin, a Requester plugin and a Visitor pl
 
 ## Customizing Requester Plugin
 
-Creating a Requester plugin is very easy. You just need to create a new class which implements Requester interface and implement the `Page getResponse(CrawlDatum crawlDatum)` method of the class. OkHttpRequester is a Requester Plugin provided by WebCollector. You can find the code here.
+Creating a Requester plugin is very easy. You just need to create a new class which implements Requester interface and implement the `Page getResponse(CrawlDatum crawlDatum)` method of the class. [OkHttpRequester](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java) is a Requester Plugin provided by WebCollector. You can find the code here: [OkHttpRequester.class](https://github.com/CrawlScript/WebCollector/blob/master/WebCollector/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java).
 
 Most of the time, you don't need to write a Requester plugin from the scratch. Creating a Requester plugin by extending the OkHttpRequester is a convenient way.
 
