@@ -79,8 +79,7 @@ public class DemoPostCrawler extends BreadthCrawler {
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-        String jsonStr = page.html();
-        JsonObject jsonObject = GsonUtils.parse(jsonStr).getAsJsonObject();
+        JsonObject jsonObject = page.jsonObject();
         System.out.println("JSON信息：" + jsonObject);
     }
 
