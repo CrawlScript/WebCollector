@@ -95,7 +95,8 @@ public class AutoNewsCrawler extends BreadthCrawler {
 
             /*If you want to add urls to crawl,add them to nextLink*/
             /*WebCollector automatically filters links that have been fetched before*/
-            /*If autoParse is true and the link you add to nextLinks does not match the regex rules,the link will also been filtered.*/
+            /*If autoParse is true and the link you add to nextLinks does not match the 
+              regex rules,the link will also been filtered.*/
             //next.add("http://xxxxxx.com");
         }
     }
