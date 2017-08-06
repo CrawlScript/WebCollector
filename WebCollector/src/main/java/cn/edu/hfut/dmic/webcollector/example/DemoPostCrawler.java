@@ -22,7 +22,6 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
 import com.google.gson.JsonObject;
 
 

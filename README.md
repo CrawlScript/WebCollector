@@ -23,7 +23,7 @@ WebCollector is an open source web crawler framework based on Java.It provides
 <dependency>
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.52</version>
+    <version>2.70</version>
 </dependency>
 ```
 
@@ -241,11 +241,11 @@ Most of the time, you don't need to write a Requester plugin from the scratch. C
     
 ## Configuration Details
 
-Configuration mechanism of WebCollector is redesigned in version 2.60. The above example [ManualNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/ManualNewsCrawler.java) also shows how to use configuration to customize your crawler.
+Configuration mechanism of WebCollector is redesigned in version 2.70. The above example [ManualNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/ManualNewsCrawler.java) also shows how to use configuration to customize your crawler.
 
-Before version 2.60, configuration is maintained by static variables in class `cn.edu.hfut.dmic.webcollector.util.Config`, hence it's cumbersome to assign different configurations to different crawlers.
+Before version 2.70, configuration is maintained by static variables in class `cn.edu.hfut.dmic.webcollector.util.Config`, hence it's cumbersome to assign different configurations to different crawlers.
 
-Since version 2.60, each crawler can has its own configuration. You can use `crawler.getConf()` to get it or `crawler.setConf(xxx)` to set it. By default, all crawlers use a singleton default configuration, which could be get by Configuration.getDefault(). So in the above example [ManualNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/ManualNewsCrawler.java), `crawler.getConf().set("xxx", "xxx")` would affect the default configuration, which may be used by other crawlers.
+Since version 2.70, each crawler can has its own configuration. You can use `crawler.getConf()` to get it or `crawler.setConf(xxx)` to set it. By default, all crawlers use a singleton default configuration, which could be get by Configuration.getDefault(). So in the above example [ManualNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/ManualNewsCrawler.java), `crawler.getConf().set("xxx", "xxx")` would affect the default configuration, which may be used by other crawlers.
 
 If you want to change the configuration of a crawler without affecting other crawlers, you should manually create a configuration and specify it to the crawler. For example:
 

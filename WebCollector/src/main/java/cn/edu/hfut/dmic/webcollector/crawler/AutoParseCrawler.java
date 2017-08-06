@@ -24,7 +24,6 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
-import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
 import cn.edu.hfut.dmic.webcollector.net.Requester;
 import cn.edu.hfut.dmic.webcollector.util.ConfigurationUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
@@ -44,8 +43,6 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
      * 是否自动抽取符合正则的链接并加入后续任务
      */
     protected boolean autoParse = true;
-    protected boolean parseImg = false;
-
     protected Visitor visitor;
     protected Requester requester;
 
@@ -94,7 +91,7 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
         if (conteType != null && conteType.contains("text/html")) {
             Document doc = page.doc();
             if (doc != null) {
-                Links links = new Links().addByRegex(doc, regexRule,parseImg);
+                Links links = new Links().addByRegex(doc, regexRule, getConf().getAutoDetectImg());
                 next.add(links);
             }
         }
@@ -171,13 +168,5 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
         this.requester = requester;
     }
 
-    public boolean isParseImg() {
-        return parseImg;
-    }
-
-    public void setParseImg(boolean parseImg) {
-        this.parseImg = parseImg;
-    }
-    
     
 }

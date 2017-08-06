@@ -20,6 +20,9 @@ package cn.edu.hfut.dmic.webcollector.util;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author hu
+ */
 public class FileIdGenerator {
     protected File baseDir;
     protected AtomicInteger lastId;
