@@ -202,6 +202,43 @@ There are some differences between CrawlDatum and url:
 + A CrawlDatum contains a key and a url. The key is the url by default. You can set the key manually by CrawlDatum.key("xxxxx") so that CrawlDatums with the same url may have different keys. This is very useful in some tasks like crawling data by api, which often request different data by the same url with different post parameters.
 + A CrawlDatum may contain metadata, which could maintain some information besides the url. 
 
+## Manually Detecting URLs
+
+In both `void visit(Page page, CrawlDatums next)` and `void execute(Page page, CrawlDatums next)`, the second parameter `CrawlDatum next` is a container which you should put the detected URLs in:
+
+```java
+//add one detected URL
+next.add("detected URL");
+//add one detected URL and set its type
+next.add("detected URL", "type");
+//add one detected URL
+next.add(new CrawlDatum("detected URL"));
+//add detected URLs
+next.add("detected URL list");
+//add detected URLs
+next.add(("detected URL list","type");
+//add detected URLs
+next.add(new CrawlDatums("detected URL list"));
+
+//add one detected URL and return the added URL(CrawlDatum)
+//and set its key and type
+next.addAndReturn("detected URL").key("key").type("type");
+//add detected URLs and return the added URLs(CrawlDatums)
+//and set their type and meta info
+next.addAndReturn("detected URL list").type("type").meta("page_num",10);
+
+//add detected URL and return next
+//and modify the type and meta info of all the CrawlDatums in next,
+//including the added URL
+next.add("detected URL").type("type").meta("page_num", 10);
+//add detected URLs and return next
+//and modify the type and meta info of all the CrawlDatums in next,
+//including the added URLs
+next.add("detected URL list").type("type").meta("page_num", 10);
+```
+
+You don't need to consider how to filter duplicated URLs, the crawler will filter them automatically.
+
 ## Plugins
 
 Plugins provide a large part of the functionality of WebCollector. There are several kinds of plugins:
