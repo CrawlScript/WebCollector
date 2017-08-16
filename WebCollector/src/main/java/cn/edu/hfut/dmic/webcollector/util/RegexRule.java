@@ -111,20 +111,20 @@ public class RegexRule {
      */
     public boolean satisfy(String str) {
 
-        int state = 0;
         for (String nregex : negative) {
             if (Pattern.matches(nregex, str)) {
                 return false;
             }
         }
 
-        int count = 0;
+        boolean isMatch = false;
         for (String pregex : positive) {
             if (Pattern.matches(pregex, str)) {
-                count++;
+                isMatch = true;
+                break;
             }
         }
-        if (count == 0) {
+        if (!isMatch) {
             return false;
         } else {
             return true;
