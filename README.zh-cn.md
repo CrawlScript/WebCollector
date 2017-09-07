@@ -29,7 +29,7 @@ WebCollector 2.x版本特性：
 <dependency>
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.70</version>
+    <version>2.71</version>
 </dependency>
 ```
 

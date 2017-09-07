@@ -18,7 +18,10 @@
 package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
+import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.io.Serializable;
@@ -184,7 +187,7 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
     @Override
     public String meta(String key){
         JsonElement value = metaData.get(key);
-        return (value==null)?null:value.getAsString();
+        return (value==null || (value instanceof JsonNull))?null:value.getAsString();
     }
 
     @Override
