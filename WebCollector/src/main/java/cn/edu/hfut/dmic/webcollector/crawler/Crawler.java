@@ -43,6 +43,11 @@ public class Crawler extends DefaultConfigured {
     }
 
     /**
+     * depth阈值
+     */
+    private static final int DEPTH_FLAG = 10;
+
+    /**
      * 根据任务管理器和执行器构造爬虫
      *
      * @param dbManager 任务管理器
@@ -91,6 +96,10 @@ public class Crawler extends DefaultConfigured {
     public void start(int depth) throws Exception {
 
         LOG.info(this.toString());
+
+        if (depth >= DEPTH_FLAG) {
+            LOG.warn(" depth is too large that may cause OutOfMemoryError !");
+        }
 
         //register dbmanager conf
         ConfigurationUtils.setTo(this, dbManager, executor, nextFilter);
