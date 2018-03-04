@@ -182,31 +182,31 @@
             -->
 
 
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <tasks>
-                                <copy todir="${project.build.directory}/bin">
-                                    <fileset dir="${project.build.directory}">
-                                        <include name="*.jar"/>
-                                        <include name="*.sh"/>
-                                        <include name="*.bat"/>
-                                    </fileset>
-                                </copy>
+            <!--<plugin>-->
+                <!--<artifactId>maven-antrun-plugin</artifactId>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>package</phase>-->
+                        <!--<configuration>-->
+                            <!--<tasks>-->
+                                <!--<copy todir="${project.build.directory}/bin">-->
+                                    <!--<fileset dir="${project.build.directory}">-->
+                                        <!--<include name="*.jar"/>-->
+                                        <!--<include name="*.sh"/>-->
+                                        <!--<include name="*.bat"/>-->
+                                    <!--</fileset>-->
+                                <!--</copy>-->
 
-                                <zip basedir="${project.build.directory}/bin"
-                                     destfile="../webcollector-${project.version}-bin.zip"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                                <!--<zip basedir="${project.build.directory}/bin"-->
+                                     <!--destfile="../webcollector-${project.version}-bin.zip"/>-->
+                            <!--</tasks>-->
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>run</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
         </plugins>
 
