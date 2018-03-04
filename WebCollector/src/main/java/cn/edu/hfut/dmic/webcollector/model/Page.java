@@ -397,14 +397,14 @@ public class Page implements MetaGetter, MetaSetter<Page>{
         if (doc != null) {
             return doc;
         }
-        try {
-
-            this.doc = Jsoup.parse(html(), url());
-            return doc;
-        } catch (Exception ex) {
-            LOG.info("Exception", ex);
-            return null;
-        }
+        this.doc = Jsoup.parse(html(), url());
+        return doc;
+//        try {
+//
+//        } catch (Exception ex) {
+//            LOG.info("Exception", ex);
+//            return null;
+//        }
     }
 
     /**
