@@ -20,9 +20,13 @@ package cn.edu.hfut.dmic.webcollector.example;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.plugin.net.OkHttpRequester;
+import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 import com.google.gson.JsonObject;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 
 /**
@@ -42,39 +46,76 @@ public class DemoPostCrawler extends BreadthCrawler {
 
     /**
      * 
-     * 假设我们要爬取三个链接 1)http://www.A.com/index.php 需要POST，并且需要附带数据id=a
-     * 2)http://www.B.com/index.php?id=b 需要POST，不需要附带数据 3)http://www.C.com/
+     * 假设我们要爬取三个链接 1)http://www.A.com/index.php 需要POST，并需要POST表单数据username:John
+     * 2)http://www.B.com/index.php?age=10 需要POST，数据直接在URL中 ，不需要附带数据 3)http://www.C.com/
      * 需要GET
      */
-    public DemoPostCrawler(String crawlPath, boolean autoParse) {
+    public DemoPostCrawler(final String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
 
         addSeed(new CrawlDatum("http://www.A.com/index.php")
                 .meta("method", "POST")
-                .meta("outputData", "id=a"));
+                .meta("username", "John"));
         addSeed(new CrawlDatum("http://www.B.com/index.php")
                 .meta("method", "POST"));
         addSeed(new CrawlDatum("http://www.C.com/index.php")
                 .meta("method", "GET"));
+
+        setRequester(new OkHttpRequester(){
+            @Override
+            public Request.Builder createRequestBuilder(CrawlDatum crawlDatum) {
+                Request.Builder requestBuilder = super.createRequestBuilder(crawlDatum);
+                String method = crawlDatum.meta("method");
+
+                // 默认就是GET方式，直接返回原来的即可
+                if(method.equals("GET")){
+                    return requestBuilder;
+                }
+
+                if(method.equals("POST")){
+                    RequestBody requestBody;
+                    String username = crawlDatum.meta("username");
+                    // 如果没有表单数据username，POST的数据直接在URL中
+                    if(username == null){
+                        requestBody = RequestBody.create(null, new byte[]{});
+                    }else{
+                        // 根据meta构建POST表单数据
+                        requestBody = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("username", username)
+                                .build();
+                    }
+                    return requestBuilder.post(requestBody);
+                }
+
+                //执行这句会抛出异常
+                ExceptionUtils.fail("wrong method: " + method);
+                return null;
+            }
+        });
+
+
     }
 
-    @Override
-    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
-        HttpRequest request = new HttpRequest(crawlDatum.url());
 
-        request.setMethod(crawlDatum.meta("method"));
-        String outputData = crawlDatum.meta("outputData");
-        if (outputData != null) {
-            request.setOutputData(outputData.getBytes("utf-8"));
-        }
-        return request.responsePage();
-        /*
-        //通过下面方式可以设置Cookie、User-Agent等http请求头信息
-        request.setCookie("xxxxxxxxxxxxxx");
-        request.setUserAgent("WebCollector");
-        request.addHeader("xxx", "xxxxxxxxx");
-         */
-    }
+
+//    @Override
+//    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
+//        HttpRequest request = new HttpRequest(crawlDatum.url());
+//
+//        request.setMethod(crawlDatum.meta("method"));
+//        String outputData = crawlDatum.meta("outputData");
+//        if (outputData != null) {
+//            request.setOutputData(outputData.getBytes("utf-8"));
+//        }
+//        return request.responsePage();
+//        /*
+//        //通过下面方式可以设置Cookie、User-Agent等http请求头信息
+//        request.setCookie("xxxxxxxxxxxxxx");
+//        request.setUserAgent("WebCollector");
+//        request.addHeader("xxx", "xxxxxxxxx");
+//         */
+//    }
 
     @Override
     public void visit(Page page, CrawlDatums next) {

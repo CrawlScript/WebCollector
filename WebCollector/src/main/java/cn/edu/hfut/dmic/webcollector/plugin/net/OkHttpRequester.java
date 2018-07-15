@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hu
  */
-public class OkHttpRequester extends DefaultConfigured implements Requester{
+public class OkHttpRequester extends Requester{
 
 
 
@@ -99,9 +99,14 @@ public class OkHttpRequester extends DefaultConfigured implements Requester{
 
         ResponseBody responseBody = response.body();
         int code = response.code();
+        //设置重定向地址
+        crawlDatum.code(code);
+        crawlDatum.location(response.header("Location"));
+
         if(!successCodeSet.contains(code)){
 //            throw new IOException(String.format("Server returned HTTP response code: %d for URL: %s (CrawlDatum: %s)", code,crawlDatum.url(), crawlDatum.key()));
-            throw new IOException(String.format("Server returned HTTP response code: %d for %s", code, crawlDatum.briefInfo()));
+//            throw new IOException(String.format("Server returned HTTP response code: %d for %s", code, crawlDatum.briefInfo()));
+            throw new IOException(String.format("Server returned HTTP response code: %d", code));
 
         }
         if(responseBody != null){
@@ -118,7 +123,6 @@ public class OkHttpRequester extends DefaultConfigured implements Requester{
 
         Page page = new Page(
                 crawlDatum,
-                code,
                 contentType,
                 content
                 );

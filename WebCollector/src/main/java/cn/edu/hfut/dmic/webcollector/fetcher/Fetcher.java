@@ -254,18 +254,20 @@ public class Fetcher extends CommonConfigured{
                                 }
                                 next = filteredNext;
                             }
-                            LOG.info("done: " + crawlDatum.briefInfo());
-                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
+
+                            LOG.info(String.format("done: %s", crawlDatum.briefInfo()));
+
+                            crawlDatum.status(CrawlDatum.STATUS_DB_SUCCESS);
                         } catch (Exception ex) {
-                            LOG.info("failed: " + crawlDatum.briefInfo(), ex);
-                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_FAILED);
+                            LOG.info(String.format("failed: %s", crawlDatum.briefInfo()), ex);
+                            crawlDatum.status(CrawlDatum.STATUS_DB_FAILED);
                         }
 
                         crawlDatum.incrExecuteCount(1);
-                        crawlDatum.setExecuteTime(System.currentTimeMillis());
+                        crawlDatum.executeTime(System.currentTimeMillis());
                         try {
                             dbManager.writeFetchSegment(crawlDatum);
-                            if (crawlDatum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
+                            if (crawlDatum.status() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
                                 dbManager.writeParseSegment(next);
                             }
                         } catch (Exception ex) {

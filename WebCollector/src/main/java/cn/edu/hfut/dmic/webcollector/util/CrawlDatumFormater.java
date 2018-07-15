@@ -42,7 +42,7 @@ public class CrawlDatumFormater {
                 .append("\nURL: ").append(datum.url())
                 .append("\nSTATUS: ");
 
-        switch (datum.getStatus()) {
+        switch (datum.status()) {
             case CrawlDatum.STATUS_DB_SUCCESS:
                 sb.append("success");
                 break;
@@ -54,14 +54,20 @@ public class CrawlDatumFormater {
                 break;
         }
 
-        sb.append("\nExecuteTime:").append(sdf.format(new Date(datum.getExecuteTime())))
-                .append("\nExecuteCount:").append(datum.getExecuteCount());
+        sb.append("\nExecuteTime: ")
+                .append(sdf.format(new Date(datum.executeTime())))
+                .append("\nExecuteCount: ").append(datum.executeCount())
+                .append("Code: ").append(datum.code());
+
+        String location = datum.location();
+        if(location != null){
+            sb.append("Location: ").append(location);
+        }
 
         int metaIndex = 0;
 
-
         for(Entry<String, JsonElement> entry: datum.meta().entrySet()){
-            sb.append("\nMETA").append("[").append(metaIndex++).append("]:(")
+            sb.append("\nMETA").append("[").append(metaIndex++).append("]: (")
                     .append(entry.getKey()).append(",").append(entry.getValue()).append(")");
         }
 
@@ -70,34 +76,34 @@ public class CrawlDatumFormater {
         return sb.toString();
     }
 
-    public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String jsonStr) {
-        JsonArray jsonArray = GsonUtils.parse(jsonStr).getAsJsonArray();
+//    public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String jsonStr) {
+//        JsonArray jsonArray = GsonUtils.parse(jsonStr).getAsJsonArray();
+//
+//        CrawlDatum crawlDatum = new CrawlDatum();
+//        crawlDatum.key(crawlDatumKey);
+//        crawlDatum.url(jsonArray.get(0).getAsString());
+//        crawlDatum.setStatus(jsonArray.get(1).getAsInt());
+//        crawlDatum.setExecuteTime(jsonArray.get(2).getAsLong());
+//        crawlDatum.setExecuteCount(jsonArray.get(3).getAsInt());
+//        if (jsonArray.size() == 5) {
+//            JsonObject metaJsonObject = jsonArray.get(4).getAsJsonObject();
+//            crawlDatum.meta(metaJsonObject);
+//        }
+//        return crawlDatum;
+//    }
 
-        CrawlDatum crawlDatum = new CrawlDatum();
-        crawlDatum.key(crawlDatumKey);
-        crawlDatum.url(jsonArray.get(0).getAsString());
-        crawlDatum.setStatus(jsonArray.get(1).getAsInt());
-        crawlDatum.setExecuteTime(jsonArray.get(2).getAsLong());
-        crawlDatum.setExecuteCount(jsonArray.get(3).getAsInt());
-        if (jsonArray.size() == 5) {
-            JsonObject metaJsonObject = jsonArray.get(4).getAsJsonObject();
-            crawlDatum.meta(metaJsonObject);
-        }
-        return crawlDatum;
-    }
-
-    public static String datumToJsonStr(CrawlDatum datum) {
-
-        JsonArray jsonArray = new JsonArray();
-        jsonArray.add(datum.url());
-        jsonArray.add(datum.getStatus());
-        jsonArray.add(datum.getExecuteTime());
-        jsonArray.add(datum.getExecuteCount());
-        if (datum.meta().size() > 0) {
-            jsonArray.add(datum.meta());
-        }
-
-        return jsonArray.toString();
-    }
+//    public static String datumToJsonStr(CrawlDatum datum) {
+//
+//        JsonArray jsonArray = new JsonArray();
+//        jsonArray.add(datum.url());
+//        jsonArray.add(datum.getStatus());
+//        jsonArray.add(datum.getExecuteTime());
+//        jsonArray.add(datum.getExecuteCount());
+//        if (datum.meta().size() > 0) {
+//            jsonArray.add(datum.meta());
+//        }
+//
+//        return jsonArray.toString();
+//    }
 
 }

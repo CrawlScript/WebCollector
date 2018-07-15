@@ -17,13 +17,14 @@
  */
 package cn.edu.hfut.dmic.contentextractor;
 
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.edu.hfut.dmic.webcollector.plugin.net.OkHttpRequester;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -449,10 +450,12 @@ public class ContentExtractor {
         return getContentElementByDoc(doc);
     }
 
+    public static OkHttpRequester okHttpRequester = new OkHttpRequester();
+
     /*输入URL，获取正文所在Element*/
     public static Element getContentElementByUrl(String url) throws Exception {
-        HttpRequest request = new HttpRequest(url);
-        String html = request.response().decode();
+//        HttpRequest request = new HttpRequest(url);
+        String html = okHttpRequester.getResponse(url).html();
         return getContentElementByHtml(html, url);
     }
 
@@ -476,8 +479,9 @@ public class ContentExtractor {
 
     /*输入URL，获取正文文本*/
     public static String getContentByUrl(String url) throws Exception {
-        HttpRequest request = new HttpRequest(url);
-        String html = request.response().decode();
+//        HttpRequest request = new HttpRequest(url);
+//        String html = request.response().decode();
+        String html = okHttpRequester.getResponse(url).html();
         return getContentByHtml(html, url);
     }
 
@@ -501,8 +505,9 @@ public class ContentExtractor {
 
     /*输入URL，获取结构化新闻信息*/
     public static News getNewsByUrl(String url) throws Exception {
-        HttpRequest request = new HttpRequest(url);
-        String html = request.response().decode();
+//        HttpRequest request = new HttpRequest(url);
+//        String html = request.response().decode();
+        String html = okHttpRequester.getResponse(url).html();
         return getNewsByHtml(html, url);
     }
 

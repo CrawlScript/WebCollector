@@ -23,8 +23,8 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.net.HttpRequest;
 import cn.edu.hfut.dmic.webcollector.net.Requester;
+import cn.edu.hfut.dmic.webcollector.plugin.net.OkHttpRequester;
 import cn.edu.hfut.dmic.webcollector.util.ConfigurationUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import org.jsoup.nodes.Document;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author hu
  */
-public abstract class AutoParseCrawler extends Crawler implements Executor, Visitor, Requester{
+public abstract class AutoParseCrawler extends Crawler implements Executor, Visitor{
 
     public static final Logger LOG = LoggerFactory.getLogger(AutoParseCrawler.class);
 
@@ -48,16 +48,16 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
 
     public AutoParseCrawler(boolean autoParse) {
         this.autoParse = autoParse;
-        this.requester = this;
+        this.requester = new OkHttpRequester();
         this.visitor = this;
         this.executor = this;
     }
 
-    @Override
-    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
-        HttpRequest request = new HttpRequest(crawlDatum);
-        return request.responsePage();
-    }
+//    @Override
+//    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
+//        HttpRequest request = new HttpRequest(crawlDatum);
+//        return request.responsePage();
+//    }
 
     @Override
     protected void registerOtherConfigurations() {

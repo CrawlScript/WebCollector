@@ -17,6 +17,7 @@
  */
 package cn.edu.hfut.dmic.webcollector.net;
 
+import cn.edu.hfut.dmic.webcollector.conf.DefaultConfigured;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 
@@ -24,6 +25,11 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
  *
  * @author hu
  */
-public interface Requester {
-     public Page getResponse(CrawlDatum crawlDatum) throws Exception;
+public abstract class Requester extends DefaultConfigured {
+
+     public Page getResponse(String url) throws Exception {
+          return getResponse(new CrawlDatum(url));
+     }
+
+     public abstract Page getResponse(CrawlDatum crawlDatum) throws Exception;
 }

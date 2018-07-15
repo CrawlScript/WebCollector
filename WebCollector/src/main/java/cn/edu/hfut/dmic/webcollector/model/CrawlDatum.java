@@ -19,10 +19,7 @@ package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
 import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import java.io.Serializable;
 import java.util.regex.Pattern;
@@ -38,10 +35,19 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
     public final static int STATUS_DB_FAILED = 1;
     public final static int STATUS_DB_SUCCESS = 5;
 
+    // 未获取到http code时为-1
+    public final static int CODE_NOT_SET = -1;
+
     private String url = null;
     private long executeTime = System.currentTimeMillis();
 
-    //private int httpCode = -1;
+
+    private int code = CODE_NOT_SET;
+    // 如果有重定向，location会保存重定向的地址
+    private String location = null;
+
+
+
     private int status = STATUS_DB_UNEXECUTED;
     private int executeCount = 0;
     /**
@@ -116,6 +122,21 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return meta(META_KEY_TYPE, type);
     }
 
+    public int code() {
+        return code;
+    }
+
+    public void code(int code) {
+        this.code = code;
+    }
+
+    public String location() {
+        return location;
+    }
+
+    public void location(String location) {
+        this.location = location;
+    }
 
     public String url() {
         return url;
@@ -126,43 +147,43 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return this;
     }
 
-    /**
-     * @deprecated 已废弃，使用url()代替
-     */
-    @Deprecated
-    public String getUrl() {
-        return url();
-    }
+//    /**
+//     * @deprecated 已废弃，使用url()代替
+//     */
+//    @Deprecated
+//    public String getUrl() {
+//        return url();
+//    }
+//
+//    /**
+//     * @deprecated 使用url(String url)代替
+//     */
+//   @Deprecated
+//    public CrawlDatum setUrl(String url) {
+//        return url(url);
+//    }
 
-    /**
-     * @deprecated 使用url(String url)代替
-     */
-   @Deprecated
-    public CrawlDatum setUrl(String url) {
-        return url(url);
-    }
-
-    public long getExecuteTime() {
+    public long executeTime() {
         return executeTime;
     }
 
-    public void setExecuteTime(long fetchTime) {
+    public void executeTime(long fetchTime) {
         this.executeTime = fetchTime;
     }
 
-    public int getExecuteCount() {
+    public int executeCount() {
         return executeCount;
     }
 
-    public void setExecuteCount(int executeCount) {
+    public void executeCount(int executeCount) {
         this.executeCount = executeCount;
     }
 
-    public int getStatus() {
+    public int status() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void status(int status) {
         this.status = status;
     }
 
@@ -222,7 +243,17 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
 //    }
 
     public String briefInfo(){
-        return String.format("CrawlDatum: %s (URL: %s)",key(),url());
+        StringBuilder sb = new StringBuilder();
+        if(code != CODE_NOT_SET) {
+            sb.append("[").append(code);
+            if (location != null) {
+                sb.append(" -> ").append(location);
+            }
+            sb.append("] ");
+        }
+        sb.append("Key: ").append(key())
+                .append(" (URL: ").append(url()).append(")");
+        return sb.toString();
     }
     
      public String key() {
@@ -284,5 +315,36 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return this;
     }
 
+
+    public String asJsonArray() {
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(url());
+        jsonArray.add(status());
+        jsonArray.add(executeTime());
+        jsonArray.add(executeCount());
+        jsonArray.add(code());
+        jsonArray.add(location());
+        if (meta().size() > 0) {
+            jsonArray.add(meta());
+        }
+
+        return jsonArray.toString();
+    }
+
+    public static CrawlDatum fromJsonArray(String crawlDatumKey, JsonArray jsonArray) {
+//        JsonArray jsonArray = GsonUtils.parse(jsonStr).getAsJsonArray();
+        CrawlDatum crawlDatum = new CrawlDatum();
+        crawlDatum.key(crawlDatumKey);
+        crawlDatum.url(jsonArray.get(0).getAsString());
+        crawlDatum.status(jsonArray.get(1).getAsInt());
+        crawlDatum.executeTime(jsonArray.get(2).getAsLong());
+        crawlDatum.executeCount(jsonArray.get(3).getAsInt());
+        if (jsonArray.size() == 7) {
+            JsonObject metaJsonObject = jsonArray.get(6).getAsJsonObject();
+            crawlDatum.meta(metaJsonObject);
+        }
+        return crawlDatum;
+    }
 
 }

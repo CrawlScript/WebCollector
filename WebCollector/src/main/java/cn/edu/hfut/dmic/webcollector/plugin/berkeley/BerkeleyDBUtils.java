@@ -19,7 +19,8 @@
 package cn.edu.hfut.dmic.webcollector.plugin.berkeley;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
-import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
+import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
+import com.google.gson.JsonArray;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseEntry;
@@ -43,8 +44,8 @@ public class BerkeleyDBUtils {
     }
     
     public static void writeDatum(Database database,CrawlDatum datum) throws Exception{
-        String key=datum.key();
-        String value=CrawlDatumFormater.datumToJsonStr(datum);
+        String key = datum.key();
+        String value= datum.asJsonArray().toString();
         put(database,key,value);
     }
     
@@ -59,6 +60,7 @@ public class BerkeleyDBUtils {
      public static CrawlDatum createCrawlDatum(DatabaseEntry key,DatabaseEntry value) throws Exception{
         String datumKey=new String(key.getData(),"utf-8");
         String valueStr=new String(value.getData(),"utf-8");
-        return CrawlDatumFormater.jsonStrToDatum(datumKey, valueStr);
+        JsonArray datumJsonArray = GsonUtils.parse(valueStr).getAsJsonArray();
+        return CrawlDatum.fromJsonArray(datumKey, datumJsonArray);
     }
 }

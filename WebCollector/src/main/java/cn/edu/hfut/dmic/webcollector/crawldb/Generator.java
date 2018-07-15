@@ -61,7 +61,7 @@ public abstract class Generator extends DefaultConfigured{
                     return datum;
                 }
                 if(filter == null || (datum = filter.filter(datum))!=null){
-                    if (datum.getExecuteCount() > maxExecuteCount) {
+                    if (datum.executeCount() > maxExecuteCount) {
                         continue;
                     }
                     totalGenerate += 1;

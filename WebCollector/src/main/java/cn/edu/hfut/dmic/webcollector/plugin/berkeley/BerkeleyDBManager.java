@@ -87,7 +87,7 @@ public class BerkeleyDBManager extends DBManager {
                 return;
             }
         }
-        value = BerkeleyDBUtils.strToEntry(CrawlDatumFormater.datumToJsonStr(datum));
+        value = BerkeleyDBUtils.strToEntry(datum.asJsonArray().toString());
         database.put(null, key, value);
         database.close();
     }
@@ -104,7 +104,7 @@ public class BerkeleyDBManager extends DBManager {
                     continue;
                 }
             }
-            value = BerkeleyDBUtils.strToEntry(CrawlDatumFormater.datumToJsonStr(datum));
+            value = BerkeleyDBUtils.strToEntry(datum.asJsonArray().toString());
             database.put(null, key, value);
         }
         database.close();

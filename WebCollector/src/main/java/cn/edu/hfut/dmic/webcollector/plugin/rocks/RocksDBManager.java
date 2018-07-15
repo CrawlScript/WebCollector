@@ -78,7 +78,7 @@ public class RocksDBManager extends DBManager {
                 return;
             }
         }
-        RocksDBUtils.put(crawldbDatabase, key, CrawlDatumFormater.datumToJsonStr(datum));
+        RocksDBUtils.put(crawldbDatabase, key, datum.asJsonArray().toString());
         crawldbDatabase.close();
     }
 
@@ -94,7 +94,7 @@ public class RocksDBManager extends DBManager {
                     continue;
                 }
             }
-            RocksDBUtils.put(crawldbDatabase, key, CrawlDatumFormater.datumToJsonStr(datum));
+            RocksDBUtils.put(crawldbDatabase, key, datum.asJsonArray().toString());
         }
         crawldbDatabase.close();
     }

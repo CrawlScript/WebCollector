@@ -20,6 +20,8 @@ package cn.edu.hfut.dmic.webcollector.plugin.rocks;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
+import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
+import com.google.gson.JsonArray;
 import org.apache.commons.io.FilenameUtils;
 import org.rocksdb.Options;
 import org.rocksdb.RocksDB;
@@ -88,8 +90,8 @@ public class RocksDBUtils {
     }
     
     public static void writeDatum(RocksDB rocksDB,CrawlDatum datum) throws Exception{
-        String key=datum.key();
-        String value=CrawlDatumFormater.datumToJsonStr(datum);
+        String key = datum.key();
+        String value = datum.asJsonArray().toString();
         put(rocksDB, key, value);
     }
     
@@ -117,6 +119,7 @@ public class RocksDBUtils {
      public static CrawlDatum createCrawlDatum(byte[] key, byte[] value) throws Exception{
         String datumKey=new String(key,"utf-8");
         String valueStr=new String(value,"utf-8");
-        return CrawlDatumFormater.jsonStrToDatum(datumKey, valueStr);
+        JsonArray datumJsonArray = GsonUtils.parse(valueStr).getAsJsonArray();
+        return CrawlDatum.fromJsonArray(datumKey, datumJsonArray);
     }
 }

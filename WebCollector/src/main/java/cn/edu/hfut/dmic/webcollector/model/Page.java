@@ -47,7 +47,7 @@ public class Page implements MetaGetter, MetaSetter<Page>{
     private CrawlDatum crawlDatum = null;
 
     private String contentType;
-    private Integer code = null;
+
 
 
     private Exception exception = null;
@@ -312,12 +312,10 @@ public class Page implements MetaGetter, MetaSetter<Page>{
     }
 
     public Page(CrawlDatum datum,
-                Integer code,
                 String contentType,
                 byte[] content){
 
         this.crawlDatum = datum;
-        this.code = code;
         this.contentType = contentType;
         this.content = content;
     }
@@ -494,13 +492,15 @@ public class Page implements MetaGetter, MetaSetter<Page>{
         return crawlDatum.key();
     }
 
-    public void code(int code){
-        this.code = code;
-    }
 
     public int code() {
-        return code;
+        return crawlDatum.code();
     }
+
+    public String location(){
+        return crawlDatum.location();
+    }
+
 
 
     public <T> T obj() {

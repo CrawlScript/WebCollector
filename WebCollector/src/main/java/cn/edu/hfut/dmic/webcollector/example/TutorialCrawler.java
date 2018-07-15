@@ -51,6 +51,7 @@ public class TutorialCrawler extends BreadthCrawler {
         
         addSeed("https://blog.csdn.net/");
         addRegex("https://blog.csdn.net/.*/article/details/.*");
+        addRegex("-.*#.*");
         
         //需要抓取图片时设置为true，并加入图片的正则规则
 //        setParseImg(true);
@@ -75,9 +76,9 @@ public class TutorialCrawler extends BreadthCrawler {
     */
     @Override
     public void visit(Page page, CrawlDatums next) {
-        if (page.matchUrl("http://blog.csdn.net/.*/article/details/.*")) {
-            String title = page.select("div[class=article_title]").first().text();
-            String author = page.select("div[id=blog_userface]").first().text();
+        if (page.matchUrl("https://blog.csdn.net/.*/article/details/.*")) {
+            String title = page.select("h1.title-article").first().text();
+            String author = page.select("a#uid").first().text();
             System.out.println("title:" + title + "\tauthor:" + author);
         }
     }
