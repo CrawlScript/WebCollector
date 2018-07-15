@@ -67,9 +67,9 @@ public class DemoMetaCrawler extends RamCrawler {
         if(type.equals("taglist")){
             //可以确定抽取到的链接都指向内容页
             //因此为这些链接添加附加信息（meta）：type=content
-            next.add(page.links("table.tagCol td>a")).meta("type", "booklist");
+            next.addAndReturn(page.links("table.tagCol td>a")).meta("type", "booklist");
         }else if(type.equals("booklist")){
-            next.add(page.links("div.info>h2>a")).meta("type", "content");
+            next.addAndReturn(page.links("div.info>h2>a")).meta("type", "content");
         }else if(type.equals("content")){
             //处理内容页，抽取书名和豆瓣评分
             String title=page.select("h1>span").first().text();

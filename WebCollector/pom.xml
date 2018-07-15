@@ -182,37 +182,52 @@
             -->
 
 
-            <!--<plugin>-->
-                <!--<artifactId>maven-antrun-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>package</phase>-->
-                        <!--<configuration>-->
-                            <!--<tasks>-->
-                                <!--<copy todir="${project.build.directory}/bin">-->
-                                    <!--<fileset dir="${project.build.directory}">-->
-                                        <!--<include name="*.jar"/>-->
-                                        <!--<include name="*.sh"/>-->
-                                        <!--<include name="*.bat"/>-->
-                                    <!--</fileset>-->
-                                <!--</copy>-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <copy todir="${project.build.directory}/bin">
+                                    <fileset dir="${project.build.directory}">
+                                        <include name="*.jar"/>
+                                        <include name="*.sh"/>
+                                        <include name="*.bat"/>
+                                    </fileset>
+                                </copy>
 
-                                <!--<zip basedir="${project.build.directory}/bin"-->
-                                     <!--destfile="../webcollector-${project.version}-bin.zip"/>-->
-                            <!--</tasks>-->
-                        <!--</configuration>-->
-                        <!--<goals>-->
-                            <!--<goal>run</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
+                                <zip basedir="${project.build.directory}/bin"
+                                     destfile="../webcollector-${project.version}-bin.zip"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
 
     </build>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+            <version>5.14.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <!--<dependency>-->
+            <!--<groupId>commons-io</groupId>-->
+            <!--<artifactId>commons-io</artifactId>-->
+            <!--<version>2.6</version>-->
+        <!--</dependency>-->
+
+
         <!-- https://mvnrepository.com/artifact/org.apache.avro/avro -->
         <dependency>
             <groupId>org.apache.avro</groupId>
@@ -228,19 +243,14 @@
         </dependency>
 
 
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.mongodb/bson &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.mongodb</groupId>-->
-            <!--<artifactId>bson</artifactId>-->
-            <!--<version>3.4.2</version>-->
-        <!--</dependency>-->
+
 
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>org.mongodb</groupId>-->
-            <!--<artifactId>mongo-java-driver</artifactId>-->
-            <!--<version>3.4.2</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.4.2</version>
+        </dependency>
 
 
         <dependency>
@@ -249,11 +259,18 @@
             <version>3.8.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <!--<dependency>-->
+            <!--<groupId>org.jsoup</groupId>-->
+            <!--<artifactId>jsoup</artifactId>-->
+            <!--<version>1.10.3</version>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.10.3</version>
+            <version>1.11.3</version>
         </dependency>
+
 
 
         <dependency>
@@ -303,22 +320,18 @@
         </dependency>
 
 
-
         <!--
             下面这些dependency用于JS数据抓取(selenium)。
             如果希望使用这些功能，请将 <scope>provided</scope>删除，并重新构建项目。
             注意这些dependency大约有几十M，国内使用最好使用开源中国的maven镜像,详细方法
             参见：http://maven.oschina.net/help.html
         -->
-
-
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>3.4.0</version>
             <scope>provided</scope>
         </dependency>
-
 
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -328,8 +341,6 @@
             <version>5.1.43</version>
         </dependency>
 
-
-
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -337,15 +348,11 @@
             <version>4.3.10.RELEASE</version>
         </dependency>
 
-
-
-
         <dependency>
             <groupId>com.mchange</groupId>
             <artifactId>c3p0</artifactId>
             <version>0.9.5.2</version>
         </dependency>
-
 
     </dependencies>
 

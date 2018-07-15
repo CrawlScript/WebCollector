@@ -166,7 +166,11 @@ public class Fetcher extends CommonConfigured{
         @Override
         public void run(){
 
-            generator = dbManager.createGenerator(generatorFilter);
+            try {
+                generator = dbManager.createGenerator(generatorFilter);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             LOG.info("create generator:" + generator.getClass().getName());
             String generatorFilterClassName = (generatorFilter==null)?"null":generatorFilter.getClass().getName();
             LOG.info("use generatorFilter:" + generatorFilterClassName);

@@ -63,13 +63,15 @@ public class BerkeleyDBManager extends DBManager {
         DatabaseEntry value = new DatabaseEntry();
 
         while (cursor.getNext(key, value, LockMode.DEFAULT) == OperationStatus.SUCCESS) {
-            try {
-                CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
-                System.out.println(CrawlDatumFormater.datumToString(datum));
-            } catch (Exception ex) {
-                LOG.info("Exception when generating", ex);
-                continue;
-            }
+            CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+            System.out.println(CrawlDatumFormater.datumToString(datum));
+//            try {
+//                CrawlDatum datum = BerkeleyDBUtils.createCrawlDatum(key, value);
+//                System.out.println(CrawlDatumFormater.datumToString(datum));
+//            } catch (Exception ex) {
+//                LOG.info("Exception when generating", ex);
+//                continue;
+//            }
         }
 
     }
@@ -158,9 +160,11 @@ public class BerkeleyDBManager extends DBManager {
     public void closeSegmentWriter() throws Exception {
         if (fetchDatabase != null) {
             fetchDatabase.close();
+            fetchDatabase = null;
         }
         if (linkDatabase != null) {
             linkDatabase.close();
+            linkDatabase = null;
         }
        
     }

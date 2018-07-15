@@ -33,9 +33,9 @@ public abstract class DBManager extends DefaultConfigured implements Injector, S
 
     public abstract void clear() throws Exception;
 
-    public abstract Generator createGenerator();
+    public abstract Generator createGenerator() throws Exception;
 
-    public Generator createGenerator(GeneratorFilter generatorFilter){
+    public Generator createGenerator(GeneratorFilter generatorFilter) throws Exception {
         Generator generator = createGenerator();
         generator.setFilter(generatorFilter);
         generator.setTopN(getConf().getTopN());

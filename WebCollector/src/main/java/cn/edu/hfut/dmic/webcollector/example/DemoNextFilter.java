@@ -21,7 +21,7 @@ import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
 
 /**
  * WebCollector 2.x版本的tutorial(2.20以上) 2.x版本特性： 1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
@@ -43,7 +43,7 @@ public class DemoNextFilter extends BreadthCrawler {
      */
     public DemoNextFilter(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
-        addSeed("http://blog.csdn.net/");
+        addSeed("https://blog.csdn.net/");
         addRegex(".*");
         //设置线程数
         setThreads(30);
@@ -62,8 +62,8 @@ public class DemoNextFilter extends BreadthCrawler {
     @Override
     public void visit(Page page, CrawlDatums next) {
         if (page.matchType("content")) {
-            String title = page.select("div[class=article_title]").first().text();
-            String author = page.select("div[id=blog_userface]").first().text();
+            String title = page.select("h1.title-article").first().text();
+            String author = page.select("p.name>a.text-truncate").first().text();
             System.out.println("title:" + title + "\tauthor:" + author);
         }
     }
@@ -73,7 +73,7 @@ public class DemoNextFilter extends BreadthCrawler {
         crawler.setNextFilter(new NextFilter() {
             @Override
             public CrawlDatum filter(CrawlDatum nextItem, CrawlDatum referer) {
-                if (nextItem.matchUrl("http://blog.csdn.net/.*/article/details/.*")) {
+                if (nextItem.matchUrl("https://blog.csdn.net/.*/article/details/.*")) {
                     nextItem.type("content");
                     return nextItem;
                 } else {

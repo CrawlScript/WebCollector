@@ -19,7 +19,10 @@ package cn.edu.hfut.dmic.webcollector.example;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
 
 
 /**
@@ -48,8 +51,8 @@ public class TutorialCrawler extends BreadthCrawler {
     public TutorialCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         
-        addSeed("http://blog.csdn.net/");
-        addRegex("http://blog.csdn.net/.*/article/details/.*");
+        addSeed("https://blog.csdn.net/");
+        addRegex("https://blog.csdn.net/.*/article/details/.*");
         
         //需要抓取图片时设置为true，并加入图片的正则规则
 //        setParseImg(true);
@@ -81,9 +84,11 @@ public class TutorialCrawler extends BreadthCrawler {
         }
     }
 
+
     public static void main(String[] args) throws Exception {
         TutorialCrawler crawler = new TutorialCrawler("crawl", true);
-        crawler.start(2);
+//        crawler.setResumable(true);
+        crawler.start(3);
     }
 
 }

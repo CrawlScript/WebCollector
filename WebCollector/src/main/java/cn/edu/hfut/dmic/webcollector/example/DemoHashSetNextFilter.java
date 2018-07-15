@@ -17,12 +17,11 @@
  */
 package cn.edu.hfut.dmic.webcollector.example;
 
-import cn.edu.hfut.dmic.webcollector.fetcher.NextFilter;
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
 import cn.edu.hfut.dmic.webcollector.plugin.nextfilter.HashSetNextFilter;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
 
 /**
  * WebCollector 2.x版本的tutorial(2.20以上) 2.x版本特性： 1）自定义遍历策略，可完成更为复杂的遍历业务，例如分页、AJAX
@@ -42,11 +41,10 @@ public class DemoHashSetNextFilter extends BreadthCrawler {
     /*
         该例子利用WebCollector 2.50新特性NextFilter过滤探测到的URL
      */
-    public DemoHashSetNextFilter(String crawlPath, boolean autoParse) {
-        super(crawlPath, autoParse);
-        addSeed("http://www.csdn.net");
-        addRegex("http://geek.csdn.net");
-        addRegex("http://lib.csdn.net");
+    public DemoHashSetNextFilter(String crawlPath) {
+        super(crawlPath, false);
+        addSeed("https://www.csdn.net");
+
         //设置线程数
         setThreads(30);
     }
@@ -63,15 +61,14 @@ public class DemoHashSetNextFilter extends BreadthCrawler {
      */
     @Override
     public void visit(Page page, CrawlDatums next) {
-        System.out.println("Not Filtered: " + page.doc().title());
+        next.addAndReturn("https://blog.csdn.net/");
     }
 
     public static void main(String[] args) throws Exception {
-        DemoHashSetNextFilter crawler = new DemoHashSetNextFilter("crawl", true);
+        DemoHashSetNextFilter crawler = new DemoHashSetNextFilter("crawl");
         HashSetNextFilter nextFilter = new HashSetNextFilter();
         //this url will be filtered
-        nextFilter.add("http://geek.csdn.net");
-        //nextFilter.add("http://lib.csdn.net");
+        nextFilter.add("https://blog.csdn.net/");
         crawler.setNextFilter(nextFilter);
         crawler.start(2);
     }

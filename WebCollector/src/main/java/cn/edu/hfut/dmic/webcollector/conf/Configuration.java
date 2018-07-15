@@ -42,7 +42,10 @@ public class Configuration{
 
     public static final String KEY_MAX_REDIRECT= "MAX_REDIRECT";
     public static final String KEY_MAX_RECEIVE_SIZE = "MAX_RECEIVE_SIZE";
+
     public static final String KEY_DEFAULT_USER_AGENT = "DEFAULT_USER_AGENT";
+    public static final String KEY_DEFAULT_COOKIE = "COOKIE";
+
     public static final String KEY_AUTO_DETECT_IMG = "AUTO_DETECT_IMG";
 
     protected HashMap<String, Object> data = new HashMap<String, Object>();
@@ -159,12 +162,22 @@ public class Configuration{
     public Configuration setMaxReceiveSize(int maxReceiveSize){
         return set(KEY_MAX_RECEIVE_SIZE, maxReceiveSize);
     }
+
     public String getDefaultUserAgent(){
         return get(KEY_DEFAULT_USER_AGENT);
     }
     public Configuration setDefaultUserAgent(String defaultUserAgent){
         return set(KEY_DEFAULT_USER_AGENT, defaultUserAgent);
     }
+
+    public String getDefaultCookie(){
+        return get(KEY_DEFAULT_COOKIE);
+    }
+    public Configuration setDefaultCookie(String defaultCookie){
+        return set(KEY_DEFAULT_COOKIE, defaultCookie);
+    }
+
+
 
     public Boolean getAutoDetectImg(){
         return get(KEY_AUTO_DETECT_IMG);

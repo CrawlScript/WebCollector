@@ -99,6 +99,11 @@ public class CrawlDatums implements Iterable<CrawlDatum>, MetaSetter<CrawlDatums
         return datums;
     }
 
+    public CrawlDatum addAndReturn(CrawlDatum datum){
+        add(datum);
+        return datum;
+    }
+
     public CrawlDatums addAndReturn(CrawlDatums datums){
         add(datums);
         return datums;

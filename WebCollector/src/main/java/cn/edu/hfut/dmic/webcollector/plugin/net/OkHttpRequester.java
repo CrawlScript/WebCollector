@@ -74,6 +74,12 @@ public class OkHttpRequester extends DefaultConfigured implements Requester{
         Request.Builder builder = new Request.Builder()
                 .header("User-Agent",getConf().getDefaultUserAgent())
                 .url(crawlDatum.url());
+
+        String defaultCookie = getConf().getDefaultCookie();
+        if(defaultCookie != null){
+            builder.header("Cookie", defaultCookie);
+        }
+
         return builder;
     }
 

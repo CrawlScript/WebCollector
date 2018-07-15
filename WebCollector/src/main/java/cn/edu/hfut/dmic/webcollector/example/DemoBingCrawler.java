@@ -85,7 +85,7 @@ public class DemoBingCrawler extends RamCrawler {
                         .meta("keyword", keyword)
                         .meta("pageNum", pageNum)
                         .meta("rank", rank);
-                next.add(datum);
+                next.addAndReturn(datum);
             }
 
         } else if (page.matchType("outlink")) {
