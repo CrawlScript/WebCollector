@@ -2,28 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2d187928-03e4-460a-a87e-ae6ec47223d2" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/BreadthCrawler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksCrawler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBUtils.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksGenerator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/WebCollector.iml" afterPath="$PROJECT_DIR$/WebCollector.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/conf/Configuration.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/conf/Configuration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/DBManager.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/DBManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoHashSetNextFilter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoHashSetNextFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoMetaCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoMetaCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoNextFilter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoNextFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Fetcher.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Fetcher.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Visitor.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Visitor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/CrawlDatums.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/CrawlDatums.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBManager.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BreadthCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BreadthCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/util/GsonUtils.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/util/GsonUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webcollector-2.72-dev-bin.zip" afterPath="$PROJECT_DIR$/../webcollector-2.72-dev-bin.zip" />
     </list>
     <ignored path="WebCollector.iws" />
     <ignored path=".idea/workspace.xml" />
