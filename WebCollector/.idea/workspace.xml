@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2d187928-03e4-460a-a87e-ae6ec47223d2" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../webcollector-2.72-dev-bin.zip" afterPath="$PROJECT_DIR$/../webcollector-2.72-dev-bin.zip" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/contentextractor/ContentExtractor.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/contentextractor/ContentExtractor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/Generator.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/Generator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/StatusGeneratorFilter.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawldb/StatusGeneratorFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawler/AutoParseCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/crawler/AutoParseCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/example/TutorialCrawler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Fetcher.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/fetcher/Fetcher.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/CrawlDatum.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/CrawlDatum.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/Page.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/model/Page.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/HttpRequest.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/HttpRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/HttpResponse.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/HttpResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/Requester.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/net/Requester.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBManager.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBUtils.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/berkeley/BerkeleyDBUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/net/OkHttpRequester.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBManager.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBUtils.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/plugin/rocks/RocksDBUtils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/util/CrawlDatumFormater.java" afterPath="$PROJECT_DIR$/src/main/java/cn/edu/hfut/dmic/webcollector/util/CrawlDatumFormater.java" />
-    </list>
+    <list default="true" id="2d187928-03e4-460a-a87e-ae6ec47223d2" name="Default" comment="" />
     <ignored path="WebCollector.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -875,12 +854,12 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1130064" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="REPL" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32638165" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32638165" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Leiningen" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31982943" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31982943" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24722838" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
