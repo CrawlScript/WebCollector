@@ -62,6 +62,13 @@ public class DemoBingCrawler extends RamCrawler {
     @Override
     public void visit(Page page, CrawlDatums next) {
 
+        // 如果遇到301或者302，手动跳转（将任务加到next中）
+        // 并且复制任务的meta
+        if(page.code() == 301 || page.code() == 302){
+            next.addAndReturn(page.location()).meta(page.meta());
+            return;
+        }
+
         String keyword = page.meta("keyword");
         int pageNum = page.metaAsInt("pageNum");
         int depth = page.metaAsInt("depth");
@@ -80,12 +87,12 @@ public class DemoBingCrawler extends RamCrawler {
                 搜索引擎结果页面，type设置为outlink，这里的值完全由
                 用户定义，可以设置一个任意的值
                 */
-                CrawlDatum datum = new CrawlDatum(result.attr("abs:href"))
+                String href = result.attr("abs:href");
+                next.addAndReturn(href)
                         .type("outlink")
                         .meta("keyword", keyword)
                         .meta("pageNum", pageNum)
                         .meta("rank", rank);
-                next.addAndReturn(datum);
             }
 
         } else if (page.matchType("outlink")) {

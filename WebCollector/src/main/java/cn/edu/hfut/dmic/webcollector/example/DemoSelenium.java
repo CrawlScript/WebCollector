@@ -22,10 +22,9 @@ import cn.edu.hfut.dmic.webcollector.crawler.Crawler;
 import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BerkeleyDBManager;
 import java.util.List;
-//import org.apache.log4j.Level;
-//import org.apache.log4j.Logger;
+
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.RocksDBManager;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
@@ -61,7 +60,7 @@ public class DemoSelenium {
         };
 
         //创建一个基于伯克利DB的DBManager
-        DBManager manager = new BerkeleyDBManager("crawl");
+        DBManager manager = new RocksDBManager("crawl");
         //创建一个Crawler需要有DBManager和Executor
         Crawler crawler = new Crawler(manager, executor);
         crawler.addSeed("https://www.sogou.com/web?query=%E6%B7%98%E5%AE%9D");

@@ -36,7 +36,7 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 
 ## Quickstart
-Lets crawl some news from hfut news.This demo prints out the titles and contents extracted from news of hfut news.
+Lets crawl some news from github news.This demo prints out the titles and contents extracted from news of github news.
 
 ### Automatically Detecting URLs
 
@@ -46,11 +46,10 @@ Lets crawl some news from hfut news.This demo prints out the titles and contents
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import org.jsoup.nodes.Document;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
 
 /**
- * Crawling news from hfut news
+ * Crawling news from github news
  *
  * @author hu
  */
@@ -63,31 +62,36 @@ public class AutoNewsCrawler extends BreadthCrawler {
      */
     public AutoNewsCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
-        /*start page*/
-        this.addSeed("http://news.hfut.edu.cn/list-1-1.html");
+        /*start pages*/
+        this.addSeed("https://blog.github.com/");
+        for(int pageIndex = 2; pageIndex <= 5; pageIndex++) {
+            String seedUrl = String.format("https://blog.github.com/page/%d/", pageIndex);
+            this.addSeed(seedUrl);
+        }
 
-        /*fetch url like http://news.hfut.edu.cn/show-xxxxxxhtml*/
-        this.addRegex("http://news.hfut.edu.cn/show-.*html");
+        /*fetch url like "https://blog.github.com/2018-07-13-graphql-for-octokit/" */
+        this.addRegex("https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+/");
         /*do not fetch jpg|png|gif*/
-        this.addRegex("-.*\\.(jpg|png|gif).*");
+        //this.addRegex("-.*\\.(jpg|png|gif).*");
         /*do not fetch url contains #*/
-        this.addRegex("-.*#.*");
+        //this.addRegex("-.*#.*");
 
         setThreads(50);
         getConf().setTopN(100);
 
-//        setResumable(true);
+        //enable resumable mode
+        //setResumable(true);
     }
 
     @Override
     public void visit(Page page, CrawlDatums next) {
         String url = page.url();
         /*if page is news page*/
-        if (page.matchUrl("http://news.hfut.edu.cn/show-.*html")) {
+        if (page.matchUrl("https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}[^/]+/")) {
 
             /*extract title and content of news by css selector*/
-            String title = page.select("div[id=Article]>h2").first().text();
-            String content = page.selectText("div#artibody");
+            String title = page.select("h1[class=lh-condensed]").first().text();
+            String content = page.selectText("div.content.markdown-body");
 
             System.out.println("URL:\n" + url);
             System.out.println("title:\n" + title);
@@ -121,11 +125,10 @@ public class AutoNewsCrawler extends BreadthCrawler {
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import org.jsoup.nodes.Document;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
 
 /**
- * Crawling news from hfut news
+ * Crawling news from github news
  *
  * @author hu
  */
@@ -138,18 +141,19 @@ public class ManualNewsCrawler extends BreadthCrawler {
      */
     public ManualNewsCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
-        /*add 10 start pages and set their type to "list"
-          "list" is not a reserved word, you can use other string instead
-         */
-        for(int i = 1; i <= 10; i++) {
-            this.addSeed("http://news.hfut.edu.cn/list-1-" + i + ".html", "list");
+        // add 5 start pages and set their type to "list"
+        //"list" is not a reserved word, you can use other string instead
+        this.addSeedAndReturn("https://blog.github.com/").type("list");
+        for(int pageIndex = 2; pageIndex <= 5; pageIndex++) {
+            String seedUrl = String.format("https://blog.github.com/page/%d/", pageIndex);
+            this.addSeed(seedUrl, "list");
         }
 
         setThreads(50);
         getConf().setTopN(100);
 
-
-//        setResumable(true);
+        //enable resumable mode
+        //setResumable(true);
     }
 
     @Override
@@ -159,12 +163,12 @@ public class ManualNewsCrawler extends BreadthCrawler {
         if (page.matchType("list")) {
             /*if type is "list"*/
             /*detect content page by css selector and mark their types as "content"*/
-            next.add(page.links("div[class=' col-lg-8 '] li>a")).type("content");
+            next.add(page.links("h1.lh-condensed>a")).type("content");
         }else if(page.matchType("content")) {
             /*if type is "content"*/
             /*extract title and content of news by css selector*/
-            String title = page.select("div[id=Article]>h2").first().text();
-            String content = page.selectText("div#artibody", 0);
+            String title = page.select("h1[class=lh-condensed]").first().text();
+            String content = page.selectText("div.content.markdown-body");
 
             //read title_prefix and content_length_limit from configuration
             title = getConf().getString("title_prefix") + title;

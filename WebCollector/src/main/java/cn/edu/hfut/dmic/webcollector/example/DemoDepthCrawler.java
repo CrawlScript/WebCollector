@@ -20,8 +20,7 @@ package cn.edu.hfut.dmic.webcollector.example;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
-import cn.edu.hfut.dmic.webcollector.plugin.berkeley.BreadthCrawler;
-import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
+import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
 
 /**
  * 本教程和深度遍历没有任何关系
