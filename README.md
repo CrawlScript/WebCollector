@@ -23,7 +23,7 @@ WebCollector is an open source web crawler framework based on Java.It provides
 <dependency>
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.71</version>
+    <version>2.72-beta</version>
 </dependency>
 ```
 
