@@ -126,16 +126,18 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return code;
     }
 
-    public void code(int code) {
+    public CrawlDatum code(int code) {
         this.code = code;
+        return this;
     }
 
     public String location() {
         return location;
     }
 
-    public void location(String location) {
+    public CrawlDatum location(String location) {
         this.location = location;
+        return this;
     }
 
     public String url() {
@@ -147,59 +149,31 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return this;
     }
 
-//    /**
-//     * @deprecated 已废弃，使用url()代替
-//     */
-//    @Deprecated
-//    public String getUrl() {
-//        return url();
-//    }
-//
-//    /**
-//     * @deprecated 使用url(String url)代替
-//     */
-//   @Deprecated
-//    public CrawlDatum setUrl(String url) {
-//        return url(url);
-//    }
 
-    public long executeTime() {
+    public long getExecuteTime() {
         return executeTime;
     }
 
-    public void executeTime(long fetchTime) {
-        this.executeTime = fetchTime;
+    public void setExecuteTime(long executeTime) {
+        this.executeTime = executeTime;
     }
 
-    public int executeCount() {
+    public int getExecuteCount() {
         return executeCount;
     }
 
-    public void executeCount(int executeCount) {
+    public void setExecuteCount(int executeCount) {
         this.executeCount = executeCount;
     }
 
-    public int status() {
+    public int getStatus() {
         return status;
     }
 
-    public void status(int status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 
-
-
-//
-//    public void meta(Document metaData) {
-//        this.metaData = metaData;
-//    }
-//
-//
-//
-//    public CrawlDatum meta(String key,String value){
-//        this.metaData.put(key, value);
-//        return this;
-//    }
 
     @Override
     public JsonObject meta() {
@@ -232,15 +206,7 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
     }
 
 
-//    @Deprecated
-//    public CrawlDatum putMetaData(String key,String value){
-//        return meta(key,value);
-//    }
-//
-//    @Deprecated
-//    public String getMetaData(String key){
-//        return meta(key);
-//    }
+
 
     public String briefInfo(){
         StringBuilder sb = new StringBuilder();
@@ -320,9 +286,9 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
 
         JsonArray jsonArray = new JsonArray();
         jsonArray.add(url());
-        jsonArray.add(status());
-        jsonArray.add(executeTime());
-        jsonArray.add(executeCount());
+        jsonArray.add(getStatus());
+        jsonArray.add(getExecuteTime());
+        jsonArray.add(getExecuteCount());
         jsonArray.add(code());
         jsonArray.add(location());
         if (meta().size() > 0) {
@@ -337,9 +303,9 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         CrawlDatum crawlDatum = new CrawlDatum();
         crawlDatum.key(crawlDatumKey);
         crawlDatum.url(jsonArray.get(0).getAsString());
-        crawlDatum.status(jsonArray.get(1).getAsInt());
-        crawlDatum.executeTime(jsonArray.get(2).getAsLong());
-        crawlDatum.executeCount(jsonArray.get(3).getAsInt());
+        crawlDatum.setStatus(jsonArray.get(1).getAsInt());
+        crawlDatum.setExecuteTime(jsonArray.get(2).getAsLong());
+        crawlDatum.setExecuteCount(jsonArray.get(3).getAsInt());
         if (jsonArray.size() == 7) {
             JsonObject metaJsonObject = jsonArray.get(6).getAsJsonObject();
             crawlDatum.meta(metaJsonObject);

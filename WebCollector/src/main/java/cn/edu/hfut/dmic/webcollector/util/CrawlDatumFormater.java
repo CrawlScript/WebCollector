@@ -42,7 +42,7 @@ public class CrawlDatumFormater {
                 .append("\nURL: ").append(datum.url())
                 .append("\nSTATUS: ");
 
-        switch (datum.status()) {
+        switch (datum.getStatus()) {
             case CrawlDatum.STATUS_DB_SUCCESS:
                 sb.append("success");
                 break;
@@ -55,8 +55,8 @@ public class CrawlDatumFormater {
         }
 
         sb.append("\nExecuteTime: ")
-                .append(sdf.format(new Date(datum.executeTime())))
-                .append("\nExecuteCount: ").append(datum.executeCount())
+                .append(sdf.format(new Date(datum.getExecuteTime())))
+                .append("\nExecuteCount: ").append(datum.getExecuteCount())
                 .append("\nCode: ").append(datum.code());
 
         String location = datum.location();

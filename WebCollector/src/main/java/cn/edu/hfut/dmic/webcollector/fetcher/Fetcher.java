@@ -256,17 +256,17 @@ public class Fetcher extends CommonConfigured{
 
                             LOG.info(String.format("done: %s", crawlDatum.briefInfo()));
 
-                            crawlDatum.status(CrawlDatum.STATUS_DB_SUCCESS);
+                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_SUCCESS);
                         } catch (Exception ex) {
                             LOG.info(String.format("failed: %s", crawlDatum.briefInfo()), ex);
-                            crawlDatum.status(CrawlDatum.STATUS_DB_FAILED);
+                            crawlDatum.setStatus(CrawlDatum.STATUS_DB_FAILED);
                         }
 
                         crawlDatum.incrExecuteCount(1);
-                        crawlDatum.executeTime(System.currentTimeMillis());
+                        crawlDatum.setExecuteTime(System.currentTimeMillis());
                         try {
                             dbManager.writeFetchSegment(crawlDatum);
-                            if (crawlDatum.status() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
+                            if (crawlDatum.getStatus() == CrawlDatum.STATUS_DB_SUCCESS && !next.isEmpty()) {
                                 dbManager.writeParseSegment(next);
                             }
                         } catch (Exception ex) {
