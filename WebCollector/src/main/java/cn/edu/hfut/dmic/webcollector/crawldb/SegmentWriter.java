@@ -27,12 +27,12 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
  */
 public interface SegmentWriter {
 
-    public void initSegmentWriter() throws Exception;
+    void initSegmentWriter() throws Exception;
 
-    public void writeFetchSegment(CrawlDatum fetchDatum) throws Exception;
+    void writeFetchSegment(CrawlDatum fetchDatum) throws Exception;
 
-    public void writeParseSegment(CrawlDatums parseDatums) throws Exception;
+    void writeParseSegment(CrawlDatums parseDatums) throws Exception;
 
-    public void closeSegmentWriter() throws Exception;
+    void closeSegmentWriter() throws Exception;
 
 }

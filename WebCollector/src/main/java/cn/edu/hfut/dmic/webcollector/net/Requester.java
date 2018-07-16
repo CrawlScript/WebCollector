@@ -25,11 +25,9 @@ import cn.edu.hfut.dmic.webcollector.model.Page;
  *
  * @author hu
  */
-public abstract class Requester extends DefaultConfigured {
+public interface Requester{
 
-     public Page getResponse(String url) throws Exception {
-          return getResponse(new CrawlDatum(url));
-     }
+     Page getResponse(String url) throws Exception;
 
-     public abstract Page getResponse(CrawlDatum crawlDatum) throws Exception;
+     Page getResponse(CrawlDatum datum) throws Exception;
 }

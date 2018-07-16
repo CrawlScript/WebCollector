@@ -33,26 +33,27 @@ public abstract class Generator extends DefaultConfigured{
 
     public static final Logger LOG = LoggerFactory.getLogger(Generator.class);
 
-
     protected GeneratorFilter filter = null;
-    protected int topN = 0;
-
     protected int totalGenerate;
-    protected int maxExecuteCount;
+
 
     public Generator() {
         this.totalGenerate = 0;
-        this.maxExecuteCount = getConf().getOrDefault(Configuration.KEY_MAX_EXECUTE_COUNT, Integer.MAX_VALUE);
     }
+
 
     /**
      * return null if there is no CrawlDatum to generate
      * @return
      */
     public CrawlDatum next(){
+        int topN = getConf().getTopN();
+        int maxExecuteCount = getConf().getOrDefault(Configuration.KEY_MAX_EXECUTE_COUNT, Integer.MAX_VALUE);
+
         if(topN > 0 && totalGenerate >= topN){
             return null;
         }
+
         CrawlDatum datum;
         while (true) {
             try {
@@ -79,22 +80,22 @@ public abstract class Generator extends DefaultConfigured{
     public abstract CrawlDatum nextWithoutFilter() throws Exception;
 
 
-    public int getTopN() {
-        return topN;
-    }
+//    public int getTopN() {
+//        return topN;
+//    }
 
-    public void setTopN(int topN) {
-        this.topN = topN;
-    }
+//    public void setTopN(int topN) {
+//        this.topN = topN;
+//    }
 
 
-    public int getMaxExecuteCount() {
-        return maxExecuteCount;
-    }
-
-    public void setMaxExecuteCount(int maxExecuteCount) {
-        this.maxExecuteCount = maxExecuteCount;
-    }
+//    public int getMaxExecuteCount() {
+//        return maxExecuteCount;
+//    }
+//
+//    public void setMaxExecuteCount(int maxExecuteCount) {
+//        this.maxExecuteCount = maxExecuteCount;
+//    }
 
     public int getTotalGenerate(){
         return totalGenerate;

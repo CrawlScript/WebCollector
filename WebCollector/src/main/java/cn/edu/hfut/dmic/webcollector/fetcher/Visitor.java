@@ -31,6 +31,6 @@ public interface Visitor {
      * @param page 当前访问页面的信息
      * @param next 可以手工将希望后续采集的任务加到next中（会参与自动去重）
      */
-    public abstract void visit(Page page, CrawlDatums next);
+    void visit(Page page, CrawlDatums next);
 
 }

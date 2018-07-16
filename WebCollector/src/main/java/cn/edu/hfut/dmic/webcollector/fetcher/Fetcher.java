@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-import cn.edu.hfut.dmic.webcollector.util.ConfigurationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -304,7 +303,7 @@ public class Fetcher extends CommonConfigured{
      */
     public int fetchAll(GeneratorFilter generatorFilter) throws Exception {
         if (executor == null) {
-            LOG.info("Please Specify A Executor!");
+            LOG.info("Please Specify An Executor!");
             return 0;
         }
 

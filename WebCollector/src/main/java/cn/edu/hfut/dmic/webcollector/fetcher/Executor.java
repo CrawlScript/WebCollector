@@ -24,5 +24,5 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
  * Created by hu on 2016/2/18.
  */
 public interface Executor{
-    public void execute(CrawlDatum datum,CrawlDatums next) throws Exception;
+    void execute(CrawlDatum datum,CrawlDatums next) throws Exception;
 }

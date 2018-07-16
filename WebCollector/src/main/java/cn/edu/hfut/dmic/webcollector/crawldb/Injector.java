@@ -24,5 +24,5 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
  * @author hu
  */
 public interface Injector {
-     public void inject(CrawlDatum datum) throws Exception;
+     void inject(CrawlDatum datum) throws Exception;
 }

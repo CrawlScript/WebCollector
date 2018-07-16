@@ -31,9 +31,9 @@ public interface NextFilter {
      * if you want to filter nextItem, return null
      * else you should return nextItem
      * 
-     * @param nextItem one of the detected crawldatums
+     * @param nextDatum one of the detected crawldatums
      * @param referer the crawldatum of the page where nextItem is detected
      * @return 
      */
-    public CrawlDatum filter(CrawlDatum nextItem, CrawlDatum referer);
+    CrawlDatum filter(CrawlDatum nextDatum, CrawlDatum referer);
 }

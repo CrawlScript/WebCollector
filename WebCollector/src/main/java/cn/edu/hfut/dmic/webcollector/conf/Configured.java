@@ -21,7 +21,7 @@ package cn.edu.hfut.dmic.webcollector.conf;
  * @author hu
  */
 public interface Configured {
-    public Configuration getConf();
-    public void setConf(Configuration conf);
+    Configuration getConf();
+    void setConf(Configuration conf);
 
 }

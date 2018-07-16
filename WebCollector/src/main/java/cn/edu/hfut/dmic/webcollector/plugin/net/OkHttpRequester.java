@@ -31,12 +31,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author hu
  */
-public class OkHttpRequester extends Requester{
-
-
+public class OkHttpRequester extends DefaultConfigured implements Requester{
 
     protected OkHttpClient client;
-
     protected HashSet<Integer> successCodeSet;
 
     public OkHttpRequester addSuccessCode(int successCode){
@@ -48,7 +45,6 @@ public class OkHttpRequester extends Requester{
         return this;
     }
 
-
     protected HashSet<Integer> createSuccessCodeSet(){
         HashSet<Integer> result = new HashSet<Integer>();
         result.add(200);
@@ -57,7 +53,6 @@ public class OkHttpRequester extends Requester{
         result.add(404);
         return result;
     }
-
 
 
     public OkHttpClient.Builder createOkHttpClientBuilder(){
@@ -89,8 +84,13 @@ public class OkHttpRequester extends Requester{
     }
 
     @Override
-    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
-        Request  request = createRequestBuilder(crawlDatum).build();
+    public Page getResponse(String url) throws Exception {
+        return getResponse(new CrawlDatum(url));
+    }
+
+    @Override
+    public Page getResponse(CrawlDatum datum) throws Exception {
+        Request  request = createRequestBuilder(datum).build();
         Response response = client.newCall(request).execute();
 
         String contentType = null;
@@ -100,8 +100,8 @@ public class OkHttpRequester extends Requester{
         ResponseBody responseBody = response.body();
         int code = response.code();
         //设置重定向地址
-        crawlDatum.code(code);
-        crawlDatum.location(response.header("Location"));
+        datum.code(code);
+        datum.location(response.header("Location"));
 
         if(!successCodeSet.contains(code)){
 //            throw new IOException(String.format("Server returned HTTP response code: %d for URL: %s (CrawlDatum: %s)", code,crawlDatum.url(), crawlDatum.key()));
@@ -122,7 +122,7 @@ public class OkHttpRequester extends Requester{
         }
 
         Page page = new Page(
-                crawlDatum,
+                datum,
                 contentType,
                 content
                 );

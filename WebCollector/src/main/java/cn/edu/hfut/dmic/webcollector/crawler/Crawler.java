@@ -92,9 +92,9 @@ public class Crawler extends DefaultConfigured {
 
         LOG.info(this.toString());
 
-        //register dbmanager conf
+        // register conf to all plugins
+        // except [fetcher, generatorFilter]
         ConfigurationUtils.setTo(this, dbManager, executor, nextFilter);
-
         registerOtherConfigurations();
 
 
@@ -127,7 +127,7 @@ public class Crawler extends DefaultConfigured {
             long startTime = System.currentTimeMillis();
             fetcher = new Fetcher();
             //register fetcher conf
-            ConfigurationUtils.setTo(this,fetcher);
+            ConfigurationUtils.setTo(this, fetcher);
 
             fetcher.setDBManager(dbManager);
             fetcher.setExecutor(executor);
