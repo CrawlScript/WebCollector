@@ -57,11 +57,11 @@ public class CrawlDatumFormater {
         sb.append("\nExecuteTime: ")
                 .append(sdf.format(new Date(datum.executeTime())))
                 .append("\nExecuteCount: ").append(datum.executeCount())
-                .append("Code: ").append(datum.code());
+                .append("\nCode: ").append(datum.code());
 
         String location = datum.location();
         if(location != null){
-            sb.append("Location: ").append(location);
+            sb.append("\nLocation: ").append(location);
         }
 
         int metaIndex = 0;

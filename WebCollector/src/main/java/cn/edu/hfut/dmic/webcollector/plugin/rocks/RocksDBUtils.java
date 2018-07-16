@@ -85,6 +85,11 @@ public class RocksDBUtils {
     }
 
     public static RocksDB open(String dbPath) throws RocksDBException {
+        File dbParentDir = new File(dbPath).getParentFile();
+        if(!dbParentDir.exists()){
+            dbParentDir.mkdirs();
+        }
+
         Options rocksOptions = RocksDBUtils.createDefaultDBOptions();
         return RocksDB.open(rocksOptions, dbPath);
     }

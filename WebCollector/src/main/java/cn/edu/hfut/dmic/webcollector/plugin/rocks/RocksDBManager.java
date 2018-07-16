@@ -212,13 +212,9 @@ public class RocksDBManager extends DBManager {
     }
 
     @Override
-    public Generator createGenerator() throws Exception{
+    protected Generator createGenerator() throws Exception{
         return new RocksGenerator(crawlPath);
 
-//        if(generator==null){
-//             generator = new BerkeleyGenerator(env);
-//        }
-//        return generator;
     }
 
 }

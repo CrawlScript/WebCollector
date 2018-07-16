@@ -33,6 +33,8 @@ import java.net.Proxy;
  * <p>
  * 阿布云代理官网：
  * https://www.abuyun.com/
+ *
+ * @author hu
  */
 public class AbuyunDynamicProxyRequester extends OkHttpRequester {
 

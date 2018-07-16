@@ -33,7 +33,7 @@ public abstract class DBManager extends DefaultConfigured implements Injector, S
 
     public abstract void clear() throws Exception;
 
-    public abstract Generator createGenerator() throws Exception;
+    protected abstract Generator createGenerator() throws Exception;
 
     public Generator createGenerator(GeneratorFilter generatorFilter) throws Exception {
         Generator generator = createGenerator();

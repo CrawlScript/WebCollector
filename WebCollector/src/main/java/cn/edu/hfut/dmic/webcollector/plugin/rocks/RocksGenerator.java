@@ -56,6 +56,7 @@ public class RocksGenerator extends Generator {
     public void close() throws Exception {
         if (crawldbDatabase != null) {
             crawldbDatabase.close();
+            crawldbDatabase = null;
         }
     }
 
