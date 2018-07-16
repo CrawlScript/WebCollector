@@ -40,15 +40,16 @@ public class DBManagerTest {
             generator.close();
             dbManager.close();
         }finally {
+            System.out.println("clear");
             dbManager.clear();
         }
 
     }
 
 
-    String tempCrawlPath = "temp_test_crawldb";
+    String tempCrawlPath = "temp_test_crawl";
 
-    @Test
+//    @Test
     public void testBerkeleyDBInjector() throws Exception {
         BerkeleyDBManager dbManager = new BerkeleyDBManager(tempCrawlPath);
         testInject(dbManager);
