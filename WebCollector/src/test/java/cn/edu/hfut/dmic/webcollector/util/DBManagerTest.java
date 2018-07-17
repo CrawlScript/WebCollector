@@ -49,7 +49,7 @@ public class DBManagerTest {
 
     String tempCrawlPath = "temp_test_crawl";
 
-//    @Test
+    @Test
     public void testBerkeleyDBInjector() throws Exception {
         BerkeleyDBManager dbManager = new BerkeleyDBManager(tempCrawlPath);
         testInject(dbManager);
