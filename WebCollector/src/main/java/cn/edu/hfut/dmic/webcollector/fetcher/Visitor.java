@@ -19,18 +19,100 @@ package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.util.ReflectionUtils;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
- *
  * @author hu
  */
 public interface Visitor {
 
+
     /**
-     *
      * @param page 当前访问页面的信息
      * @param next 可以手工将希望后续采集的任务加到next中（会参与自动去重）
      */
     void visit(Page page, CrawlDatums next);
 
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MatchType {
+        String[] types();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MatchNullType {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MatchUrl {
+        String urlRegex();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MatchUrlRegexRule {
+        String[] urlRegexRule();
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface BeforeVisit {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface AfterParse {
+    }
+
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.METHOD)
+    public static @interface MatchCode {
+        int[] codes();
+    }
+
+
+
+    public static class InvalidAnnotatedVisitorMethodException extends Exception {
+
+        static String buildMessage(Visitor visitor, Method method) {
+
+            String fullMethodName = ReflectionUtils.getFullMethodName(method);
+
+            String validMethodFormat = String.format("public void %s(%s param0, %s param1){...}",
+                    method.getName(),
+                    Page.class.getName(),
+                    CrawlDatums.class.getName()
+            );
+            StringBuilder sb = new StringBuilder("\n\tThe definition of ")
+                    .append(fullMethodName)
+                    .append(" is invalid,\n")
+                    .append("\texpect    \"").append(validMethodFormat).append("\",")
+                    .append("\n\tbut found \"")
+                    .append(ReflectionUtils.getMethodDeclaration(method)).append("{...}")
+                    .append("\"");
+            return sb.toString();
+
+        }
+
+        public InvalidAnnotatedVisitorMethodException(String message) {
+            super(message);
+        }
+
+        public InvalidAnnotatedVisitorMethodException(Visitor visitor, Method method) {
+            super(buildMessage(visitor, method));
+
+        }
+
+    }
 }

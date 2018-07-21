@@ -39,7 +39,7 @@ import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
  *
  * @author hu
  */
-public class DemoMetaCrawler extends RamCrawler {
+public class DemoAnnotatedMatchTypeCrawler extends RamCrawler {
 
     /*
         实际使用时建议按照DemoTypeCrawler的方式操作，该教程目的为阐述meta的原理
@@ -58,28 +58,7 @@ public class DemoMetaCrawler extends RamCrawler {
         2）列表页（booklist，包含图书详情页的入口链接）
         3）图书详情页（content）
      */
-    @Override
-    public void visit(Page page, CrawlDatums next) {
-
-        String type=page.meta("type");
-        //如果是列表页，抽取内容页链接，放入后续任务中
-        if(type.equals("taglist")){
-            //可以确定抽取到的链接都指向内容页
-            //因此为这些链接添加附加信息（meta）：type=content
-            next.addAndReturn(page.links("table.tagCol td>a")).meta("type", "booklist");
-        }else if(type.equals("booklist")){
-            next.addAndReturn(page.links("div.info>h2>a")).meta("type", "content");
-        }else if(type.equals("content")){
-            //处理内容页，抽取书名和豆瓣评分
-            String title=page.select("h1>span").first().text();
-            String score=page.select("strong.ll.rating_num").first().text();
-            System.out.println("title:"+title+"\tscore:"+score);
-        }
-
-    }
-
-    public static void main(String[] args) throws Exception {
-        DemoMetaCrawler crawler = new DemoMetaCrawler();
+    public DemoAnnotatedMatchTypeCrawler(){
         //meta是CrawlDatum的附加信息，爬虫内核并不使用meta信息
         //在解析页面时，往往需要知道当前页面的类型（例如是列表页还是内容页）或一些附加信息（例如页号）
         //然而根据当前页面的信息（内容和URL）并不一定能够轻易得到这些信息
@@ -87,17 +66,45 @@ public class DemoMetaCrawler extends RamCrawler {
         //虽然用正则可以解决这个问题，但是较为麻烦
         //当我们将一个新链接（CrawlDatum）提交给爬虫时，链接指向页面的类型有时是确定的（例如在很多任务中，种子页面就是列表页）
         //如果在提交CrawlDatum时，直接将链接的类型信息（type）存放到meta中，那么在解析页面时，
-        //只需取出链接（CrawlDatum）中的类型信息（type）即可知道当前页面类型           
-        CrawlDatum seed=new CrawlDatum("https://book.douban.com/tag/").meta("type", "taglist");
-        crawler.addSeed(seed);
-
+        //只需取出链接（CrawlDatum）中的类型信息（type）即可知道当前页面类型
+        addSeedAndReturn("https://book.douban.com/tag/").type("taglist");
 
         /*可以设置每个线程visit的间隔，这里是毫秒*/
-        //crawler.setVisitInterval(1000);
-        /*可以设置http请求重试的间隔，这里是毫秒*/
-        //crawler.setRetryInterval(1000);
-        crawler.setThreads(30);
+        getConf().setExecuteInterval(1000);
+        /*设置线程数*/
+        setThreads(30);
+    }
+
+
+    @MatchType(types = "taglist")
+    public void visitTagList(Page page, CrawlDatums next) {
+        //可以确定抽取到的链接都指向内容页
+        //因此为这些链接添加附加信息（meta）：type=content
+        next.addAndReturn(page.links("table.tagCol td>a")).type("booklist");
+    }
+
+    @MatchType(types = "booklist")
+    public void visitBookList(Page page, CrawlDatums next) {
+        next.addAndReturn(page.links("div.info>h2>a")).type("content");
+    }
+
+    @MatchType(types = "content")
+    public void visitContent(Page page, CrawlDatums next) {
+        //处理内容页，抽取书名和豆瓣评分
+        String title=page.select("h1>span").first().text();
+        String score=page.select("strong.ll.rating_num").first().text();
+        System.out.println("title:"+title+"\tscore:"+score);
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        DemoAnnotatedMatchTypeCrawler crawler = new DemoAnnotatedMatchTypeCrawler();
+
         crawler.start(3);
     }
 
+    @Override
+    public void visit(Page page, CrawlDatums next) {
+
+    }
 }

@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.crawler;
 
 import cn.edu.hfut.dmic.webcollector.fetcher.Executor;
 import cn.edu.hfut.dmic.webcollector.fetcher.Visitor;
+import cn.edu.hfut.dmic.webcollector.fetcher.VisitorMethodDispatcher;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
@@ -46,6 +47,8 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
     protected Visitor visitor;
     protected Requester requester;
 
+    protected VisitorMethodDispatcher visitorMethodDispatcher;
+
     public AutoParseCrawler(boolean autoParse) {
         this.autoParse = autoParse;
         this.requester = new OkHttpRequester();
@@ -53,7 +56,14 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
         this.executor = this;
     }
 
-//    @Override
+    @Override
+    public void start(int depth) throws Exception {
+        this.visitorMethodDispatcher = new VisitorMethodDispatcher(visitor, autoParse, regexRule);
+        ConfigurationUtils.setTo(this, this.visitorMethodDispatcher);
+        super.start(depth);
+    }
+
+    //    @Override
 //    public Page getResponse(CrawlDatum crawlDatum) throws Exception {
 //        HttpRequest request = new HttpRequest(crawlDatum);
 //        return request.responsePage();
@@ -75,28 +85,12 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
     @Override
     public void execute(CrawlDatum datum, CrawlDatums next) throws Exception {
         Page page = requester.getResponse(datum);
-        visitor.visit(page, next);
-        if (autoParse && !regexRule.isEmpty()) {
-            parseLink(page, next);
-        }
-        afterParse(page, next);
-    }
-
-    protected void afterParse(Page page, CrawlDatums next) {
+//        visitor.visit(page, next);
+        visitorMethodDispatcher.dispatch(page, next);
 
     }
 
-    protected void parseLink(Page page, CrawlDatums next) {
-        String conteType = page.contentType();
-        if (conteType != null && conteType.contains("text/html")) {
-            Document doc = page.doc();
-            if (doc != null) {
-                Links links = new Links().addByRegex(doc, regexRule, getConf().getAutoDetectImg());
-                next.add(links);
-            }
-        }
 
-    }
 
     /**
      * 添加URL正则约束
@@ -151,14 +145,14 @@ public abstract class AutoParseCrawler extends Crawler implements Executor, Visi
         return visitor;
     }
 
-    /**
-     * 设置Visitor
-     *
-     * @param visitor Visitor
-     */
-    public void setVisitor(Visitor visitor) {
-        this.visitor = visitor;
-    }
+//    /**
+//     * 设置Visitor
+//     *
+//     * @param visitor Visitor
+//     */
+//    public void setVisitor(Visitor visitor) {
+//        this.visitor = visitor;
+//    }
 
     public Requester getRequester() {
         return requester;

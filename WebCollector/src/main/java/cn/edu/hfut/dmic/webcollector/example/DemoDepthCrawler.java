@@ -55,8 +55,8 @@ public class DemoDepthCrawler extends BreadthCrawler {
         System.out.println("visiting:" + page.url() + "\tdepth=" + page.meta("depth"));
     }
 
-    @Override
-    protected void afterParse(Page page, CrawlDatums next) {
+    @AfterParse
+    public void afterParse(Page page, CrawlDatums next) {
         //当前页面的depth为x，则从当前页面解析的后续任务的depth为x+1
         int depth = 1;
         //如果在添加种子时忘记添加depth信息，可以通过这种方式保证程序不出错

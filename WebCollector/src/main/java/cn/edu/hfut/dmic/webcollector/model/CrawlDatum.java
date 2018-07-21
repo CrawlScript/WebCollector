@@ -19,6 +19,7 @@ package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
 import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import com.google.gson.*;
 
 import java.io.Serializable;
@@ -84,7 +85,7 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         }
     }
     
-        /**
+    /**
      * 判断当前Page的URL是否和输入正则匹配
      *
      * @param urlRegex
@@ -92,6 +93,16 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
      */
     public boolean matchUrl(String urlRegex) {
         return Pattern.matches(urlRegex, url());
+    }
+
+
+    /**
+     * 判断当前Page的URL是否和输入正则规则匹配
+     * @param urlRegexRule
+     * @return
+     */
+    public boolean matchUrlRegexRule(RegexRule urlRegexRule) {
+        return urlRegexRule.satisfy(url());
     }
 
 

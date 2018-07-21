@@ -397,14 +397,14 @@ public class Crawler extends DefaultConfigured {
         return executor;
     }
 
-    /**
-     * 设置执行器
-     *
-     * @param executor 执行器
-     */
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
-    }
+//    /**
+//     * 设置执行器
+//     *
+//     * @param executor 执行器
+//     */
+//    public void setExecutor(Executor executor) {
+//        this.executor = executor;
+//    }
 
     /**
      * 返回每次迭代爬取的网页数量上限

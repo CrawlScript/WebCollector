@@ -67,7 +67,16 @@ public class Page implements MetaGetter, MetaSetter<Page>{
      * @return
      */
     public boolean matchUrl(String urlRegex) {
-        return Pattern.matches(urlRegex, url());
+        return crawlDatum.matchUrl(urlRegex);
+    }
+
+    /**
+     * 判断当前Page的URL是否和输入正则规则匹配
+     * @param urlRegexRule
+     * @return
+     */
+    public boolean matchUrlRegexRule(RegexRule urlRegexRule) {
+        return crawlDatum.matchUrlRegexRule(urlRegexRule);
     }
 
     /**
