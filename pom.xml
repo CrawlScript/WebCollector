@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>WebCollector</name>
+
+    <groupId>cn.edu.hfut.dmic.webcollector</groupId>
+    <artifactId>WebCollector</artifactId>
+    <version>2.73-alpha</version>
+    <description>A java crawler for information collection</description>
+    <url>https://github.com/CrawlScript/WebCollector</url>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>GPL2.0</name>
+            <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/CrawlScript/WebCollector</url>
+        <connection>scm:git:https://github.com/CrawlScript/WebCollector.git</connection>
+    </scm>
+
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>cobertura</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                    </formats>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadoc</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                        <plugin>
+                                <groupId>org.sonatype.plugins</groupId>
+                                <artifactId>nexus-staging-maven-plugin</artifactId>
+                                <version>1.6.8</version>
+                                <extensions>true</extensions>
+                                <configuration>
+                                    <serverId>ossrh</serverId>
+                                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                                </configuration>
+                            </plugin>
+
+                          <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-gpg-plugin</artifactId>
+                            <version>1.5</version>
+                            <executions>
+                                <execution>
+                                    <id>sign-artifacts</id>
+                                    <phase>verify</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                        </plugin>
+-->
+
+
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>2.7.2</version>
+                            <configuration>
+                                <forkMode>once</forkMode>
+                                <argLine>-Dfile.encoding=UTF-8</argLine>
+                                <systemProperties>
+                                    <property>
+                                        <name>net.sourceforge.cobertura.datafile</name>
+                                        <value>target/cobertura/cobertura.ser</value>
+                                    </property>
+                                </systemProperties>
+                                <skipTests>false</skipTests>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <version>2.8</version>
+                            <executions>
+                                <execution>
+                                    <id>copy-dependencies</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                    </goals>
+
+                                    <configuration>
+                                        <outputDirectory>${project.build.directory}/</outputDirectory>
+                                        <overWriteReleases>false</overWriteReleases>
+                                        <overWriteSnapshots>true</overWriteSnapshots>
+                                        <excludeTransitive>false</excludeTransitive>
+                                        <includeScope>runtime</includeScope>
+                                        <!--<excludeScope>provided</excludeScope>-->
+                            <!--<excludeScope>test</excludeScope>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>cn.edu.hfut.dmic.webcollector.ui.BreadthCrawlerUI</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin> 
+            -->
+
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <delete dir="./crawl" includeemptydirs="true"/>
+                                <copy todir="${project.build.directory}/bin">
+                                    <fileset dir="${project.build.directory}">
+                                        <include name="*.jar"/>
+                                        <include name="*.sh"/>
+                                        <include name="*.bat"/>
+                                    </fileset>
+                                </copy>
+
+                                <zip basedir="${project.build.directory}/bin"
+                                     destfile="./webcollector-${project.version}-bin.zip"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.rocksdb/rocksdbjni -->
+        <dependency>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+            <version>5.14.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <!--<dependency>-->
+            <!--<groupId>commons-io</groupId>-->
+            <!--<artifactId>commons-io</artifactId>-->
+            <!--<version>2.6</version>-->
+        <!--</dependency>-->
+
+
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.1</version>
+        </dependency>
+
+
+
+
+        <!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.11.0</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.11.3</version>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>com.googlecode.juniversalchardet</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>org.json</groupId>-->
+            <!--<artifactId>json</artifactId>-->
+            <!--<version>20140107</version>-->
+        <!--</dependency>-->
+
+        <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.json/json &ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.json</groupId>-->
+            <!--<artifactId>json</artifactId>-->
+            <!--<version>20170516</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>com.sleepycat</groupId>
+            <artifactId>je</artifactId>
+            <version>5.0.73</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.25</version>
+        </dependency>
+
+
+        <!--
+            下面这些dependency用于JS数据抓取(selenium)。
+            如果希望使用这些功能，请将 <scope>provided</scope>删除，并重新构建项目。
+            注意这些dependency大约有几十M，国内使用最好使用开源中国的maven镜像,详细方法
+            参见：http://maven.oschina.net/help.html
+        -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>3.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.avro/avro -->
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.8.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.3.18.RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <developers>
+        <developer>
+            <id>hujun</id>
+            <name>Hu Jun</name>
+            <email>hujunxianligong@gmail.com</email>
+            <roles>
+                <role>Lead Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+
+</project>

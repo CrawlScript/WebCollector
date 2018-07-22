@@ -1,3 +1,2 @@
-/WebCollector/target/
-/WebCollector/.idea/
-/WebCollector-JRuby/lib/*.jar
+target/
+.idea/
