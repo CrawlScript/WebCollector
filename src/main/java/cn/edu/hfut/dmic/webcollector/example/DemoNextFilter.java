@@ -77,6 +77,7 @@ public class DemoNextFilter extends BreadthCrawler {
                     nextItem.type("content");
                     return nextItem;
                 } else {
+                    // return null if you want to filter the CrawlDatum
                     return null;
                 }
             }
