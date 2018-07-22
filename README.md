@@ -51,6 +51,7 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 + [DemoCookieCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoCookieCrawler.java)
 + [DemoRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRedirectCrawler.java)  | [DemoAnnotatedRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedRedirectCrawler.java)
 + [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler)
++ [DemoRandomProxyCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRandomProxyCrawler.java)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
 
 ### NextFilter
@@ -58,9 +59,14 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 + [DemoNextFilter.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoNextFilter.java)
 + [DemoHashSetNextFilter.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoHashSetNextFilter.java)
 
+
+### Exception
+
++ [DemoExceptionCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoExceptionCrawler.java)
+
 ### Javascript
 
-+ [DemoSelenium.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSelenium.java)
++ [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java)
 
 
 ## Quickstart
