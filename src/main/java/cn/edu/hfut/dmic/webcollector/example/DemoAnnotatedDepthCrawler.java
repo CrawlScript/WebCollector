@@ -29,9 +29,9 @@ import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
  *
  * @author hu
  */
-public class DemoDepthCrawler extends BreadthCrawler {
+public class DemoAnnotatedDepthCrawler extends BreadthCrawler {
 
-    public DemoDepthCrawler(String crawlPath, boolean autoParse) {
+    public DemoAnnotatedDepthCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
 
         for (int i = 1; i <= 5; i++) {
@@ -71,7 +71,7 @@ public class DemoDepthCrawler extends BreadthCrawler {
 
 
     public static void main(String[] args) throws Exception {
-        DemoDepthCrawler crawler = new DemoDepthCrawler("crawl", true);
+        DemoAnnotatedDepthCrawler crawler = new DemoAnnotatedDepthCrawler("crawl", true);
         crawler.getConf().setTopN(5);
         crawler.start(3);
     }

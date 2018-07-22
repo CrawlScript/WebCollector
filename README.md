@@ -9,15 +9,17 @@ WebCollector is an open source web crawler framework based on Java.It provides
 
 ## Installation
 
+<!--
 ### Using Maven
 
 ```xml
 <dependency>
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.72-beta</version>
+    <version>2.73-alpha</version>
 </dependency>
 ```
+-->
 
 ### Without Maven
 WebCollector jars are available on the [HomePage](https://github.com/CrawlScript/WebCollector).
@@ -28,21 +30,32 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 ## Example Index
 
+Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
+
 ### Basic
 
-+ [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java) ([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedAutoNewsCrawler.java))
++ [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java) | [DemoAnnotatedAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedAutoNewsCrawler.java)
 + [DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java)
 
 
-### MetaData
+### CrawlDatum and MetaData
 
-+ [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java)([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java))
-
++ [DemoMetaCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoMetaCrawler.java)
++ [DemoAnnotatedMatchTypeCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedMatchTypeCrawler.java)
++ [DemoAnnotatedDepthCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedDepthCrawler.java)
++ [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java) | [DemoAnnotatedBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java)
++ [DemoAnnotatedDepthCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedDepthCrawler.java)
 
 ### Http Request
 
-+ [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java)([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java))
++ [DemoRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRedirectCrawler.java)  | [DemoAnnotatedRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedRedirectCrawler.java)
++ [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
+
+### NextFilter
+
++ [DemoNextFilter.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoNextFilter.java)
++ [DemoHashSetNextFilter.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoHashSetNextFilter.java)
 
 
 
