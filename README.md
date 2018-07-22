@@ -30,14 +30,18 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 ### Basic
 
-+ [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java)
++ [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java) ([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedAutoNewsCrawler.java))
 + [DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java)
 
 
+### MetaData
+
++ [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java)([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java))
 
 
-### Proxy
+### Http Request
 
++ [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java)([Annotation Version](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java))
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
 
 
