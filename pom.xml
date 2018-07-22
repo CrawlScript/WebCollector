@@ -37,27 +37,27 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <report>cobertura</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-                <configuration>
-                    <formats>
-                        <format>html</format>
-                    </formats>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
+    <!--<reporting>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>cobertura-maven-plugin</artifactId>-->
+                <!--<version>2.7</version>-->
+                <!--<reportSets>-->
+                    <!--<reportSet>-->
+                        <!--<reports>-->
+                            <!--<report>cobertura</report>-->
+                        <!--</reports>-->
+                    <!--</reportSet>-->
+                <!--</reportSets>-->
+                <!--<configuration>-->
+                    <!--<formats>-->
+                        <!--<format>html</format>-->
+                    <!--</formats>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</reporting>-->
 
     <build>
 
