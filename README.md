@@ -9,7 +9,7 @@ WebCollector is an open source web crawler framework based on Java.It provides
 
 ## Installation
 
-<!--
+
 ### Using Maven
 
 ```xml
@@ -19,7 +19,7 @@ WebCollector is an open source web crawler framework based on Java.It provides
     <version>2.73-alpha</version>
 </dependency>
 ```
--->
+
 
 ### Without Maven
 WebCollector jars are available on the [HomePage](https://github.com/CrawlScript/WebCollector).
