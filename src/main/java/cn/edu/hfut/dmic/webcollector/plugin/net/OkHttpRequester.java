@@ -98,37 +98,43 @@ public class OkHttpRequester extends DefaultConfigured implements Requester{
         String charset = null;
 
         ResponseBody responseBody = response.body();
-        int code = response.code();
-        //设置重定向地址
-        datum.code(code);
-        datum.location(response.header("Location"));
+        try {
+            int code = response.code();
+            //设置重定向地址
+            datum.code(code);
+            datum.location(response.header("Location"));
 
-        if(!successCodeSet.contains(code)){
+            if (!successCodeSet.contains(code)) {
 //            throw new IOException(String.format("Server returned HTTP response code: %d for URL: %s (CrawlDatum: %s)", code,crawlDatum.url(), crawlDatum.key()));
 //            throw new IOException(String.format("Server returned HTTP response code: %d for %s", code, crawlDatum.briefInfo()));
-            throw new IOException(String.format("Server returned HTTP response code: %d", code));
+                throw new IOException(String.format("Server returned HTTP response code: %d", code));
 
-        }
-        if(responseBody != null){
-            content = responseBody.bytes();
-            MediaType mediaType = responseBody.contentType();
-            if(mediaType!=null){
-                contentType = mediaType.toString();
-                Charset responseCharset = mediaType.charset();
-                if(responseCharset!=null){
-                    charset = responseCharset.name();
+            }
+            if (responseBody != null) {
+                content = responseBody.bytes();
+                MediaType mediaType = responseBody.contentType();
+                if (mediaType != null) {
+                    contentType = mediaType.toString();
+                    Charset responseCharset = mediaType.charset();
+                    if (responseCharset != null) {
+                        charset = responseCharset.name();
+                    }
                 }
             }
-        }
 
-        Page page = new Page(
-                datum,
-                contentType,
-                content
-                );
-        page.charset(charset);
-        page.obj(response);
-        return page;
+            Page page = new Page(
+                    datum,
+                    contentType,
+                    content
+            );
+            page.charset(charset);
+            page.obj(response);
+            return page;
+        }finally {
+            if(responseBody != null){
+                responseBody.close();
+            }
+        }
     }
 
     public HashSet<Integer> getSuccessCodeSet() {
