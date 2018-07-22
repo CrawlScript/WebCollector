@@ -3,16 +3,8 @@ WebCollector is an open source web crawler framework based on Java.It provides
   some simple interfaces for crawling the Web,you can setup a
   multi-threaded web crawler in less than 5 minutes.
 
-
-
-
 ## HomePage
 [https://github.com/CrawlScript/WebCollector](https://github.com/CrawlScript/WebCollector)
-
-<!--
-## Document
-[WebCollector-GitDoc](https://github.com/CrawlScript/WebCollector-GitDoc)
--->
 
 
 ## Installation
@@ -34,13 +26,19 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 
 
+## Example Index
+
++ [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
+
+
+
 
 ## Quickstart
 Lets crawl some news from github news.This demo prints out the titles and contents extracted from news of github news.
 
 ### Automatically Detecting URLs
 
-[AutoNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/AutoNewsCrawler.java):
+[DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java):
 
 ```java
 
@@ -53,14 +51,14 @@ import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
  *
  * @author hu
  */
-public class AutoNewsCrawler extends BreadthCrawler {
+public class DemoAutoNewsCrawler extends BreadthCrawler {
     /**
      * @param crawlPath crawlPath is the path of the directory which maintains
      *                  information of this crawler
      * @param autoParse if autoParse is true,BreadthCrawler will auto extract
      *                  links which match regex rules from pag
      */
-    public AutoNewsCrawler(String crawlPath, boolean autoParse) {
+    public DemoAutoNewsCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         /*start pages*/
         this.addSeed("https://blog.github.com/");
@@ -106,7 +104,7 @@ public class AutoNewsCrawler extends BreadthCrawler {
     }
 
     public static void main(String[] args) throws Exception {
-        AutoNewsCrawler crawler = new AutoNewsCrawler("crawl", true);
+        DemoAutoNewsCrawler crawler = new DemoAutoNewsCrawler("crawl", true);
         /*start crawl with depth of 4*/
         crawler.start(4);
     }
@@ -119,7 +117,7 @@ public class AutoNewsCrawler extends BreadthCrawler {
 ### Manually Detecting URLs
 
 
-[ManualNewsCrawler.java](https://github.com/CrawlScript/WebCollector/blob/master/ManualNewsCrawler.java):
+[DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java):
 
 ```java
 
@@ -132,14 +130,14 @@ import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
  *
  * @author hu
  */
-public class ManualNewsCrawler extends BreadthCrawler {
+public class DemoManualNewsCrawler extends BreadthCrawler {
     /**
      * @param crawlPath crawlPath is the path of the directory which maintains
      *                  information of this crawler
      * @param autoParse if autoParse is true,BreadthCrawler will auto extract
      *                  links which match regex rules from pag
      */
-    public ManualNewsCrawler(String crawlPath, boolean autoParse) {
+    public DemoManualNewsCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         // add 5 start pages and set their type to "list"
         //"list" is not a reserved word, you can use other string instead
@@ -182,7 +180,7 @@ public class ManualNewsCrawler extends BreadthCrawler {
     }
 
     public static void main(String[] args) throws Exception {
-        ManualNewsCrawler crawler = new ManualNewsCrawler("crawl", false);
+        DemoManualNewsCrawler crawler = new DemoManualNewsCrawler("crawl", false);
 
         crawler.getConf().setExecuteInterval(5000);
 
