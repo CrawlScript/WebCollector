@@ -3,6 +3,7 @@ package cn.edu.hfut.dmic.webcollector.example;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.rocks.BreadthCrawler;
+import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 
 /**
  * Crawling news from github news
@@ -20,44 +21,22 @@ public class DemoExceptionCrawler extends BreadthCrawler {
         super(crawlPath, autoParse);
         /*start pages*/
         this.addSeed("https://blog.github.com/");
-        for(int pageIndex = 2; pageIndex <= 5; pageIndex++) {
-            String seedUrl = String.format("https://blog.github.com/page/%d/", pageIndex);
-            this.addSeed(seedUrl);
-        }
+    }
 
-        /*fetch url like "https://blog.github.com/2018-07-13-graphql-for-octokit/" */
-        this.addRegex("https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+/");
-        /*do not fetch jpg|png|gif*/
-        //this.addRegex("-.*\\.(jpg|png|gif).*");
-        /*do not fetch url contains #*/
-        //this.addRegex("-.*#.*");
-
-        setThreads(50);
-        getConf().setTopN(100);
-
-        //enable resumable mode
-        //setResumable(true);
+    public void myMethod() throws Exception{
+        throw new Exception("this is an exception");
     }
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-        String url = page.url();
-        /*if page is news page*/
-        if (page.matchUrl("https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}[^/]+/")) {
-
-            /*extract title and content of news by css selector*/
-            String title = page.select("h1[class=lh-condensed]").first().text();
-            String content = page.selectText("div.content.markdown-body");
-
-            System.out.println("URL:\n" + url);
-            System.out.println("title:\n" + title);
-            System.out.println("content:\n" + content);
-
-            /*If you want to add urls to crawl,add them to nextLink*/
-            /*WebCollector automatically filters links that have been fetched before*/
-            /*If autoParse is true and the link you add to nextLinks does not match the 
-              regex rules,the link will also been filtered.*/
-            //next.add("http://xxxxxx.com");
+        try {
+            this.myMethod();
+        } catch (Exception e) {
+            // 当捕捉到异常时，且认为这个网页需要重新爬取时
+            // 应该使用ExceptionUtils.fail(e)
+            // 无视或者throw异常在编译时会报错，因为visit方法没有throws异常
+            // 该方法会抛出RuntimeException，不会强制要求visit方法加上throws
+            ExceptionUtils.fail(e);
         }
     }
 

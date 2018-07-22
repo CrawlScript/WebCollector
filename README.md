@@ -35,8 +35,8 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 ### Basic
 
 + [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java) | [DemoAnnotatedAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedAutoNewsCrawler.java)
-+ [DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java)
-
++ [DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java) | [DemoAnnotatedManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedManualNewsCrawler.java)
++ [DemoExceptionCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoExceptionCrawler.java)
 
 ### CrawlDatum and MetaData
 
@@ -46,13 +46,14 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 + [DemoBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoBingCrawler.java) | [DemoAnnotatedBingCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedBingCrawler.java)
 + [DemoAnnotatedDepthCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedDepthCrawler.java)
 
-### Http Request
+### Http Request and Javascript
 
 + [DemoCookieCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoCookieCrawler.java)
 + [DemoRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRedirectCrawler.java)  | [DemoAnnotatedRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedRedirectCrawler.java)
 + [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler)
 + [DemoRandomProxyCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRandomProxyCrawler.java)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
++ [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java)
 
 ### NextFilter
 
@@ -60,13 +61,8 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 + [DemoHashSetNextFilter.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoHashSetNextFilter.java)
 
 
-### Exception
 
-+ [DemoExceptionCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoExceptionCrawler.java)
 
-### Javascript
-
-+ [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java)
 
 
 ## Quickstart
