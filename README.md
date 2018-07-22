@@ -48,6 +48,7 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 
 ### Http Request
 
++ [DemoCookieCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoCookieCrawler)
 + [DemoRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRedirectCrawler.java)  | [DemoAnnotatedRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedRedirectCrawler.java)
 + [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)

@@ -237,6 +237,20 @@ public class VisitorMethodDispatcher extends DefaultConfigured{
         this.autoParse = autoParse;
     }
 
+    protected void parseLink(Page page, CrawlDatums next) {
+        String conteType = page.contentType();
+        if (conteType != null && conteType.contains("text/html")) {
+            Document doc = page.doc();
+            if (doc != null) {
+                Links links = new Links().addByRegex(doc, regexRule, getConf().getAutoDetectImg());
+                next.add(links);
+            }
+        }
+
+    }
+
+
+
     //    public static void main(String[] args) throws Exception {
 //        Visitor visitor = new Visitor() {
 //
@@ -258,16 +272,5 @@ public class VisitorMethodDispatcher extends DefaultConfigured{
 //    }
 //
 //
-    protected void parseLink(Page page, CrawlDatums next) {
-        String conteType = page.contentType();
-        if (conteType != null && conteType.contains("text/html")) {
-            Document doc = page.doc();
-            if (doc != null) {
-                Links links = new Links().addByRegex(doc, regexRule, getConf().getAutoDetectImg());
-                next.add(links);
-            }
-        }
-
-    }
 
 }
