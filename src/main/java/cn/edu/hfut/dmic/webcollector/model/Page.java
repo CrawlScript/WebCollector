@@ -474,6 +474,11 @@ public class Page implements MetaGetter, MetaSetter<Page>{
         return crawlDatum.metaAsLong(key);
     }
 
+    @Override
+    public JsonObject copyMeta() {
+        return crawlDatum.copyMeta();
+    }
+
 //    public void meta(HashMap<String, String> metaData) {
 //        this.crawlDatum.meta(metaData);
 //    }

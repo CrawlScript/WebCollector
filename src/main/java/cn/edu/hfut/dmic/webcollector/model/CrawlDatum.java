@@ -216,7 +216,10 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return metaData.get(key).getAsLong();
     }
 
-
+    @Override
+    public JsonObject copyMeta() {
+        return meta().deepCopy();
+    }
 
 
     public String briefInfo(){

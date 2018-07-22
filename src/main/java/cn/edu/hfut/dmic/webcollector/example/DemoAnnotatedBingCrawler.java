@@ -63,7 +63,7 @@ public class DemoAnnotatedBingCrawler extends RamCrawler {
     // 并且复制任务的meta
     @MatchCode(codes = {301, 302})
     public void visitRedirect(Page page, CrawlDatums next){
-        next.addAndReturn(page.location()).meta(page.meta().deepCopy());
+        next.addAndReturn(page.location()).meta(page.copyMeta());
     }
 
     @MatchType(types = "searchEngine")

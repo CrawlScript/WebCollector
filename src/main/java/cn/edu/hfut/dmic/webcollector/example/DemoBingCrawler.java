@@ -65,7 +65,7 @@ public class DemoBingCrawler extends RamCrawler {
         // 如果遇到301或者302，手动跳转（将任务加到next中）
         // 并且复制任务的meta
         if(page.code() == 301 || page.code() == 302){
-            next.addAndReturn(page.location()).meta(page.meta().deepCopy());
+            next.addAndReturn(page.location()).meta(page.copyMeta());
             return;
         }
 

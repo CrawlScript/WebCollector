@@ -9,4 +9,5 @@ public interface MetaGetter {
     boolean metaAsBoolean(String key);
     double metaAsDouble(String key);
     long metaAsLong(String key);
+    JsonObject copyMeta();
 }
