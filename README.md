@@ -28,6 +28,16 @@ WebCollector jars are available on the [HomePage](https://github.com/CrawlScript
 
 ## Example Index
 
+### Basic
+
++ [DemoAutoNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAutoNewsCrawler.java)
++ [DemoManualNewsCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoManualNewsCrawler.java)
+
+
+
+
+### Proxy
+
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
 
 
