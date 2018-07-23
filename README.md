@@ -50,7 +50,7 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 
 + [DemoCookieCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoCookieCrawler.java)
 + [DemoRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRedirectCrawler.java)  | [DemoAnnotatedRedirectCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoAnnotatedRedirectCrawler.java)
-+ [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler)
++ [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler.java)
 + [DemoRandomProxyCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRandomProxyCrawler.java)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
 + [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java)
