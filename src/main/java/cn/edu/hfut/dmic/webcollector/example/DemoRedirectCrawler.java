@@ -21,9 +21,12 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
+import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 
 /**
@@ -32,19 +35,30 @@ import java.net.URLEncoder;
  */
 public class DemoRedirectCrawler extends RamCrawler {
 
-    public DemoRedirectCrawler(String keyword, int maxPageNum) throws Exception {
-        for (int pageNum = 1; pageNum <= maxPageNum; pageNum++) {
-            String url = createBingUrl(keyword, pageNum);
+    public DemoRedirectCrawler(String keyword, int pageNum) throws Exception {
+        for (int pageIndex = 1; pageIndex <= pageNum; pageIndex++) {
+            String url = createBingUrl(keyword, pageIndex);
             addSeedAndReturn(url);
         }
     }
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-        // 如果遇到301或者302，手动跳转（将任务加到next中）
-        // 并且复制任务的meta
+        // If the http status code is 301 or 302,
+        // you have to obtain the redirected url, which is "Location" header of the http response
+        // and add it to subsequent tasks by applying "next.add(redirectedUrl)"
+        // Since the page may contains metadata,
+        // you have to copy it to the added task by "xxxx.meta(page.copyMeta())"
         if(page.code() == 301 || page.code() == 302){
-            next.addAndReturn(page.location()).meta(page.copyMeta());
+            try {
+                // page.location() may be relative url path
+                // we have to construct an absolute url path
+                String redirectUrl = new URL(new URL(page.url()), page.location()).toExternalForm();
+                next.addAndReturn(redirectUrl).meta(page.copyMeta());
+            } catch (MalformedURLException e) {
+                //the way to handle exceptions in WebCollector
+                ExceptionUtils.fail(e);
+            }
             return;
         }
         System.out.println("this page is not redirected: " + page.url());
@@ -56,14 +70,14 @@ public class DemoRedirectCrawler extends RamCrawler {
     }
 
     /**
-     * 根据关键词和页号拼接Bing搜索对应的URL
-     * @param keyword 关键词
-     * @param pageNum 页号
-     * @return 对应的URL
-     * @throws Exception 异常 
+     * construct the Bing Search url by the search keyword and the pageIndex
+     * @param keyword
+     * @param pageIndex
+     * @return the constructed url
+     * @throws Exception
      */
-    public static String createBingUrl(String keyword, int pageNum) throws Exception {
-        int first = pageNum * 10 - 9;
+    public static String createBingUrl(String keyword, int pageIndex) throws Exception {
+        int first = pageIndex * 10 - 9;
         keyword = URLEncoder.encode(keyword, "utf-8");
         return String.format("http://cn.bing.com/search?q=%s&first=%s", keyword, first);
     }

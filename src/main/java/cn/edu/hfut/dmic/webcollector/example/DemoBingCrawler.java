@@ -21,7 +21,12 @@ import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
+
+import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 
@@ -47,13 +52,13 @@ import org.jsoup.nodes.Element;
  */
 public class DemoBingCrawler extends RamCrawler {
 
-    public DemoBingCrawler(String keyword, int maxPageNum) throws Exception {
-        for (int pageNum = 1; pageNum <= maxPageNum; pageNum++) {
-            String url = createBingUrl(keyword, pageNum);
+    public DemoBingCrawler(String keyword, int pageNum) throws Exception {
+        for (int pageIndex = 1; pageIndex <= pageNum; pageIndex++) {
+            String url = createBingUrl(keyword, pageIndex);
             CrawlDatum datum = new CrawlDatum(url)
                     .type("searchEngine")
                     .meta("keyword", keyword)
-                    .meta("pageNum", pageNum)
+                    .meta("pageIndex", pageIndex)
                     .meta("depth", 1);
             addSeed(datum);
         }
@@ -61,20 +66,30 @@ public class DemoBingCrawler extends RamCrawler {
 
     @Override
     public void visit(Page page, CrawlDatums next) {
-
-        // 如果遇到301或者302，手动跳转（将任务加到next中）
-        // 并且复制任务的meta
+        // If the http status code is 301 or 302,
+        // you have to obtain the redirected url, which is "Location" header of the http response
+        // and add it to subsequent tasks by applying "next.add(redirectedUrl)"
+        // Since the page may contains metadata,
+        // you have to copy it to the added task by "xxxx.meta(page.copyMeta())"
         if(page.code() == 301 || page.code() == 302){
-            next.addAndReturn(page.location()).meta(page.copyMeta());
+            try {
+                // page.location() may be relative url path
+                // we have to construct an absolute url path
+                String redirectUrl = new URL(new URL(page.url()), page.location()).toExternalForm();
+                next.addAndReturn(redirectUrl).meta(page.copyMeta());
+            } catch (MalformedURLException e) {
+                //the way to handle exceptions in WebCollector
+                ExceptionUtils.fail(e);
+            }
             return;
         }
 
         String keyword = page.meta("keyword");
-        int pageNum = page.metaAsInt("pageNum");
+        int pageIndex = page.metaAsInt("pageIndex");
         int depth = page.metaAsInt("depth");
 
         if (page.matchType("searchEngine")) {
-            System.out.println("成功抓取关键词" + keyword + "的第" + pageNum + "页搜索结果");
+            System.out.println("成功抓取关键词" + keyword + "的第" + pageIndex + "页搜索结果");
             Elements results = page.select("li.b_algo>h2>a");
 
             for (int rank = 0; rank < results.size(); rank++) {
@@ -91,7 +106,7 @@ public class DemoBingCrawler extends RamCrawler {
                 next.addAndReturn(href)
                         .type("outlink")
                         .meta("keyword", keyword)
-                        .meta("pageNum", pageNum)
+                        .meta("pageIndex", pageIndex)
                         .meta("rank", rank);
             }
 
@@ -101,7 +116,7 @@ public class DemoBingCrawler extends RamCrawler {
             String referer=page.meta("referer");
 
             String line = String.format("第%s页第%s个结果:%s(%s字节)\tdepth=%s\treferer=%s",
-                    pageNum, rank + 1, page.doc().title(),page.content().length,depth, referer);
+                    pageIndex, rank + 1, page.doc().title(),page.content().length,depth, referer);
             System.out.println(line);
 
         }
@@ -128,14 +143,14 @@ public class DemoBingCrawler extends RamCrawler {
     }
 
     /**
-     * 根据关键词和页号拼接Bing搜索对应的URL
-     * @param keyword 关键词
-     * @param pageNum 页号
-     * @return 对应的URL
-     * @throws Exception 异常 
+     * construct the Bing Search url by the search keyword and the pageIndex
+     * @param keyword
+     * @param pageIndex
+     * @return the constructed url
+     * @throws Exception
      */
-    public static String createBingUrl(String keyword, int pageNum) throws Exception {
-        int first = pageNum * 10 - 9;
+    public static String createBingUrl(String keyword, int pageIndex) throws Exception {
+        int first = pageIndex * 10 - 9;
         keyword = URLEncoder.encode(keyword, "utf-8");
         return String.format("http://cn.bing.com/search?q=%s&first=%s", keyword, first);
     }
