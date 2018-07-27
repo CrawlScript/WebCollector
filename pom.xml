@@ -90,7 +90,7 @@
                 <executions>
                     <execution>
                         <id>attach-javadoc</id>
-                        <phase>verify</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
@@ -192,7 +192,11 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <!--<delete dir="./crawl" includeemptydirs="true"/>-->
+                                <delete dir="./docs" includeemptydirs="true"/>
+                                <copy todir="./docs">
+                                    <fileset dir="${project.build.directory}/apidocs">
+                                    </fileset>
+                                </copy>
                                 <copy todir="${project.build.directory}/bin">
                                     <fileset dir="${project.build.directory}">
                                         <include name="*.jar"/>
