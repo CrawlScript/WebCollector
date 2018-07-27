@@ -19,6 +19,8 @@ package cn.edu.hfut.dmic.webcollector.model;
 
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -511,11 +513,25 @@ public class Page implements MetaGetter, MetaSetter<Page>{
         return crawlDatum.code();
     }
 
+
+
+    /**
+     * get the Location Response Header,
+     * which represent the redirect url
+     * @return
+     */
     public String location(){
         return crawlDatum.location();
     }
 
-
+    /**
+     * get the Location Response Header and convert it to absolute url,
+     * which represent the absolute redirect url
+     * @return
+     */
+    public String absLocation() throws MalformedURLException {
+        return crawlDatum.absLocation();
+    }
 
     public <T> T obj() {
         return (T)obj;

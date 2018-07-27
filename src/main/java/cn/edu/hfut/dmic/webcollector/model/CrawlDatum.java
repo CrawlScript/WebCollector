@@ -23,6 +23,8 @@ import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import com.google.gson.*;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.regex.Pattern;
 
 /**
@@ -142,6 +144,12 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         return this;
     }
 
+
+    /**
+     * get the Location Response Header,
+     * which represent the redirect url
+     * @return
+     */
     public String location() {
         return location;
     }
@@ -150,6 +158,21 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
         this.location = location;
         return this;
     }
+
+    /**
+     * get the Location Response Header and convert it to absolute url,
+     * which represent the absolute redirect url
+     * @return
+     */
+    public String absLocation() throws MalformedURLException {
+        if(location == null){
+            return null;
+        }
+        URL baseURL = new URL(url());
+        return new URL(baseURL, location).toExternalForm();
+    }
+
+
 
     public String url() {
         return url;

@@ -6,7 +6,7 @@
 
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.73-alpha</version>
+    <version>2.73-beta</version>
     <description>A java crawler for information collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>

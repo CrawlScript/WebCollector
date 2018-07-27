@@ -21,6 +21,11 @@ public class DemoExceptionCrawler extends BreadthCrawler {
         super(crawlPath, autoParse);
         /*start pages*/
         this.addSeed("https://blog.github.com/");
+
+        // the ExecuteCount will increate by 1 when the task(CrawlDatum) is executed
+        // either the task(CrawlDatum) succeed or fail
+        // MaxExecuteCount limit the max execution number of the task(CrawlDatum)
+        getConf().setMaxExecuteCount(3);
     }
 
     public void myMethod() throws Exception{
@@ -32,10 +37,9 @@ public class DemoExceptionCrawler extends BreadthCrawler {
         try {
             this.myMethod();
         } catch (Exception e) {
-            // 当捕捉到异常时，且认为这个网页需要重新爬取时
-            // 应该使用ExceptionUtils.fail(e)
-            // 无视或者throw异常在编译时会报错，因为visit方法没有throws异常
-            // 该方法会抛出RuntimeException，不会强制要求visit方法加上throws
+            // if you want to throw exceptions manually in the visit method
+            // you should use ExceptionUtils.fail and the crawler will consider the task(CrawlDatum) as failed
+            // failed tasks(CrawlDatums) will be executed again if the MaxExecuteCount is not reached
             ExceptionUtils.fail(e);
         }
     }
@@ -44,6 +48,7 @@ public class DemoExceptionCrawler extends BreadthCrawler {
         DemoExceptionCrawler crawler = new DemoExceptionCrawler("crawl", true);
         /*start crawl with depth of 4*/
         crawler.start(4);
+
     }
 
 }

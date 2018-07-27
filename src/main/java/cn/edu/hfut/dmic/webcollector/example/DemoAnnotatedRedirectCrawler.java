@@ -23,7 +23,6 @@ import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
 import cn.edu.hfut.dmic.webcollector.util.ExceptionUtils;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 
 /**
@@ -48,8 +47,8 @@ public class DemoAnnotatedRedirectCrawler extends RamCrawler {
     public void visitRedirect(Page page, CrawlDatums next){
         try {
             // page.location() may be relative url path
-            // we have to construct an absolute url path
-            String redirectUrl = new URL(new URL(page.url()), page.location()).toExternalForm();
+            // page.absLocation is absolute url path
+            String redirectUrl = page.absLocation();
             next.addAndReturn(redirectUrl).meta(page.copyMeta());
         } catch (MalformedURLException e) {
             //the way to handle exceptions in WebCollector

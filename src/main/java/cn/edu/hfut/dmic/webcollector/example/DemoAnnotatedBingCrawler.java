@@ -17,7 +17,6 @@
  */
 package cn.edu.hfut.dmic.webcollector.example;
 
-import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Page;
 import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
@@ -26,7 +25,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLEncoder;
 
 /**
@@ -72,8 +70,8 @@ public class DemoAnnotatedBingCrawler extends RamCrawler {
     public void visitRedirect(Page page, CrawlDatums next){
         try {
             // page.location() may be relative url path
-            // we have to construct an absolute url path
-            String redirectUrl = new URL(new URL(page.url()), page.location()).toExternalForm();
+            // page.absLocation is absolute url path
+            String redirectUrl = page.absLocation();
             next.addAndReturn(redirectUrl).meta(page.copyMeta());
         } catch (MalformedURLException e) {
             //the way to handle exceptions in WebCollector
