@@ -29,8 +29,8 @@ public class DemoCookieCrawler extends BreadthCrawler {
             // 可以参考OkHttp的文档来修改请求头
             System.out.println("request with cookie: " + cookie);
             return super.createRequestBuilder(crawlDatum)
-                    .Header("User-Agent", userAgent)
-                    .Header("Cookie", cookie);
+                    .header("User-Agent", userAgent)
+                    .header("Cookie", cookie);
         }
 
     }
