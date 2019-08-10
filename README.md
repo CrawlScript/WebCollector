@@ -53,7 +53,7 @@ Annotation versions are named with `DemoAnnotatedxxxxxx.java`.
 + [DemoPostCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoPostCrawler.java)
 + [DemoRandomProxyCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoRandomProxyCrawler.java)
 + [AbuyunDynamicProxyRequester.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/AbuyunDynamicProxyRequester.java)
-+ [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java)
++ [DemoSeleniumCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumCrawler.java) | [DemoSeleniumWithCookieCrawler.java](src/main/java/cn/edu/hfut/dmic/webcollector/example/DemoSeleniumWithCookieCrawler.java)
 
 ### NextFilter
 
