@@ -124,6 +124,7 @@ public class BerkeleyDBManager extends DBManager {
 
     @Override
     public void close() throws Exception {
+        env.cleanLog();
         env.close();
     }
 
