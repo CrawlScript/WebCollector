@@ -370,9 +370,10 @@ Element contentElement = ContentExtractor.getContentElementByUrl(url);
 
 ## WeChat Group
 
-<div style="text-align:center;width:400px;margin: 0 auto;">
-    <img src="http://cdn.zhuanzhi.ai/other/wc_wx0.jpg">
-</div>
+<p align="center">
+  <img width="400"  src="http://cdn.zhuanzhi.ai/other/wc_wx0.jpg">
+</p>
+
 
 
 
