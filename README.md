@@ -368,6 +368,13 @@ Element contentElement = ContentExtractor.getContentElementByHtml(html);
 Element contentElement = ContentExtractor.getContentElementByUrl(url);
 ```
 
+## WeChat Group
+
+<img src="http://cdn.zhuanzhi.ai/other/wc_wx0.jpg" style="display:block;width:400px;margin: 0 auto;">
+
+
+
+
 <!--
 
 ## Other Documentation
