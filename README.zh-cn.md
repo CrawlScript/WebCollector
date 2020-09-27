@@ -47,7 +47,7 @@ WebCollector 2.x版本特性：
 ## 微信群
 
 <p align="center">
-  <img width="400"  src="http://cdn.zhuanzhi.ai/other/wc_wx0.jpg">
+  <img width="400"  src="http://cdn.zhuanzhi.ai/other/wc_wx2.jpg">
 </p>
 
 
