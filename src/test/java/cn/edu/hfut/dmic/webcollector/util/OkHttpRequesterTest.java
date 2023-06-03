@@ -11,7 +11,7 @@ public class OkHttpRequesterTest {
 
     @Test
     public void testHttpCode(){
-        String url = "http://www.hfut.edu.cn/ch/";
+        String url = "https://www.bing.com/";
         try {
             Page page = requester.getResponse(new CrawlDatum(url));
             assertEquals(200, page.code());

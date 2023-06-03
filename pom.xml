@@ -6,7 +6,7 @@
 
     <groupId>cn.edu.hfut.dmic.webcollector</groupId>
     <artifactId>WebCollector</artifactId>
-    <version>2.73-alpha</version>
+    <version>2.74-alpha</version>
     <description>A java crawler for information collection</description>
     <url>https://github.com/CrawlScript/WebCollector</url>
     <packaging>jar</packaging>
@@ -141,7 +141,7 @@
                                         <value>target/cobertura/cobertura.ser</value>
                                     </property>
                                 </systemProperties>
-                                <skipTests>false</skipTests>
+                                <skipTests>true</skipTests>
                             </configuration>
                         </plugin>
                         <plugin>
@@ -167,6 +167,17 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration combine.self="override">
+                    <excludes>
+<!--                        <exclude>**/cn/edu/hfut/dmic/webcollector/example/*</exclude>-->
+                        <exclude>**/cn/edu/hfut/dmic/webcollector/example/</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <!--
             <plugin>
@@ -252,7 +263,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.11.0</version>
+            <version>4.11.0</version>
         </dependency>
 
 
@@ -260,8 +271,9 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.11.3</version>
+            <version>1.16.1</version>
         </dependency>
+
 
 
 
@@ -275,9 +287,11 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+
+
 
 
         <!--<dependency>-->
@@ -303,7 +317,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.36</version>
         </dependency>
 
 
@@ -311,8 +325,9 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.36</version>
         </dependency>
+
 
 
         <!--

@@ -19,14 +19,10 @@ public class DemoAnnotatedAutoNewsCrawler extends BreadthCrawler {
     public DemoAnnotatedAutoNewsCrawler(String crawlPath, boolean autoParse) {
         super(crawlPath, autoParse);
         /*start pages*/
-        this.addSeed("https://blog.github.com/");
-        for(int pageIndex = 2; pageIndex <= 5; pageIndex++) {
-            String seedUrl = String.format("https://blog.github.com/page/%d/", pageIndex);
-            this.addSeed(seedUrl);
-        }
+        this.addSeed("https://github.blog/");
 
         /*fetch url like "https://blog.github.com/2018-07-13-graphql-for-octokit/" */
-        this.addRegex("https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+/");
+        this.addRegex("https://github.blog/[0-9]{4}-[0-9]{2}-[0-9]{2}-[^/]+/");
         /*do not fetch jpg|png|gif*/
         //this.addRegex("-.*\\.(jpg|png|gif).*");
         /*do not fetch url contains #*/
@@ -40,11 +36,11 @@ public class DemoAnnotatedAutoNewsCrawler extends BreadthCrawler {
     }
 
 
-    @MatchUrl(urlRegex = "https://blog.github.com/[0-9]{4}-[0-9]{2}-[0-9]{2}[^/]+/")
+    @MatchUrl(urlRegex = "https://github.blog/[0-9]{4}-[0-9]{2}-[0-9]{2}[^/]+/")
     public void visitNews(Page page, CrawlDatums next) {
         /*extract title and content of news by css selector*/
-        String title = page.select("h1[class=lh-condensed]").first().text();
-        String content = page.selectText("div.content.markdown-body");
+        String title = page.select("h1.lh-condensed").first().text();
+        String content = page.selectText("main[id^='post']");
 
         System.out.println("URL:\n" + page.url());
         System.out.println("title:\n" + title);

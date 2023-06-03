@@ -20,11 +20,7 @@ public class DemoManualNewsCrawler extends BreadthCrawler {
         super(crawlPath, autoParse);
         // add 5 start pages and set their type to "list"
         //"list" is not a reserved word, you can use other string instead
-        this.addSeedAndReturn("https://blog.github.com/").type("list");
-        for(int pageIndex = 2; pageIndex <= 5; pageIndex++) {
-            String seedUrl = String.format("https://blog.github.com/page/%d/", pageIndex);
-            this.addSeed(seedUrl, "list");
-        }
+        this.addSeedAndReturn("https://github.blog/").type("list");
 
         setThreads(50);
         getConf().setTopN(100);
@@ -40,12 +36,12 @@ public class DemoManualNewsCrawler extends BreadthCrawler {
         if (page.matchType("list")) {
             /*if type is "list"*/
             /*detect content page by css selector and mark their types as "content"*/
-            next.add(page.links("h1.lh-condensed>a")).type("content");
+            next.add(page.links("article h3>a")).type("content");
         }else if(page.matchType("content")) {
             /*if type is "content"*/
             /*extract title and content of news by css selector*/
-            String title = page.select("h1[class=lh-condensed]").first().text();
-            String content = page.selectText("div.content.markdown-body");
+            String title = page.select("h1.lh-condensed").first().text();
+            String content = page.selectText("main[id^='post']");
 
             //read title_prefix and content_length_limit from configuration
             title = getConf().getString("title_prefix") + title;
