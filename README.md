@@ -308,6 +308,8 @@ AutoParseCrawler is also an Executor plugin, a Requester plugin and a Visitor pl
 + Just override the corresponding methods of your AutoParseCrawler. For example, if you are using BreadthCrawler, all you have to do is override the `Page getResponse(CrawlDatum crawlDatum)` method.
 + Create a new class which implements Requester interface and implement the `Page getResponse(CrawlDatum crawlDatum)` method of the class. Instantiate the class and use `crawler.setRequester(the instance)` to mount the plugin to the crawler.
 
+### Just to be clear,Using the okHttp3 plugin, which by default is Gzip compressed, the data returned by the request is automatically decompressed.If you manually set accept-encoding, you'll need to decompress the data returned by the request, and okHttp3 won't help you decompress the data.
+
 
 ## Customizing Requester Plugin
 
