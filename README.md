@@ -11,6 +11,8 @@ In addition to a general crawler framework, WebCollector also integrates __CEPF_
 ## HomePage
 [https://github.com/CrawlScript/WebCollector](https://github.com/CrawlScript/WebCollector)
 
+##QQ交流群：831391915
+
 
 ## Installation
 
