@@ -18,16 +18,24 @@
 package cn.edu.hfut.dmic.webcollector.util;
 
 
+import cn.edu.hfut.dmic.webcollector.model.Links;
+import org.jsoup.nodes.Element;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import static java.util.Spliterators.iterator;
 
 /**
  *
  * @author hu
  */
 public class RegexRule {
-    
+
+    Links links=new Links();
+
     public RegexRule(){
         
     }
@@ -129,6 +137,62 @@ public class RegexRule {
         } else {
             return true;
         }
+    }
 
+
+    public Links filterByRegex(String regex) {
+        RegexRule regexRule = new RegexRule();
+        regexRule.addRule(regex);
+        return filterByRegex(regexRule);
+    }
+
+    public Links filterByRegex(RegexRule regexRule) {
+        Iterator<String> ite = iterator();
+        while(ite.hasNext()){
+            String url = ite.next();
+            if (!regexRule.satisfy(url)) {
+                ite.remove();
+            }
+        }
+        return links;
+    }
+
+    private Iterator<String> iterator() {
+        return null;
+    }
+
+
+
+    public Links addByRegex(Element ele, String regex, boolean parseSrc) {
+        RegexRule regexRule = new RegexRule(regex);
+        return addByRegex(ele, regexRule, parseSrc);
+    }
+
+    public Links addByRegex(Element ele, String regex) {
+        RegexRule regexRule = new RegexRule(regex);
+        return addByRegex(ele,regexRule,false);
+    }
+
+    public Links addByRegex(Element ele, RegexRule regexRule) {
+        return addByRegex(ele, regexRule, false);
+    }
+
+    public Links addByRegex(Element ele, RegexRule regexRule, boolean parseSrc) {
+        // This method should use the regexRule parameter to add links to the Links object.
+        Links links = new Links();
+        for (String href : ele.select("a[href]").eachAttr("abs:href")) {
+            if (regexRule.satisfy(href)) {
+                links.add(href);
+            }
+        }
+        if (parseSrc) {
+            for (String src : ele.select("img[src]").eachAttr("abs:src")) {
+                if (regexRule.satisfy(src)) {
+                    links.add(src);
+                }
+            }
+        }
+        return links;
     }
 }
+

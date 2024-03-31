@@ -1,6 +1,7 @@
 package cn.edu.hfut.dmic.webcollector.fetcher;
 
 import cn.edu.hfut.dmic.webcollector.conf.DefaultConfigured;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
 import cn.edu.hfut.dmic.webcollector.model.Links;
 import cn.edu.hfut.dmic.webcollector.model.Page;
@@ -242,7 +243,9 @@ public class VisitorMethodDispatcher extends DefaultConfigured{
         if (conteType != null && conteType.contains("text/html")) {
             Document doc = page.doc();
             if (doc != null) {
-                Links links = new Links().addByRegex(doc, regexRule, getConf().getAutoDetectImg());
+                RegexRule regexRule = new RegexRule(); // Presuming you have set the regex patterns somewhere
+
+                Links links = regexRule.addByRegex(doc, regexRule, getConf().getAutoDetectImg());
                 next.add(links);
             }
         }
@@ -267,8 +270,7 @@ public class VisitorMethodDispatcher extends DefaultConfigured{
 //            }
 //        };
 //
-//        VisitorMethodDispatcher visitorMethodDispatcher = new VisitorMethodDispatcher(visitor);
-//
+    //
 //    }
 //
 //

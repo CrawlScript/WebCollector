@@ -67,20 +67,34 @@ public class CharsetDetector {
             }
         }
         if (encoding == null) {
-            if (length >= 3 && content[0] == (byte) 0xEF
-                    && content[1] == (byte) 0xBB && content[2] == (byte) 0xBF) {
+            if (isUTF8Signature(content, length)) {
                 encoding = "UTF-8";
-            } else if (length >= 2) {
-                if (content[0] == (byte) 0xFF && content[1] == (byte) 0xFE) {
-                    encoding = "UTF-16LE";
-                } else if (content[0] == (byte) 0xFE
-                        && content[1] == (byte) 0xFF) {
-                    encoding = "UTF-16BE";
-                }
+            } else if (isUTF16LESignature(content, length)) {
+                encoding = "UTF-16LE";
+            } else if (isUTF16BESignature(content, length)) {
+                encoding = "UTF-16BE";
             }
         }
-
         return encoding;
+    }
+
+    private static boolean isUTF8Signature(byte[] content, int length) {
+        return length >= 3
+                && content[0] == (byte) 0xEF
+                && content[1] == (byte) 0xBB
+                && content[2] == (byte) 0xBF;
+    }
+
+    private static boolean isUTF16LESignature(byte[] content, int length) {
+        return length >= 2
+                && content[0] == (byte) 0xFF
+                && content[1] == (byte) 0xFE;
+    }
+
+    private static boolean isUTF16BESignature(byte[] content, int length) {
+        return length >= 2
+                && content[0] == (byte) 0xFE
+                && content[1] == (byte) 0xFF;
     }
 
     /**

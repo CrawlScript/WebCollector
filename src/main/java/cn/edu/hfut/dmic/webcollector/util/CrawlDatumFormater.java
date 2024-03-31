@@ -42,18 +42,7 @@ public class CrawlDatumFormater {
                 .append("\nURL: ").append(datum.url())
                 .append("\nSTATUS: ");
 
-        switch (datum.getStatus()) {
-            case CrawlDatum.STATUS_DB_SUCCESS:
-                sb.append("success");
-                break;
-            case CrawlDatum.STATUS_DB_FAILED:
-                sb.append("failed");
-                break;
-            case CrawlDatum.STATUS_DB_UNEXECUTED:
-                sb.append("unexecuted");
-                break;
-        }
-
+        String status = getStatusFormatter(datum.getStatus()).format(datum);
         sb.append("\nExecuteTime: ")
                 .append(sdf.format(new Date(datum.getExecuteTime())))
                 .append("\nExecuteCount: ").append(datum.getExecuteCount())
@@ -74,6 +63,19 @@ public class CrawlDatumFormater {
 
         sb.append("\n");
         return sb.toString();
+    }
+
+    private static StatusFormatter getStatusFormatter(int status) {
+        switch (status) {
+            case CrawlDatum.STATUS_DB_SUCCESS:
+                return new SuccessStatusFormatter();
+            case CrawlDatum.STATUS_DB_FAILED:
+                return new FailedStatusFormatter();
+            case CrawlDatum.STATUS_DB_UNEXECUTED:
+                return new UnexecutedStatusFormatter();
+            default:
+                throw new IllegalArgumentException("Unknown status: " + status);
+        }
     }
 
 //    public static CrawlDatum jsonStrToDatum(String crawlDatumKey, String jsonStr) {

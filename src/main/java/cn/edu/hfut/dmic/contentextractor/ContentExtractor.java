@@ -34,6 +34,8 @@ import org.jsoup.select.Elements;
 import org.jsoup.select.NodeVisitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static cn.edu.hfut.dmic.contentextractor.NewsExtractor.getNewsByHtml;
+
 
 /**
  * ContentExtractor could extract content,title,time from news webpage
@@ -49,6 +51,8 @@ public class ContentExtractor {
     ContentExtractor(Document doc) {
         this.doc = doc;
     }
+
+    TextAnalyzer textAnalyzer=new TextAnalyzer();
 
     protected HashMap<Element, CountInfo> infoMap = new HashMap<Element, CountInfo>();
 
@@ -122,7 +126,11 @@ public class ContentExtractor {
     protected double computeScore(Element tag) {
         CountInfo countInfo = infoMap.get(tag);
         double var = Math.sqrt(computeVar(countInfo.leafList) + 1);
-        double score = Math.log(var) * countInfo.densitySum * Math.log(countInfo.textCount - countInfo.linkTextCount + 1) * Math.log10(countInfo.pCount + 2);
+//        double score = Math.log(var) * countInfo.densitySum * Math.log(countInfo.textCount - countInfo.linkTextCount + 1) * Math.log10(countInfo.pCount + 2);
+        double logVar = Math.log(var);
+        double adjustedTextCount = Math.log(countInfo.textCount - countInfo.linkTextCount + 1);
+        double adjustedPCount = Math.log10(countInfo.pCount + 2);
+        double score = logVar * countInfo.densitySum * adjustedTextCount * adjustedPCount;
         return score;
     }
 
@@ -168,38 +176,16 @@ public class ContentExtractor {
         return content;
     }
 
-    public News getNews() throws Exception {
-        News news = new News();
-        Element contentElement;
-        try {
-            contentElement = getContentElement();
-            news.setContentElement(contentElement);
-        } catch (Exception ex) {
-            LOG.info("news content extraction failed,extraction abort", ex);
-            throw new Exception(ex);
+    protected String getTime(Element contentElement) throws Exception {
+        Element searchedElement = climbDOMTree(contentElement);
+        String time = findTimeInElement(searchedElement);
+        if (time != null) {
+            return time;
         }
-
-        if (doc.baseUri() != null) {
-            news.setUrl(doc.baseUri());
-        }
-
-        try {
-            news.setTime(getTime(contentElement));
-        } catch (Exception ex) {
-            LOG.info("news title extraction failed", ex);
-        }
-
-        try {
-            news.setTitle(getTitle(contentElement));
-        } catch (Exception ex) {
-            LOG.info("title extraction failed", ex);
-        }
-        return news;
+        return handleTimeExtractionFailure(contentElement);
     }
 
-    protected String getTime(Element contentElement) throws Exception {
-        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-2]?[1-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
-        Pattern pattern = Pattern.compile(regex);
+    private Element climbDOMTree(Element contentElement) {
         Element current = contentElement;
         for (int i = 0; i < 2; i++) {
             if (current != null && current != doc.body()) {
@@ -209,26 +195,34 @@ public class ContentExtractor {
                 }
             }
         }
+        return current;
+    }
+
+    private String findTimeInElement(Element element) {
+        String regex = "([1-2][0-9]{3})[^0-9]{1,5}?([0-1]?[0-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-2]?[1-9])[^0-9]{1,5}?([0-9]{1,2})[^0-9]{1,5}?([0-9]{1,2})";
+        Pattern pattern = Pattern.compile(regex);
         for (int i = 0; i < 6; i++) {
-            if (current == null) {
+            if (element == null) {
                 break;
             }
-            String currentHtml = current.outerHtml();
+            String currentHtml = element.outerHtml();
             Matcher matcher = pattern.matcher(currentHtml);
             if (matcher.find()) {
                 return matcher.group(1) + "-" + matcher.group(2) + "-" + matcher.group(3) + " " + matcher.group(4) + ":" + matcher.group(5) + ":" + matcher.group(6);
             }
-            if (current != doc.body()) {
-                current = current.parent();
+            if (element != doc.body()) {
+                element = element.parent();
             }
         }
+        return null;
+    }
 
+    private String handleTimeExtractionFailure(Element contentElement) throws Exception {
         try {
             return getDate(contentElement);
         } catch (Exception ex) {
-            throw new Exception("time not found");
+            throw new Exception("Time not found");
         }
-
     }
 
     protected String getDate(Element contentElement) throws Exception {
@@ -259,24 +253,6 @@ public class ContentExtractor {
         throw new Exception("date not found");
     }
 
-    protected double strSim(String a, String b) {
-        int len1 = a.length();
-        int len2 = b.length();
-        if (len1 == 0 || len2 == 0) {
-            return 0;
-        }
-        double ratio;
-        if (len1 > len2) {
-            ratio = (len1 + 0.0) / len2;
-        } else {
-            ratio = (len2 + 0.0) / len1;
-        }
-        if (ratio >= 3) {
-            return 0;
-        }
-        return (lcs(a, b) + 0.0) / Math.max(len1, len2);
-    }
-
     protected String getTitle(final Element contentElement) throws Exception {
         final ArrayList<Element> titleList = new ArrayList<Element>();
         final ArrayList<Double> titleSim = new ArrayList<Double>();
@@ -295,7 +271,7 @@ public class ContentExtractor {
                         String tagName = tag.tagName();
                         if (Pattern.matches("h[1-6]", tagName)) {
                             String title = tag.text().trim();
-                            double sim = strSim(title, metaTitle);
+                            double sim = textAnalyzer.strSim(title, metaTitle);
                             titleSim.add(sim);
                             titleList.add(tag);
                         }
@@ -351,7 +327,7 @@ public class ContentExtractor {
                 if (node instanceof TextNode) {
                     TextNode tn = (TextNode) node;
                     String text = tn.text().trim();
-                    double sim = strSim(text, metaTitle);
+                    double sim = textAnalyzer.strSim(text, metaTitle);
                     if (sim > 0) {
                         if (sim > max.get(0)) {
                             max.set(0, sim);
@@ -394,42 +370,6 @@ public class ContentExtractor {
 
         return opt[0][0];
 
-    }
-
-    protected int editDistance(String word1, String word2) {
-        int len1 = word1.length();
-        int len2 = word2.length();
-
-        int[][] dp = new int[len1 + 1][len2 + 1];
-
-        for (int i = 0; i <= len1; i++) {
-            dp[i][0] = i;
-        }
-
-        for (int j = 0; j <= len2; j++) {
-            dp[0][j] = j;
-        }
-
-        for (int i = 0; i < len1; i++) {
-            char c1 = word1.charAt(i);
-            for (int j = 0; j < len2; j++) {
-                char c2 = word2.charAt(j);
-
-                if (c1 == c2) {
-                    dp[i + 1][j + 1] = dp[i][j];
-                } else {
-                    int replace = dp[i][j] + 1;
-                    int insert = dp[i][j + 1] + 1;
-                    int delete = dp[i + 1][j] + 1;
-
-                    int min = replace > insert ? insert : replace;
-                    min = delete > min ? min : delete;
-                    dp[i + 1][j + 1] = min;
-                }
-            }
-        }
-
-        return dp[len1][len2];
     }
 
     /*输入Jsoup的Document，获取正文所在Element*/
@@ -483,24 +423,6 @@ public class ContentExtractor {
 //        String html = request.response().decode();
         String html = okHttpRequester.getResponse(url).html();
         return getContentByHtml(html, url);
-    }
-
-    /*输入Jsoup的Document，获取结构化新闻信息*/
-    public static News getNewsByDoc(Document doc) throws Exception {
-        ContentExtractor ce = new ContentExtractor(doc);
-        return ce.getNews();
-    }
-
-    /*输入HTML，获取结构化新闻信息*/
-    public static News getNewsByHtml(String html) throws Exception {
-        Document doc = Jsoup.parse(html);
-        return getNewsByDoc(doc);
-    }
-
-    /*输入HTML和URL，获取结构化新闻信息*/
-    public static News getNewsByHtml(String html, String url) throws Exception {
-        Document doc = Jsoup.parse(html, url);
-        return getNewsByDoc(doc);
     }
 
     /*输入URL，获取结构化新闻信息*/
