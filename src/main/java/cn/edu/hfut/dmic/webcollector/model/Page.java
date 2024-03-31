@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.model;
+import cn.edu.hfut.dmic.webcollector.util.RegexRule;
 
 import cn.edu.hfut.dmic.webcollector.util.CharsetDetector;
 import java.io.UnsupportedEncodingException;
@@ -189,10 +190,11 @@ public class Page implements MetaGetter, MetaSetter<Page>{
 
 
     public Links regexLinks(RegexRule regexRule, boolean parseSrc) {
-        return new Links().addByRegex(doc(), regexRule, parseSrc);
+        return  regexRule.addByRegex(doc(), regexRule, parseSrc);
     }
     public Links regexLinks(String regex, boolean parseSrc){
-        return new Links().addByRegex(doc(),regex,parseSrc);
+        RegexRule regexRule=new RegexRule();
+        return regexRule.addByRegex(doc(),regex,parseSrc);
     }
 
     public Links regexLinks(RegexRule regexRule) {

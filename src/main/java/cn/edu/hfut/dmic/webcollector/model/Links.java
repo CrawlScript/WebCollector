@@ -73,22 +73,22 @@ public class Links implements Iterable<String> {
         return dataList.iterator();
     }
 
-    public Links filterByRegex(RegexRule regexRule) {
-        Iterator<String> ite = iterator();
-        while(ite.hasNext()){
-            String url = ite.next();
-            if (!regexRule.satisfy(url)) {
-                ite.remove();
-            }
-        }
-        return this;
-    }
-
-    public Links filterByRegex(String regex) {
-        RegexRule regexRule = new RegexRule();
-        regexRule.addRule(regex);
-        return filterByRegex(regexRule);
-    }
+//    public Links filterByRegex(RegexRule regexRule) {
+//        Iterator<String> ite = iterator();
+//        while(ite.hasNext()){
+//            String url = ite.next();
+//            if (!regexRule.satisfy(url)) {
+//                ite.remove();
+//            }
+//        }
+//        return this;
+//    }
+//
+//    public Links filterByRegex(String regex) {
+//        RegexRule regexRule = new RegexRule();
+//        regexRule.addRule(regex);
+//        return filterByRegex(regexRule);
+//    }
 
     public Links addFromElement(Element ele) {
         addFromElement(ele,false);
@@ -131,34 +131,34 @@ public class Links implements Iterable<String> {
         return addBySelector(ele ,cssSelector,false);
     }
 
-    public Links addByRegex(Element ele, RegexRule regexRule, boolean parseSrc) {
-        for(String href: ele.select("a[href]").eachAttr("abs:href")){
-            if (regexRule.satisfy(href)) {
-                this.add(href);
-            }
-        }
-        if(parseSrc) {
-            for (String src : ele.select("*[src]").eachAttr("abs:src")){
-                if(regexRule.satisfy(src)){
-                    this.add(src);
-                }
-            }
-        }
-        return this;
-    }
+//    public Links addByRegex(Element ele, RegexRule regexRule, boolean parseSrc) {
+//        for(String href: ele.select("a[href]").eachAttr("abs:href")){
+//            if (regexRule.satisfy(href)) {
+//                this.add(href);
+//            }
+//        }
+//        if(parseSrc) {
+//            for (String src : ele.select("*[src]").eachAttr("abs:src")){
+//                if(regexRule.satisfy(src)){
+//                    this.add(src);
+//                }
+//            }
+//        }
+//        return this;
+//    }
 
-    public Links addByRegex(Element ele, RegexRule regexRule) {
-        return addByRegex(ele, regexRule, false);
-    }
-
-    public Links addByRegex(Element ele, String regex, boolean parseSrc) {
-        RegexRule regexRule = new RegexRule(regex);
-        return addByRegex(ele, regexRule, parseSrc);
-    }
-    public Links addByRegex(Element ele, String regex) {
-        RegexRule regexRule = new RegexRule(regex);
-        return addByRegex(ele,regexRule,false);
-    }
+//    public Links addByRegex(Element ele, RegexRule regexRule) {
+//        return addByRegex(ele, regexRule, false);
+//    }
+//
+//    public Links addByRegex(Element ele, String regex, boolean parseSrc) {
+//        RegexRule regexRule = new RegexRule(regex);
+//        return addByRegex(ele, regexRule, parseSrc);
+//    }
+//    public Links addByRegex(Element ele, String regex) {
+//        RegexRule regexRule = new RegexRule(regex);
+//        return addByRegex(ele,regexRule,false);
+//    }
 
 
 
