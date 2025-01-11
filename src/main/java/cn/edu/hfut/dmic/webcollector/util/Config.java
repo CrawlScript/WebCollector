@@ -24,7 +24,7 @@ package cn.edu.hfut.dmic.webcollector.util;
  */
 public class Config {
 
-    public static String DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36";
+    public static String DEFAULT_USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.3";
     public static int MAX_RECEIVE_SIZE = 1024 * 1024 * 10;
     public static int THREAD_KILLER = 1000 * 60 * 2;
     public static int WAIT_THREAD_END_TIME = 1000 * 60;
