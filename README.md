@@ -4,8 +4,6 @@ WebCollector is an open source web crawler framework based on Java.It provides
   multi-threaded web crawler in less than 5 minutes.
 
 
-In addition to a general crawler framework, WebCollector also integrates __CEPF__, a well-designed state-of-the-art web content extraction algorithm proposed by Wu, et al.:
-+ Wu GQ, Hu J, Li L, Xu ZH, Liu PC, Hu XG, Wu XD. Online Web news extraction via tag path feature fusion. Ruan Jian Xue Bao/Journal of Software, 2016,27(3):714-735 (in Chinese). http://www.jos.org.cn/1000-9825/4868.htm
 
 
 ## HomePage
@@ -383,3 +381,4 @@ Element contentElement = ContentExtractor.getContentElementByUrl(url);
 
 + [中文文档](https://github.com/CrawlScript/WebCollector/blob/master/README.zh-cn.md)
 -->
+
