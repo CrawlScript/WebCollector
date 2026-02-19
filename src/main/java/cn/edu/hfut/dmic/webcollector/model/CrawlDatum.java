@@ -16,10 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 package cn.edu.hfut.dmic.webcollector.model;
-
-import cn.edu.hfut.dmic.webcollector.util.CrawlDatumFormater;
 import cn.edu.hfut.dmic.webcollector.util.GsonUtils;
 import cn.edu.hfut.dmic.webcollector.util.RegexRule;
+import cn.edu.hfut.dmic.webcollector.util.StatusFormatter;
 import com.google.gson.*;
 
 import java.io.Serializable;
@@ -64,6 +63,17 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
      * 在visit方法中，可以通过page.getMetaData()方法来访问CrawlDatum中的metaData
      */
     private JsonObject metaData = new JsonObject();
+
+    private StatusFormatter statusFormatter;
+
+    public void setStatusFormatter(StatusFormatter statusFormatter) {
+        this.statusFormatter = statusFormatter;
+    }
+
+    public String statusAsString() {
+        return statusFormatter.format(this);
+    }
+
 
     public CrawlDatum() {
     }
@@ -250,12 +260,9 @@ public class CrawlDatum implements Serializable, MetaGetter, MetaSetter<CrawlDat
     }
 
 
-
-
-
     @Override
     public String toString() {
-        return CrawlDatumFormater.datumToString(this);
+        return CrawlDatumService.CrawlDatumToString(this);
     }
 
 
